@@ -1,5 +1,8 @@
 package org.kata.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.kata.controller.dto.AvatarDto;
 import org.kata.exception.AvatarNotFoundException;
@@ -16,11 +19,18 @@ public class AvatarController {
 
     private final AvatarService avatarService;
 
+    @Operation(summary = "Gets Avatar by icp",
+            description= "Avatar must exist")
     @GetMapping
     public ResponseEntity<AvatarDto> getAvatar(@RequestParam String icp) {
         return new ResponseEntity<>(avatarService.getAvatar(icp), HttpStatus.OK);
     }
 
+    @Operation(summary = "Post Avatar by dto")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Avatar успешно создан"),
+            @ApiResponse(responseCode = "400", description = "Неверный запрос")
+    })
     @PostMapping
     public ResponseEntity<AvatarDto> postAvatar(@RequestBody AvatarDto dto) {
         return new ResponseEntity<>(avatarService.saveAvatar(dto), HttpStatus.CREATED);
