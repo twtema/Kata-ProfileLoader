@@ -3,10 +3,10 @@ package org.kata.mapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.kata.controller.dto.AddressDto;
 import org.kata.controller.dto.IndividualDto;
 import org.kata.entity.*;
 import org.kata.entity.enums.GenderType;
+import org.kata.mapper.util.MapperChecker;
 import org.kata.service.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -61,38 +61,41 @@ public class IndividualMapperTest implements MapperTest<Individual, IndividualDt
     @Override
     public void setEntityFields(Individual individual) {
         individual.setPlaceOfBirth("placeOfBirth");
-        individual.setAddress(List.of(new Address(), new Address()));
+        List<Address> addresses = new ArrayList<>();
+        Address address = new Address();
+        Individual individual1 = new Individual();
         individual.setGender(GenderType.MALE);
-        individual.setDocuments(List.of(new Document(), new Document()));
+        address.setIndividual(individual1);
+        addresses.add(address);
+        addresses.add(new Address());
+        individual.setAddress(addresses);
+        individual.setGender(GenderType.MALE);
+        individual.setDocuments(new ArrayList<>());
         individual.setFullName("FromEntityFullName");
-        individual.setAvatar(List.of(new Avatar(), new Avatar()));
+        individual.setAvatar(new ArrayList<>());
         individual.setBirthDate(new Date());
         individual.setPatronymic("FromEntityPatronymic");
         individual.setCountryOfBirth("FromEntityCountryOfBirth");
         individual.setSurname("FromEntitySurname");
         individual.setIcp("FromEntityIcp");
         individual.setName("FromEntityName");
-        individual.setContacts(List.of(new ContactMedium(), new ContactMedium()));
+        individual.setContacts(new ArrayList<>());
     }
 
     @Override
     public void setDtoFields(IndividualDto individualDto) {
         individualDto.setPlaceOfBirth("placeOfBirth");
-        List<Address> addresses = new ArrayList<>();
-        addresses.add(new Address());
-        addresses.add(new Address());
-        List<AddressDto> addressDtoList = addresses.stream().map(address -> addressMapper.toDto(address)).toList();
-        individualDto.setAddress(addressDtoList);
+        individualDto.setAddress(new ArrayList<>());
         individualDto.setGender(GenderType.MALE);
-        individualDto.setDocuments(List.of(documentMapper.toDto(new Document()), documentMapper.toDto(new Document())));
+        individualDto.setDocuments(new ArrayList<>());
         individualDto.setFullName("FromEntityFullName");
-        individualDto.setAvatar(List.of(avatarMapper.toDto(new Avatar()), avatarMapper.toDto(new Avatar())));
+        individualDto.setAvatar(new ArrayList<>());
         individualDto.setBirthDate(new Date());
         individualDto.setPatronymic("FromEntityPatronymic");
         individualDto.setCountryOfBirth("FromEntityCountryOfBirth");
         individualDto.setSurname("FromEntitySurname");
         individualDto.setIcp("FromEntityIcp");
         individualDto.setName("FromEntityName");
-        individualDto.setContacts(List.of(contactMediumMapper.toDto(new ContactMedium()), contactMediumMapper.toDto(new ContactMedium())));
+        individualDto.setContacts(new ArrayList<>());
     }
 }

@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.kata.controller.dto.DocumentDto;
 import org.kata.entity.Document;
 import org.kata.entity.enums.DocumentType;
+import org.kata.mapper.util.MapperChecker;
 import org.kata.service.mapper.DocumentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -46,6 +47,7 @@ public class DocumentMapperTest implements MapperTest<Document, DocumentDto> {
     }
     @Override
     public void setEntityFields(Document document) {
+        document.setActual(false);
         document.setDocumentNumber("documentNumberFromDocument");
         document.setDocumentType(DocumentType.RF_PASSPORT);
         document.setIssueDate(new Date());

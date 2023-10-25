@@ -1,5 +1,6 @@
-package org.kata.mapper;
+package org.kata.mapper.config;
 
+import org.kata.mapper.util.MapperChecker;
 import org.kata.service.mapper.*;
 import org.mapstruct.factory.Mappers;
 import org.springframework.boot.test.context.TestConfiguration;

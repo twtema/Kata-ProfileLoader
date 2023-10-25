@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kata.controller.dto.AddressDto;
 import org.kata.entity.Address;
+import org.kata.mapper.util.MapperChecker;
 import org.kata.service.mapper.AddressMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -53,6 +54,7 @@ public class AddressMapperTest implements MapperTest<Address, AddressDto>{
 
     @Override
     public void setDtoFields(AddressDto addressDto) {
+        addressDto.setIcp("FromDtoIcp");
         addressDto.setPostCode("FromDtoPostCode");
         addressDto.setCity("FromDtoCity");
         addressDto.setCountry("FromDtoCountry");

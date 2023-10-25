@@ -1,5 +1,6 @@
 package org.kata.mapper;
 
+import org.kata.mapper.config.MappersTestConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 

@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kata.controller.dto.AvatarDto;
 import org.kata.entity.Avatar;
+import org.kata.mapper.util.MapperChecker;
 import org.kata.service.mapper.AvatarMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;

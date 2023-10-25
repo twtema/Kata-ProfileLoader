@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.kata.controller.dto.ContactMediumDto;
 import org.kata.entity.ContactMedium;
 import org.kata.entity.enums.ContactMediumType;
+import org.kata.mapper.util.MapperChecker;
 import org.kata.service.mapper.ContactMediumMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
