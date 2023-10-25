@@ -7,9 +7,11 @@ import org.junit.runner.RunWith;
 import org.kata.controller.dto.DocumentDto;
 import org.kata.entity.Document;
 import org.kata.entity.enums.DocumentType;
+import org.kata.mapper.setters.Setter;
 import org.kata.mapper.util.MapperChecker;
 import org.kata.service.mapper.DocumentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.junit4.SpringRunner;
 import java.util.*;
 
@@ -20,6 +22,9 @@ public class DocumentMapperTest implements MapperTest<Document, DocumentDto> {
     private DocumentMapper documentMapper;
     @Autowired
     private MapperChecker mapperChecker;
+    @Autowired
+    @Qualifier("documentSetter")
+    private Setter setter;
 
     private Document documentFrom;
     private DocumentDto documentDtoFrom;
@@ -28,8 +33,8 @@ public class DocumentMapperTest implements MapperTest<Document, DocumentDto> {
     public void setUp() {
         documentFrom = new Document();
         documentDtoFrom = documentMapper.toDto(documentFrom);
-        setEntityFields(documentFrom);
-        setDtoFields(documentDtoFrom);
+        setter.setEntityFields(documentFrom);
+        setter.setDtoFields(documentDtoFrom);
     }
     @Override
     @Test
@@ -45,22 +50,5 @@ public class DocumentMapperTest implements MapperTest<Document, DocumentDto> {
                 documentDtoFrom,
                 documentMapper.toEntity(documentDtoFrom));
     }
-    @Override
-    public void setEntityFields(Document document) {
-        document.setActual(false);
-        document.setDocumentNumber("documentNumberFromDocument");
-        document.setDocumentType(DocumentType.RF_PASSPORT);
-        document.setIssueDate(new Date());
-        document.setExpirationDate(new Date());
-        document.setDocumentSerial("documentSerialTest");
-    }
 
-    @Override
-    public void setDtoFields(DocumentDto documentDto) {
-        documentDto.setDocumentNumber("documentNumberFromDocumentDto");
-        documentDto.setDocumentType(DocumentType.INN);
-        documentDto.setIssueDate(new Date());
-        documentDto.setExpirationDate(new Date());
-        documentDto.setDocumentSerial("documentSerialTest");
-    }
 }

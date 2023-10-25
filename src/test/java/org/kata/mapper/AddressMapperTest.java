@@ -5,9 +5,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kata.controller.dto.AddressDto;
 import org.kata.entity.Address;
+import org.kata.mapper.setters.Setter;
 import org.kata.mapper.util.MapperChecker;
 import org.kata.service.mapper.AddressMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
@@ -16,6 +18,9 @@ public class AddressMapperTest implements MapperTest<Address, AddressDto>{
     private AddressMapper addressMapper;
     @Autowired
     private MapperChecker mapperChecker;
+    @Autowired
+    @Qualifier("addressSetter")
+    private Setter setter;
 
     private Address addressFrom;
     private AddressDto addressDtoFrom;
@@ -24,8 +29,8 @@ public class AddressMapperTest implements MapperTest<Address, AddressDto>{
     public void setUp() {
         addressFrom = new Address();
         addressDtoFrom = addressMapper.toDto(addressFrom);
-        setEntityFields(addressFrom);
-        setDtoFields(addressDtoFrom);
+        setter.setEntityFields(addressFrom);
+        setter.setDtoFields(addressDtoFrom);
     }
     @Override
     @Test
@@ -40,25 +45,5 @@ public class AddressMapperTest implements MapperTest<Address, AddressDto>{
         mapperChecker.checkFieldsEquivalence(
                 addressDtoFrom,
                 addressMapper.toEntity(addressDtoFrom));
-    }
-
-
-    @Override
-    public void setEntityFields(Address address) {
-        address.setPostCode("FromEntityPostCode");
-        address.setCity("FromEntityCity");
-        address.setCountry("FromEntityCountry");
-        address.setState("FromEntityState");
-        address.setStreet("FromEntityStreet");
-    }
-
-    @Override
-    public void setDtoFields(AddressDto addressDto) {
-        addressDto.setIcp("FromDtoIcp");
-        addressDto.setPostCode("FromDtoPostCode");
-        addressDto.setCity("FromDtoCity");
-        addressDto.setCountry("FromDtoCountry");
-        addressDto.setState("FromDtoState");
-        addressDto.setStreet("FromDtoStreet");
     }
 }

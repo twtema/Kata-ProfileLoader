@@ -6,9 +6,11 @@ import org.junit.runner.RunWith;
 import org.kata.controller.dto.IndividualDto;
 import org.kata.entity.*;
 import org.kata.entity.enums.GenderType;
+import org.kata.mapper.setters.Setter;
 import org.kata.mapper.util.MapperChecker;
 import org.kata.service.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
@@ -29,6 +31,9 @@ public class IndividualMapperTest implements MapperTest<Individual, IndividualDt
     private DocumentMapper documentMapper;
     @Autowired
     private AvatarMapper avatarMapper;
+    @Autowired
+    @Qualifier("individualSetter")
+    private Setter setter;
 
     private Individual individualFrom;
     private IndividualDto individualDtoFrom;
@@ -37,8 +42,8 @@ public class IndividualMapperTest implements MapperTest<Individual, IndividualDt
     public void setUp() {
         individualFrom = new Individual();
         individualDtoFrom = individualMapper.toDto(individualFrom);
-        setEntityFields(individualFrom);
-        setDtoFields(individualDtoFrom);
+        setter.setEntityFields(individualFrom);
+        setter.setDtoFields(individualDtoFrom);
     }
 
     @Override
@@ -55,47 +60,5 @@ public class IndividualMapperTest implements MapperTest<Individual, IndividualDt
         mapperChecker.checkFieldsEquivalence(
                 individualDtoFrom,
                 individualMapper.toEntity(individualDtoFrom));
-    }
-
-
-    @Override
-    public void setEntityFields(Individual individual) {
-        individual.setPlaceOfBirth("placeOfBirth");
-        List<Address> addresses = new ArrayList<>();
-        Address address = new Address();
-        Individual individual1 = new Individual();
-        individual.setGender(GenderType.MALE);
-        address.setIndividual(individual1);
-        addresses.add(address);
-        addresses.add(new Address());
-        individual.setAddress(addresses);
-        individual.setGender(GenderType.MALE);
-        individual.setDocuments(new ArrayList<>());
-        individual.setFullName("FromEntityFullName");
-        individual.setAvatar(new ArrayList<>());
-        individual.setBirthDate(new Date());
-        individual.setPatronymic("FromEntityPatronymic");
-        individual.setCountryOfBirth("FromEntityCountryOfBirth");
-        individual.setSurname("FromEntitySurname");
-        individual.setIcp("FromEntityIcp");
-        individual.setName("FromEntityName");
-        individual.setContacts(new ArrayList<>());
-    }
-
-    @Override
-    public void setDtoFields(IndividualDto individualDto) {
-        individualDto.setPlaceOfBirth("placeOfBirth");
-        individualDto.setAddress(new ArrayList<>());
-        individualDto.setGender(GenderType.MALE);
-        individualDto.setDocuments(new ArrayList<>());
-        individualDto.setFullName("FromEntityFullName");
-        individualDto.setAvatar(new ArrayList<>());
-        individualDto.setBirthDate(new Date());
-        individualDto.setPatronymic("FromEntityPatronymic");
-        individualDto.setCountryOfBirth("FromEntityCountryOfBirth");
-        individualDto.setSurname("FromEntitySurname");
-        individualDto.setIcp("FromEntityIcp");
-        individualDto.setName("FromEntityName");
-        individualDto.setContacts(new ArrayList<>());
     }
 }

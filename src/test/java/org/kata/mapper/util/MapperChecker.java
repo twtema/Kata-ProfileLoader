@@ -19,6 +19,7 @@ public class MapperChecker {
         fromFields = removeCollectionFields(fromFields);
         toFields = removeCollectionFields(toFields);
 
+
         fromCollectionFields.ifPresent(check -> {
             try {
                 checkCollectionFieldsEquivalence(
