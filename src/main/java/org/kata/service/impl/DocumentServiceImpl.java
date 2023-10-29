@@ -51,7 +51,7 @@ public class DocumentServiceImpl implements DocumentService {
         }
     }
 
-    public List<DocumentDto> getArchiveDocuments(String icp) {
+    public List<DocumentDto> getNotActualDocuments(String icp) {
         Optional<Individual> individual = individualCrudRepository.findByIcp(icp);
 
         if (individual.isPresent()) {
@@ -63,6 +63,7 @@ public class DocumentServiceImpl implements DocumentService {
                         .toList();
                 List<DocumentDto> documentDtos = documentMapper.toDto(documentList);
                 documentDtos.forEach(doc -> doc.setIcp(icp));
+
                 return documentDtos;
             } else {
                 throw new DocumentsNotFoundException("No Document found for individual with icp: " + icp);

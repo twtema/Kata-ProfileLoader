@@ -37,7 +37,7 @@ public class DocumentController {
     })
     @GetMapping("/getNotActual")
     public ResponseEntity<List<DocumentDto>> getNotActualDocument(@RequestParam String icp) {
-        return new ResponseEntity<>(documentService.getArchiveDocuments(icp), HttpStatus.OK);
+        return new ResponseEntity<>(documentService.getNotActualDocuments(icp), HttpStatus.OK);
     }
 
     @Operation(summary = "Создать новый Document", description = "Сохраняет и возвращает DTO нового документа")
