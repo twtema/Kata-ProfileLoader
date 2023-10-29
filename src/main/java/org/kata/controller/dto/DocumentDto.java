@@ -26,11 +26,4 @@ public class DocumentDto {
 
     private boolean actual;
 
-//    public void setActual(boolean actual) {
-//        this.actual = actual;
-//    }
-//
-//    public boolean isActual() {
-//        return actual;
-//    }
 }
