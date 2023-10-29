@@ -7,10 +7,10 @@ import java.util.List;
 
 public interface DocumentService {
 
-    List<DocumentDto> getActualDocuments(String icp);
+    List<DocumentDto> getAllDocuments(String icp);
 
     DocumentDto saveDocument(DocumentDto dto);
 
-    List<DocumentDto> getNotActualDocuments(String icp);
+
 
 }

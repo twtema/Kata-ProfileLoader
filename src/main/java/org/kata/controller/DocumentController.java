@@ -20,21 +20,11 @@ import java.util.List;
 public class DocumentController {
     private final DocumentService documentService;
 
-    @GetMapping("/getActual")
+    @GetMapping("/getAll")
     public ResponseEntity<List<DocumentDto>> getDocument(@RequestParam String icp) {
-        return new ResponseEntity<>(documentService.getActualDocuments(icp), HttpStatus.OK);
+        return new ResponseEntity<>(documentService.getAllDocuments(icp), HttpStatus.OK);
     }
 
-    @Operation(summary = "Get not actual documents")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful retrieval of not actual documents"),
-            @ApiResponse(responseCode = "400", description = "Bad request"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
-    @GetMapping("/getNotActual")
-    public ResponseEntity<List<DocumentDto>> getNotActualDocument(@RequestParam String icp) {
-        return new ResponseEntity<>(documentService.getNotActualDocuments(icp), HttpStatus.OK);
-    }
 
     @PostMapping
     public ResponseEntity<DocumentDto> postDocument(@RequestBody DocumentDto dto) {
