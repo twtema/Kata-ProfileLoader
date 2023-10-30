@@ -17,7 +17,7 @@ public class DocumentDto {
     @Schema(description = "ICP", example = "1234567890")
     private String icp;
 
-    @Schema(description = "Тип документа")
+    @Schema(description = "Тип документа", example = "RF_PASSPORT")
     private DocumentType documentType;
 
     @Schema(description = "Номер документа", example = "123456")
@@ -29,6 +29,6 @@ public class DocumentDto {
     @Schema(description = "Дата выдачи", example = "01.01.2010")
     private Date issueDate;
 
-    @Schema(description = "Дата истечения срока действия", example = "01.01.2030")
+    @Schema(description = "Дата истечения срока действия", example = "null")
     private Date expirationDate;
 }
