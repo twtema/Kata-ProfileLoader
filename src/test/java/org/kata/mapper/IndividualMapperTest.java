@@ -24,14 +24,6 @@ public class IndividualMapperTest implements MapperTest<Individual, IndividualDt
     @Autowired
     private MapperChecker mapperChecker;
     @Autowired
-    private AddressMapper addressMapper;
-    @Autowired
-    private ContactMediumMapper contactMediumMapper;
-    @Autowired
-    private DocumentMapper documentMapper;
-    @Autowired
-    private AvatarMapper avatarMapper;
-    @Autowired
     @Qualifier("individualSetter")
     private Setter setter;
 

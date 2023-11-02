@@ -12,14 +12,14 @@ public class AvatarSetter implements Setter {
     @Override
     public void setEntityFields(Object avatarObject) {
         Avatar avatar = (Avatar) avatarObject;
-        avatar.setFilename("FromEntityFileName");
+        StringFieldsSetterUtil.set(avatarObject);
         avatar.setImageData(generateByteArray());
     }
 
     @Override
     public void setDtoFields(Object avatarDtoObject) {
         AvatarDto avatarDto = (AvatarDto) avatarDtoObject;
-        avatarDto.setFilename("FromDtoFileName");
+        StringFieldsSetterUtil.set(avatarDtoObject);
         avatarDto.setImageData(generateByteArray());
     }
 
