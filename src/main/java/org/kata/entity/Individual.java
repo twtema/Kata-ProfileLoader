@@ -61,6 +61,9 @@ public class Individual {
     @OneToMany(mappedBy = "individual", cascade = CascadeType.ALL)
     private List<Avatar> avatar;
 
+    @OneToOne(mappedBy = "individual", cascade = CascadeType.ALL)
+    private Wallet wallet;
+
 }
 
 
