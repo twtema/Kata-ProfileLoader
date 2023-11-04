@@ -1,6 +1,6 @@
 package org.kata.entity.enums;
 
-public enum Currency {
+public enum CurrencyType {
     RUB,
     BYN,
     USD,

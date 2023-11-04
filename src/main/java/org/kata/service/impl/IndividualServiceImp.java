@@ -42,6 +42,7 @@ public class IndividualServiceImp implements IndividualService {
         processCollection(entity.getDocuments(), entity);
         processCollection(entity.getContacts(), entity);
         processCollection(entity.getAvatar(), entity);
+        processCollection(entity.getWallet(), entity);
 
         log.info("Create new Individual: {}", entity);
 

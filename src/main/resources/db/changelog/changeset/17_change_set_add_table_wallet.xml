@@ -3,14 +3,16 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
 
-    <changeSet id="add_table_wallet" author="defeatedSanity">
+    <changeSet id="17" author="defeatedSanity">
         <createTable tableName="wallet">
             <column name="uuid" type="VARCHAR(36)">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="individual_uuid" type="VARCHAR(36)"/>
-            <column name="currency" type="CHAR(3)"/>
-            <column name="value" type="DECIMAL"/>
+            <column name="currency_type" type="CHAR(3)"/>
+            <column name="balance" type="DECIMAL"/>
+            <column name="individual_uuid" type="VARCHAR(36)">
+                <constraints nullable="false" foreignKeyName="fk_address_employee" references="individual(uuid)"/>
+            </column>
         </createTable>
     </changeSet>
 

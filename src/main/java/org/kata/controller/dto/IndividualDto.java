@@ -63,5 +63,5 @@ public class IndividualDto {
     private List<AvatarDto> avatar;
 
     @Schema(description = "Кошелёк")
-    private WalletDto wallet;
+    private List<WalletDto> wallet;
 }

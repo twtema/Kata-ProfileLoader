@@ -4,13 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
-import org.kata.entity.Individual;
-import org.kata.entity.enums.Currency;
+import org.kata.entity.enums.CurrencyType;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import java.math.BigDecimal;
 
 @Data
@@ -23,9 +18,9 @@ public class WalletDto {
     private String icp;
 
     @Schema(description = "Валюта", example = "BYN")
-    private Currency currency;
+    private CurrencyType currencyType;
 
     @Schema(description = "Баланс", example = "123.45")
-    private BigDecimal value;
+    private BigDecimal balance;
 
 }
