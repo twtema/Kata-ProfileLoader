@@ -61,6 +61,9 @@ public class Individual {
     @OneToMany(mappedBy = "individual", cascade = CascadeType.ALL)
     private List<Avatar> avatar;
 
+    @OneToMany(mappedBy = "individual", cascade = CascadeType.ALL)
+    private List<SavingsAccount> savingsAccount;
+
 }
 
 
