@@ -12,4 +12,5 @@ public interface IndividualMapper {
 
     IndividualDto toDto(Individual individual);
 
+
 }

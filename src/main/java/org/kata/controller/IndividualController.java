@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
 import org.kata.controller.dto.IndividualDto;
 import org.kata.exception.IndividualNotFoundException;
@@ -38,6 +39,27 @@ public class IndividualController {
             @Parameter(description = "DTO Individual для создания") @RequestBody IndividualDto dto) {
         return new ResponseEntity<>(individualService.saveIndividual(dto), HttpStatus.CREATED);
     }
+
+    @Operation(summary = "Delete an individual by icp")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful deleted of Individual"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @DeleteMapping("/delete")
+    public ResponseEntity<HttpStatus> deleteIndividual(@RequestBody String icp) {
+        individualService.deleteIndividual(icp);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+    @PutMapping("/update")
+    public  ResponseEntity<IndividualDto> updateIndividual(@RequestParam String icp, @RequestBody IndividualDto dto) {
+        return new ResponseEntity<>(individualService.updateIndividual(icp, dto), HttpStatus.OK);
+    }
+
+
+
+
+
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IndividualNotFoundException.class)

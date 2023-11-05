@@ -48,7 +48,37 @@ public class IndividualServiceImp implements IndividualService {
         individualCrudRepository.save(entity);
 
         return individualMapper.toDto(entity);
+
     }
+
+    @Override
+    public IndividualDto updateIndividual(String icp, IndividualDto dto) {
+        System.out.println("зашли в update");
+        Individual  origin =individualCrudRepository.findByIcp(icp)
+                .orElseThrow(() -> new IndividualNotFoundException
+                        ("Individual with icp: " + icp+ " not found"));
+
+        Individual entity = individualMapper.toEntity(dto);
+        entity.setUuid(origin.getUuid());
+        entity.setIcp(icp);
+        processCollection(entity.getAddress(), entity);
+        processCollection(entity.getDocuments(), entity);
+        processCollection(entity.getContacts(), entity);
+        processCollection(entity.getAvatar(), entity);
+        log.info("Update  Individual: {}", entity);
+        individualCrudRepository.save(entity);
+        return individualMapper.toDto(entity);
+    }
+
+    @Override
+    public void deleteIndividual(String icp) {
+        Individual entity = individualCrudRepository.findByIcp(icp)
+                .orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + icp + " not found"));
+
+        individualCrudRepository.delete(entity);
+    }
+
+
 
     private void processCollection(Collection<? extends IndividualRelatedEntity> collection, Individual entity) {
         if (!CollectionUtils.isEmpty(collection)) {

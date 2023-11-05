@@ -6,4 +6,8 @@ public interface IndividualService {
     IndividualDto getIndividual(String icp);
 
     IndividualDto saveIndividual(IndividualDto dto);
+
+    void deleteIndividual(String icp);
+
+    IndividualDto updateIndividual(String icp, IndividualDto dto);
 }
