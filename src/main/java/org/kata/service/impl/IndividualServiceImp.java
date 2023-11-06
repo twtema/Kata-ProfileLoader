@@ -52,15 +52,15 @@ public class IndividualServiceImp implements IndividualService {
     }
 
     @Override
-    public IndividualDto updateIndividual(String icp, IndividualDto dto) {
+    public IndividualDto updateIndividual( IndividualDto dto) {
         System.out.println("зашли в update");
-        Individual  origin =individualCrudRepository.findByIcp(icp)
+        Individual  origin =individualCrudRepository.findByIcp(dto.getIcp())
                 .orElseThrow(() -> new IndividualNotFoundException
-                        ("Individual with icp: " + icp+ " not found"));
+                        ("Individual with icp: " + dto.getIcp() + " not found"));
 
         Individual entity = individualMapper.toEntity(dto);
         entity.setUuid(origin.getUuid());
-        entity.setIcp(icp);
+        entity.setIcp(dto.getIcp());
         processCollection(entity.getAddress(), entity);
         processCollection(entity.getDocuments(), entity);
         processCollection(entity.getContacts(), entity);
@@ -72,6 +72,8 @@ public class IndividualServiceImp implements IndividualService {
 
     @Override
     public void deleteIndividual(String icp) {
+        System.out.println();
+        System.out.println();
         Individual entity = individualCrudRepository.findByIcp(icp)
                 .orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + icp + " not found"));
 

@@ -9,4 +9,8 @@ import java.util.Optional;
 @Repository
 public interface IndividualCrudRepository extends CrudRepository<Individual, String> {
     Optional<Individual> findByIcp(String icp);
+
+    @Override
+    void delete(Individual entity);
+    void removeByIcp(String icp);
 }

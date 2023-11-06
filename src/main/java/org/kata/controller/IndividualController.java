@@ -37,6 +37,7 @@ public class IndividualController {
     @PostMapping
     public ResponseEntity<IndividualDto> postIndividual(
             @Parameter(description = "DTO Individual для создания") @RequestBody IndividualDto dto) {
+        System.out.println("dassdfghkjlkghfgdfgsdf");
         return new ResponseEntity<>(individualService.saveIndividual(dto), HttpStatus.CREATED);
     }
 
@@ -46,14 +47,16 @@ public class IndividualController {
             @ApiResponse(responseCode = "400", description = "Bad request"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
+
     @DeleteMapping("/delete")
-    public ResponseEntity<HttpStatus> deleteIndividual(@RequestBody String icp) {
+    public ResponseEntity<HttpStatus> deleteIndividual(@RequestParam String icp) {
+        System.out.println("controller loader delete icp - " + icp);
         individualService.deleteIndividual(icp);
         return ResponseEntity.ok(HttpStatus.OK);
     }
-    @PutMapping("/update")
-    public  ResponseEntity<IndividualDto> updateIndividual(@RequestParam String icp, @RequestBody IndividualDto dto) {
-        return new ResponseEntity<>(individualService.updateIndividual(icp, dto), HttpStatus.OK);
+    @PutMapping ("/update")
+    public  ResponseEntity<IndividualDto> updateIndividual( @RequestBody IndividualDto dto) {
+        return new ResponseEntity<>(individualService.updateIndividual( dto), HttpStatus.OK);
     }
 
 
