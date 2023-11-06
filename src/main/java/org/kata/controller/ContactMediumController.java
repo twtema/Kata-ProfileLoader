@@ -1,5 +1,9 @@
 package org.kata.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.kata.controller.dto.ContactMediumDto;
 import org.kata.exception.ContactMediumNotFoundException;
@@ -18,13 +22,22 @@ public class ContactMediumController {
 
     private final ContactMediumService contactMediumService;
 
+    @Operation(summary = "Получить ContactMedium по icp",
+            description= "Возвращает DTO ContactMedium по ICP")
     @GetMapping
-    public ResponseEntity<List<ContactMediumDto>> getContactMedium(@RequestParam String icp) {
+    public ResponseEntity<List<ContactMediumDto>> getContactMedium(
+            @Parameter(description = "ICP ContactMedium") @RequestParam String icp) {
         return new ResponseEntity<>(contactMediumService.getContactMedium(icp), HttpStatus.OK);
     }
 
+    @Operation(summary = "Создать новый ContactMedium", description = "Сохраняет и возвращает DTO нового контакта")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "ContactMedium успешно создан"),
+            @ApiResponse(responseCode = "400", description = "Неверный запрос")
+    })
     @PostMapping
-    public ResponseEntity<ContactMediumDto> postContactMedium(@RequestBody ContactMediumDto dto) {
+    public ResponseEntity<ContactMediumDto> postContactMedium(
+            @Parameter(description = "DTO ContactMedium для создания") @RequestBody ContactMediumDto dto) {
         return new ResponseEntity<>(contactMediumService.saveContactMedium(dto), HttpStatus.CREATED);
     }
 
