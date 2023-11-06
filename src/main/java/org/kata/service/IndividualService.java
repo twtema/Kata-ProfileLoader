@@ -9,5 +9,4 @@ public interface IndividualService {
 
     void deleteIndividual(String icp);
 
-    IndividualDto updateIndividual( IndividualDto dto);
 }

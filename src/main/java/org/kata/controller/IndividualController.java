@@ -54,14 +54,6 @@ public class IndividualController {
         individualService.deleteIndividual(icp);
         return ResponseEntity.ok(HttpStatus.OK);
     }
-    @PutMapping ("/update")
-    public  ResponseEntity<IndividualDto> updateIndividual( @RequestBody IndividualDto dto) {
-        return new ResponseEntity<>(individualService.updateIndividual( dto), HttpStatus.OK);
-    }
-
-
-
-
 
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
