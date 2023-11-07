@@ -14,8 +14,8 @@ import java.math.BigDecimal;
 @Schema(description = "DTO представляющий кошелёк")
 public class WalletDto {
 
-    @Schema(description = "Individual ICP", example = "1234567890")
-    private String icp;
+    @Schema(description = "Идентификатор кошелька", example = "1234567890")
+    private String walletId;
 
     @Schema(description = "Валюта", example = "BYN")
     private CurrencyType currencyType;

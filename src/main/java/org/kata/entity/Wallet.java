@@ -17,6 +17,9 @@ public class Wallet implements IndividualRelatedEntity{
     @Column(name = "uuid")
     private String uuid;
 
+    @Column(name = "wallet_id")
+    private String walletId;
+
     @ManyToOne
     @JoinColumn(name = "individual_uuid")
     private Individual individual;
