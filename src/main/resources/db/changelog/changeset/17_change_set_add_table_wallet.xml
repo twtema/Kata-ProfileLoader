@@ -13,6 +13,7 @@
             </column>
             <column name="currency_type" type="CHAR(3)"/>
             <column name="balance" type="DECIMAL"/>
+            <column name="is_actual" type="BOOLEAN"/>
             <column name="individual_uuid" type="VARCHAR(36)">
                 <constraints nullable="false" foreignKeyName="fk_address_employee" references="individual(uuid)"/>
             </column>

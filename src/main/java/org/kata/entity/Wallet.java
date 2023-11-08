@@ -31,4 +31,7 @@ public class Wallet implements IndividualRelatedEntity{
     @Column(name = "balance")
     private BigDecimal balance;
 
+    @Column(name = "is_actual")
+    private boolean isActual;
+
 }
