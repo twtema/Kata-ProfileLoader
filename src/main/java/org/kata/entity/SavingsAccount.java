@@ -23,8 +23,16 @@ public class SavingsAccount {
     @Column(name = "forex")
     private String forex;
 
-    @Column(name = "sum")
-    private Long sum;
+
+    @Column(name = "infoOfPercent")
+    private String infoOfPercent;
+
+    @Column(name = "final_sum")
+    private Long finalSum;
+
+
+    @Column(name = "deposit_term")
+    private Byte depositTerm;
 
     @ManyToOne
     @JoinColumn(name = "individual_uuid")
