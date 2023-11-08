@@ -37,7 +37,6 @@ public class IndividualController {
     @PostMapping
     public ResponseEntity<IndividualDto> postIndividual(
             @Parameter(description = "DTO Individual для создания") @RequestBody IndividualDto dto) {
-        System.out.println("dassdfghkjlkghfgdfgsdf");
         return new ResponseEntity<>(individualService.saveIndividual(dto), HttpStatus.CREATED);
     }
 
