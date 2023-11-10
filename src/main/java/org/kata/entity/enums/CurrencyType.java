@@ -4,4 +4,5 @@ public enum CurrencyType {
     RUB,
     BYN,
     USD,
+    CNY
 }
