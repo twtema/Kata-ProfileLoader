@@ -5,19 +5,17 @@ import org.kata.entity.ContactMedium;
 import org.kata.entity.enums.ContactMediumType;
 
 
-public class ContactSetter implements Setter {
+public class ContactSetter implements Setter<ContactMedium, ContactMediumDto> {
 
     @Override
-    public void setEntityFields(Object contactMediumObject) {
-        ContactMedium contactMedium = (ContactMedium) contactMediumObject;
+    public void setEntityFields(ContactMedium contactMedium) {
         contactMedium.setType(ContactMediumType.PHONE);
-        StringFieldsSetterUtil.set(contactMediumObject);
+        StringFieldsSetterUtil.set(contactMedium);
     }
 
     @Override
-    public void setDtoFields(Object contactMediumDtoObject) {
-        ContactMediumDto contactMediumDto = (ContactMediumDto) contactMediumDtoObject;
+    public void setDtoFields(ContactMediumDto contactMediumDto) {
         contactMediumDto.setType(ContactMediumType.EMAIL);
-        StringFieldsSetterUtil.set(contactMediumDtoObject);
+        StringFieldsSetterUtil.set(contactMediumDto);
     }
 }
