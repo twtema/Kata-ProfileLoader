@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.kata.controller.dto.DocumentDto;
 import org.kata.entity.Document;
 import org.kata.entity.Individual;
-import org.kata.entity.enums.DocumentType;
 import org.kata.exception.DocumentsNotFoundException;
 import org.kata.exception.IndividualNotFoundException;
 import org.kata.repository.DocumentCrudRepository;
@@ -51,7 +50,7 @@ public class DocumentServiceImpl implements DocumentService {
         }
     }
 
-    public List<DocumentDto> getNotActualDocuments(String icp) {
+    public List<DocumentDto> getArchiveDocuments(String icp) {
         Optional<Individual> individual = individualCrudRepository.findByIcp(icp);
 
         if (individual.isPresent()) {
