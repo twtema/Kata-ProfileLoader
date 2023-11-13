@@ -12,20 +12,18 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 
-public class WalletSetter implements Setter {
+public class WalletSetter implements Setter<Wallet, WalletDto> {
 
     @Override
-    public void setEntityFields(Object walletObject) {
-        Wallet wallet = (Wallet) walletObject;
-        StringFieldsSetterUtil.set(walletObject);
+    public void setEntityFields(Wallet wallet) {
+        StringFieldsSetterUtil.set(wallet);
         wallet.setBalance(BigDecimal.valueOf(33.33333));
         wallet.setCurrencyType(CurrencyType.BYN);
     }
 
     @Override
-    public void setDtoFields(Object walletDtoObject) {
-        WalletDto walletDto = (WalletDto) walletDtoObject;
-        StringFieldsSetterUtil.set(walletDtoObject);
+    public void setDtoFields(WalletDto walletDto) {
+        StringFieldsSetterUtil.set(walletDto);
         walletDto.setCurrencyType(CurrencyType.RUB);
         walletDto.setBalance(BigDecimal.valueOf(66.66666));
     }
