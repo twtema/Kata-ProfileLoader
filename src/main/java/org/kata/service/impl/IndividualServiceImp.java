@@ -54,8 +54,6 @@ public class IndividualServiceImp implements IndividualService {
 
     @Override
     public void deleteIndividual(String icp) {
-        System.out.println();
-        System.out.println();
         Individual entity = individualCrudRepository.findByIcp(icp)
                 .orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + icp + " not found"));
 
