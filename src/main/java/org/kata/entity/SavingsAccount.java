@@ -20,11 +20,11 @@ public class SavingsAccount {
     @Column(name = "uuid")
     private String uuid;
 
-    @Column(name = "forex")
-    private String forex;
+    @Column(name = "currency")
+    private String currency;
 
 
-    @Column(name = "infoOfPercent")
+    @Column(name = "info_Of_Percent")
     private String infoOfPercent;
 
     @Column(name = "final_sum")
