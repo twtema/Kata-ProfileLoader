@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.kata.controller.dto.DocumentDto;
 import org.kata.entity.Document;
 import org.kata.entity.Individual;
+import org.kata.entity.enums.DocumentType;
 import org.kata.exception.DocumentsNotFoundException;
 import org.kata.exception.IndividualNotFoundException;
 import org.kata.repository.DocumentCrudRepository;
@@ -29,7 +30,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     private final DocumentMapper documentMapper;
 
-    public List<DocumentDto> getDocument(String icp) {
+    public List<DocumentDto> getActualDocuments(String icp) {
         Optional<Individual> individual = individualCrudRepository.findByIcp(icp);
 
         if (individual.isPresent()) {
@@ -39,6 +40,27 @@ public class DocumentServiceImpl implements DocumentService {
                 List<Document> documentList = documents.stream()
                         .filter(Document::isActual)
                         .collect(Collectors.toList());
+                List<DocumentDto> documentDtos = documentMapper.toDto(documentList);
+                documentDtos.forEach(doc -> doc.setIcp(icp));
+                return documentDtos;
+            } else {
+                throw new DocumentsNotFoundException("No Document found for individual with icp: " + icp);
+            }
+        } else {
+            throw new IndividualNotFoundException("Individual with icp: " + icp + " not found");
+        }
+    }
+
+    public List<DocumentDto> getArchiveDocuments(String icp) {
+        Optional<Individual> individual = individualCrudRepository.findByIcp(icp);
+
+        if (individual.isPresent()) {
+            List<Document> documents = individual.get().getDocuments();
+
+            if (!documents.isEmpty()) {
+                List<Document> documentList = documents.stream()
+                        .filter(document -> !document.isActual())
+                        .toList();
                 List<DocumentDto> documentDtos = documentMapper.toDto(documentList);
                 documentDtos.forEach(doc -> doc.setIcp(icp));
                 return documentDtos;
