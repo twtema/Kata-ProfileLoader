@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
 
-public class IndividualSetter implements Setter {
+public class IndividualSetter implements Setter<Individual, IndividualDto> {
     @Autowired
     @Qualifier("documentSetter")
     private Setter documentSetter;
@@ -36,9 +36,8 @@ public class IndividualSetter implements Setter {
     AvatarMapper  avatarMapper;
 
     @Override
-    public void setEntityFields(Object individualObject) {
-        Individual individual = (Individual) individualObject;
-        StringFieldsSetterUtil.set(individualObject);
+    public void setEntityFields(Individual individual) {
+        StringFieldsSetterUtil.set(individual);
         individual.setAddress(generateEntityList(new Address(), addressSetter));
         individual.setDocuments(generateEntityList(new Document(), documentSetter));
         individual.setAvatar(generateEntityList(new Avatar(), avatarSetter));
@@ -48,8 +47,7 @@ public class IndividualSetter implements Setter {
     }
 
     @Override
-    public void setDtoFields(Object individualDtoObject) {
-        IndividualDto individualDto = (IndividualDto) individualDtoObject;
+    public void setDtoFields(IndividualDto individualDto) {
         StringFieldsSetterUtil.set(individualDto);
         individualDto.setGender(GenderType.MALE);
         individualDto.setAddress(generateDtoList(addressMapper.toDto(new Address()), addressSetter));
