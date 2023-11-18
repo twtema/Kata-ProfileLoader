@@ -2,11 +2,11 @@ package org.kata.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.kata.controller.dto.DocumentDto;
 import org.kata.controller.dto.WalletDto;
-import org.kata.entity.Document;
 import org.kata.entity.Individual;
 import org.kata.entity.Wallet;
+import org.kata.entity.enums.ContactMediumType;
+import org.kata.entity.enums.CurrencyType;
 import org.kata.exception.IndividualNotFoundException;
 import org.kata.exception.WalletNotFoundException;
 import org.kata.repository.IndividualCrudRepository;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
+import org.kata.service.ContactMediumService;
 
 @Service
 @Slf4j
@@ -30,6 +30,10 @@ public class WalletServiceImpl implements WalletService {
     private final IndividualCrudRepository individualCrudRepository;
 
     private final WalletMapper walletMapper;
+
+    private final ContactMediumService contactMediumService;
+
+
 
     @Override
     public List<WalletDto> getWallet(String icp) {
@@ -76,6 +80,7 @@ public class WalletServiceImpl implements WalletService {
         walletDto.setIcp(dto.getIcp());
         return walletDto;
     }
+
     private void markWalletAsNotActual(List<Wallet> list) {
         list.forEach(wallet -> {
             if (wallet.isActual()) {
@@ -87,9 +92,49 @@ public class WalletServiceImpl implements WalletService {
     private Individual getIndividual(String icp) {
         return individualCrudRepository
                 .findByIcp(icp)
-                .orElseThrow(()-> new IndividualNotFoundException(
-                        "Individual with icp "
-                        + icp
-                        + " not found"));
+                .orElseThrow(() -> new IndividualNotFoundException(
+                        "Individual with icp " + icp + " not found"));
+    }
+
+    private Wallet getWalletByWalletId(String walletId) {
+        return walletCrudRepository
+                .findByWalletId(walletId)
+                .filter(Wallet::isActual)
+                .orElseThrow(() -> new WalletNotFoundException(
+                        "Wallet with id "
+                                + walletId
+                                + " not found"
+                ));
+    }
+
+    public WalletDto getWalletByMobileAndCurrency(String mobile, CurrencyType currencyType) {
+
+        return walletMapper.toDto(contactMediumService
+                .getContactMediumByTypeAndValue(ContactMediumType.PHONE, mobile)
+                .getIndividual()
+                .getWallet()
+                .stream()
+                .filter(wallet -> wallet.getCurrencyType().compareTo(currencyType) == 0
+                        && wallet.isActual())
+                .findFirst()
+                .orElseThrow(() -> new WalletNotFoundException(
+                        "Wallet for mobile "
+                                + mobile
+                                + " with currency "
+                                + currencyType
+                                + " not found"
+
+                )));
+    }
+
+    @Override
+    public WalletDto update(String walletId, BigDecimal balance) {
+        Wallet wallet = walletCrudRepository.findByWalletId(walletId).orElseThrow(
+                () -> new WalletNotFoundException("Wallet with walletId "
+                        + walletId
+                        + " not found")
+        );
+        wallet.setBalance(balance);
+        return walletMapper.toDto(walletCrudRepository.save(wallet));
     }
 }

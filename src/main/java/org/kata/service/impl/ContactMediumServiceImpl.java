@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.kata.controller.dto.ContactMediumDto;
 import org.kata.entity.ContactMedium;
 import org.kata.entity.Individual;
+import org.kata.entity.enums.ContactMediumType;
 import org.kata.exception.ContactMediumNotFoundException;
 import org.kata.exception.IndividualNotFoundException;
 import org.kata.repository.ContactMediumCrudRepository;
@@ -73,6 +74,14 @@ public class ContactMediumServiceImpl implements ContactMediumService {
         }).orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + dto.getIcp() + " not found"));
     }
 
+    public ContactMedium getContactMediumByTypeAndValue(ContactMediumType type, String value) {
+        return contactMediumCrudRepository
+                .findByTypeAndValue(type, value)
+                .orElseThrow(() -> new ContactMediumNotFoundException("No contact medium found with type "
+                        + type
+                        + " and value "
+                        + value));
+    }
     private void markContactMediumAsNotActual(List<ContactMedium> list) {
         list.forEach(contactMedium -> {
             if (contactMedium.isActual()) {
