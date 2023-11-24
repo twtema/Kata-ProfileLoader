@@ -1,5 +1,9 @@
 package org.kata.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.kata.controller.dto.AddressDto;
 import org.kata.exception.AddressNotFoundException;
@@ -15,21 +19,33 @@ import org.springframework.web.bind.annotation.*;
 public class AddressController {
     private final AddressService addressService;
 
+    @Operation(summary = "Получить Address по icp",
+            description= "Возвращает DTO Address по ICP")
+
     @GetMapping("/getActual")
-    public ResponseEntity<AddressDto> getAddress(@RequestParam(required = false) String id,
-                                                 @RequestParam(required = false) String type) {
+    public ResponseEntity<AddressDto> getAddress(
+            @Parameter(description = "ICP Address")
+            @RequestParam(required = false) String id,
+            @RequestParam(required = false) String type) {
+
         if (id != null && type != null) {
             return new ResponseEntity<>(addressService.getAddress(id, type), HttpStatus.OK);
         } else if (id != null) {
             return new ResponseEntity<>(addressService.getAddress(id), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
     }
 
+    @Operation(summary = "Создать новый Address", description = "Сохраняет и возвращает DTO нового адреса")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Address успешно создан"),
+            @ApiResponse(responseCode = "400", description = "Неверный запрос")
+    })
 
     @PostMapping
-    public ResponseEntity<AddressDto> postAddress(@RequestBody AddressDto dto) {
+    public ResponseEntity<AddressDto> postAddress(
+            @Parameter(description = "DTO Address для создания")
+            @RequestBody AddressDto dto) {
         return new ResponseEntity<>(addressService.saveAddress(dto), HttpStatus.CREATED);
     }
 

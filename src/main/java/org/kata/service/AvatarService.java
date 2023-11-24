@@ -1,6 +1,5 @@
 package org.kata.service;
 
-import org.kata.controller.dto.AddressDto;
 import org.kata.controller.dto.AvatarDto;
 
 public interface AvatarService {
