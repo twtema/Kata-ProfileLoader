@@ -11,14 +11,22 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("v1/address")
+@RequestMapping("/v1/address")
 public class AddressController {
     private final AddressService addressService;
 
-    @GetMapping
-    public ResponseEntity<AddressDto> getAddress(@RequestParam String icp) {
-        return new ResponseEntity<>(addressService.getAddress(icp), HttpStatus.OK);
+    @GetMapping("/getActual")
+    public ResponseEntity<AddressDto> getAddress(@RequestParam(required = false) String id,
+                                                 @RequestParam(required = false) String type) {
+        if (id != null && type != null) {
+            return new ResponseEntity<>(addressService.getAddress(id, type), HttpStatus.OK);
+        } else if (id != null) {
+            return new ResponseEntity<>(addressService.getAddress(id), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
     }
+
 
     @PostMapping
     public ResponseEntity<AddressDto> postAddress(@RequestBody AddressDto dto) {
@@ -31,3 +39,4 @@ public class AddressController {
         return new ErrorMessage(e.getMessage());
     }
 }
+

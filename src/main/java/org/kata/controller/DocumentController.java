@@ -17,9 +17,16 @@ import java.util.List;
 public class DocumentController {
     private final DocumentService documentService;
 
-    @GetMapping
-    public ResponseEntity<List<DocumentDto>> getDocument(@RequestParam String icp) {
-        return new ResponseEntity<>(documentService.getDocument(icp), HttpStatus.OK);
+    @GetMapping("/getActual")
+    public ResponseEntity<List<DocumentDto>> getDocument(@RequestParam(required = false) String id,
+                                                         @RequestParam(required = false) String type) {
+        if (id != null && type != null) {
+            return new ResponseEntity<>(documentService.getDocument(id, type), HttpStatus.OK);
+        } else if (id != null) {
+            return new ResponseEntity<>(documentService.getDocument(id), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping

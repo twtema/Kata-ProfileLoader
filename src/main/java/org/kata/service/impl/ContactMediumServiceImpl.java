@@ -2,9 +2,14 @@ package org.kata.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.kata.controller.dto.AvatarDto;
 import org.kata.controller.dto.ContactMediumDto;
+import org.kata.entity.Avatar;
 import org.kata.entity.ContactMedium;
 import org.kata.entity.Individual;
+import org.kata.entity.enums.ContactMediumType;
+import org.kata.exception.AddressNotFoundException;
+import org.kata.exception.AvatarNotFoundException;
 import org.kata.exception.ContactMediumNotFoundException;
 import org.kata.exception.IndividualNotFoundException;
 import org.kata.repository.ContactMediumCrudRepository;
@@ -13,6 +18,7 @@ import org.kata.service.ContactMediumService;
 import org.kata.service.mapper.ContactMediumMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -71,6 +77,16 @@ public class ContactMediumServiceImpl implements ContactMediumService {
             contactMediumDto.setIcp(dto.getIcp());
             return contactMediumDto;
         }).orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + dto.getIcp() + " not found"));
+    }
+
+
+    @Override
+    public List<ContactMediumDto> getContactMedium(String icp, String uuid) {
+        if (uuid.equals("uuid")) {
+            return getContactMedium(icp);
+        } else {
+            throw new IllegalArgumentException("Invalid type");
+        }
     }
 
     private void markContactMediumAsNotActual(List<ContactMedium> list) {

@@ -9,4 +9,6 @@ public interface DocumentService {
     List<DocumentDto> getDocument(String icp);
 
     DocumentDto saveDocument(DocumentDto dto);
+
+    List <DocumentDto> getDocument (String icp, String uuid);
 }

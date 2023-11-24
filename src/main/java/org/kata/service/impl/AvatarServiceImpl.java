@@ -2,9 +2,12 @@ package org.kata.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.kata.controller.dto.AddressDto;
 import org.kata.controller.dto.AvatarDto;
+import org.kata.entity.Address;
 import org.kata.entity.Avatar;
 import org.kata.entity.Individual;
+import org.kata.exception.AddressNotFoundException;
 import org.kata.exception.AvatarNotFoundException;
 import org.kata.exception.IndividualNotFoundException;
 import org.kata.repository.AvatarCrudRepository;
@@ -71,6 +74,15 @@ public class AvatarServiceImpl implements AvatarService {
             avatarDto.setIcp(dto.getIcp());
             return avatarDto;
         }).orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + dto.getIcp() + " not found"));
+    }
+
+    @Override
+    public AvatarDto getAvatar(String icp, String uuid) {
+        if (uuid.equals("uuid")) {
+            return getAvatar(icp);
+        } else {
+            throw new IllegalArgumentException("Invalid type");
+        }
     }
 
     private void markAvatarAsNotActual(List<Avatar> list) {

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.kata.controller.dto.IndividualDto;
 import org.kata.entity.Individual;
 import org.kata.entity.IndividualRelatedEntity;
+import org.kata.exception.ContactMediumNotFoundException;
 import org.kata.exception.IndividualNotFoundException;
 import org.kata.repository.IndividualCrudRepository;
 import org.kata.service.IndividualService;
@@ -27,7 +28,11 @@ public class IndividualServiceImp implements IndividualService {
     public IndividualDto getIndividual(String icp) {
         Individual entity = individualCrudRepository.findByIcp(icp)
                 .orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + icp + " not found"));
-        return individualMapper.toDto(entity);
+        if (!(entity == null)) {
+            return individualMapper.toDto(entity);
+        } else {
+            throw new IndividualNotFoundException("Individual with uuid: " + icp + " not found");
+        }
     }
 
     @Override
@@ -49,6 +54,17 @@ public class IndividualServiceImp implements IndividualService {
 
         return individualMapper.toDto(entity);
     }
+
+    @Override
+    public IndividualDto getIndividual(String icp, String uuid) {
+        if (uuid.equals("uuid")) {
+            return getIndividual(icp);
+        } else {
+            throw new IllegalArgumentException("Invalid Type");
+        }
+
+    }
+
 
     private void processCollection(Collection<? extends IndividualRelatedEntity> collection, Individual entity) {
         if (!CollectionUtils.isEmpty(collection)) {

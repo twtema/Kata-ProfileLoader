@@ -6,4 +6,6 @@ public interface IndividualService {
     IndividualDto getIndividual(String icp);
 
     IndividualDto saveIndividual(IndividualDto dto);
+
+    IndividualDto getIndividual(String icp, String uuid);
 }

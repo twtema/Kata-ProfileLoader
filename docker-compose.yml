@@ -4,7 +4,7 @@ services:
     image: postgres:14.8-alpine3.18
     environment:
       POSTGRES_DB: "profile-loader"
-      POSTGRES_USER: "kata"
+      POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "kata"
     volumes:
       - .:/docker-entrypoint-initdb.d

@@ -2,9 +2,12 @@ package org.kata.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.kata.controller.dto.ContactMediumDto;
 import org.kata.controller.dto.DocumentDto;
+import org.kata.entity.ContactMedium;
 import org.kata.entity.Document;
 import org.kata.entity.Individual;
+import org.kata.exception.ContactMediumNotFoundException;
 import org.kata.exception.DocumentsNotFoundException;
 import org.kata.exception.IndividualNotFoundException;
 import org.kata.repository.DocumentCrudRepository;
@@ -74,6 +77,15 @@ public class DocumentServiceImpl implements DocumentService {
             documentDto.setIcp(dto.getIcp());
             return documentDto;
         }).orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + dto.getIcp() + " not found"));
+    }
+
+    @Override
+    public List<DocumentDto> getDocument(String icp, String uuid) {
+        if (uuid.equals("uuid")) {
+            return getDocument(icp);
+        } else {
+            throw new IllegalArgumentException("Invalid type");
+        }
     }
 
     private void markDocumentAsNotActual(List<Document> list) {
