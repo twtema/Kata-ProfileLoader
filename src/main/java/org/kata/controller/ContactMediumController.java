@@ -23,7 +23,7 @@ public class ContactMediumController {
     private final ContactMediumService contactMediumService;
 
     @Operation(summary = "Получить ContactMedium по icp",
-            description= "Возвращает DTO ContactMedium по ICP")
+            description = "Возвращает DTO ContactMedium по ICP")
 
     @GetMapping("/getActual")
     public ResponseEntity<List<ContactMediumDto>> getContactMedium(
@@ -35,9 +35,8 @@ public class ContactMediumController {
             return new ResponseEntity<>(contactMediumService.getContactMedium(id, type), HttpStatus.OK);
         } else if (id != null) {
             return new ResponseEntity<>(contactMediumService.getContactMedium(id), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @Operation(summary = "Создать новый ContactMedium", description = "Сохраняет и возвращает DTO нового контакта")

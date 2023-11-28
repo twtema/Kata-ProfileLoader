@@ -22,7 +22,7 @@ public class AvatarController {
     private final AvatarService avatarService;
 
     @Operation(summary = "Получить Avatar по icp",
-            description= "Возвращает DTO Avatar по ICP")
+            description = "Возвращает DTO Avatar по ICP")
 
     @GetMapping("/getActual")
     public ResponseEntity<AvatarDto> getAddress(
@@ -34,10 +34,11 @@ public class AvatarController {
             return new ResponseEntity<>(avatarService.getAvatar(id, type), HttpStatus.OK);
         } else if (id != null) {
             return new ResponseEntity<>(avatarService.getAvatar(id), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
+
 
     @Operation(summary = "Создать новый Avatar", description = "Сохраняет и возвращает DTO нового аватара")
     @ApiResponses(value = {

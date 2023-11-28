@@ -22,7 +22,7 @@ public class DocumentController {
     private final DocumentService documentService;
 
     @Operation(summary = "Получить Document по icp",
-            description= "Возвращает DTO Document по ICP")
+            description = "Возвращает DTO Document по ICP")
 
     @GetMapping("/getActual")
     public ResponseEntity<List<DocumentDto>> getDocument(
@@ -34,9 +34,8 @@ public class DocumentController {
             return new ResponseEntity<>(documentService.getDocument(id, type), HttpStatus.OK);
         } else if (id != null) {
             return new ResponseEntity<>(documentService.getDocument(id), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping

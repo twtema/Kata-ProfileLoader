@@ -30,9 +30,8 @@ public class IndividualController {
             return new ResponseEntity<>(individualService.getIndividual(id, type), HttpStatus.OK);
         } else if (id != null) {
             return new ResponseEntity<>(individualService.getIndividual(id), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @Operation(summary = "Создать нового Individual", description = "Сохраняет и возвращает DTO нового индивида")
