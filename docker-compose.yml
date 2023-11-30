@@ -39,17 +39,14 @@ services:
       - kafka
       - pgadmin
     image: profile-loader
-#    build: ./
     container_name: "profile-loader"
     ports:
         - 8081:8081
     restart: always
     environment:
-      PGUSER: kata
-      PGHOST: localhost
+
+      SPRING_DATASOURCE_USER: kata
+      SPRING_DATASOURCE_PASSWORD: kata
+      SPRING_DATASOURCE_PORT: 5432
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres/profile-loader
 
-      PGDATABASE: profile-loader
-
-      PGPASSWORD: kata
-      PGPORT: 5432
