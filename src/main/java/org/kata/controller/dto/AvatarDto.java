@@ -19,4 +19,5 @@ public class AvatarDto {
 
     @Schema(description = "Данные изображения")
     private byte[] imageData;
+
 }
