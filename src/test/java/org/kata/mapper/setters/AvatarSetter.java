@@ -7,19 +7,17 @@ import java.util.Random;
 import java.util.stream.Stream;
 
 
-public class AvatarSetter implements Setter {
+public class AvatarSetter implements Setter<Avatar, AvatarDto> {
 
     @Override
-    public void setEntityFields(Object avatarObject) {
-        Avatar avatar = (Avatar) avatarObject;
-        StringFieldsSetterUtil.set(avatarObject);
+    public void setEntityFields(Avatar avatar) {
+        StringFieldsSetterUtil.set(avatar);
         avatar.setImageData(generateByteArray());
     }
 
     @Override
-    public void setDtoFields(Object avatarDtoObject) {
-        AvatarDto avatarDto = (AvatarDto) avatarDtoObject;
-        StringFieldsSetterUtil.set(avatarDtoObject);
+    public void setDtoFields(AvatarDto avatarDto) {
+        StringFieldsSetterUtil.set(avatarDto);
         avatarDto.setImageData(generateByteArray());
     }
 

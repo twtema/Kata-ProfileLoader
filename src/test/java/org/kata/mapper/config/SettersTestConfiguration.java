@@ -26,4 +26,8 @@ public class SettersTestConfiguration {
     public IndividualSetter individualSetter() {
         return new IndividualSetter();
     }
+    @Bean
+    public WalletSetter walletSetter() {
+        return new WalletSetter();
+    }
 }

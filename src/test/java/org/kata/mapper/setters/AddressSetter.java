@@ -3,18 +3,16 @@ package org.kata.mapper.setters;
 import org.kata.controller.dto.AddressDto;
 import org.kata.entity.Address;
 
-public class AddressSetter implements Setter {
+public class AddressSetter implements Setter<Address, AddressDto> {
 
 
     @Override
-    public void setEntityFields(Object addressObject) {
-        Address address = (Address) addressObject;
-        StringFieldsSetterUtil.set(addressObject);
+    public void setEntityFields(Address address) {
+        StringFieldsSetterUtil.set(address);
     }
 
     @Override
-    public void setDtoFields(Object addressDtoObject) {
-        AddressDto addressDto = (AddressDto) addressDtoObject;
-        StringFieldsSetterUtil.set(addressDtoObject);
+    public void setDtoFields(AddressDto addressDto) {
+        StringFieldsSetterUtil.set(addressDto);
     }
 }

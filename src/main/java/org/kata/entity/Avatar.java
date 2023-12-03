@@ -2,8 +2,10 @@ package org.kata.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -18,8 +20,12 @@ public class Avatar implements IndividualRelatedEntity {
     @Column(name = "filename")
     private String filename;
 
+    @Column(name = "hex")
+    private String hex;
+
     @Lob
-    @Column(name = "image_data", columnDefinition = "BLOB")
+    @Type(type="org.hibernate.type.ImageType")
+    @Column(name = "image_data")
     private byte[] imageData;
 
     @ManyToOne
@@ -28,4 +34,17 @@ public class Avatar implements IndividualRelatedEntity {
 
     @Column(name = "is_actual")
     private boolean isActual;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Avatar avatar = (Avatar) o;
+        return Objects.equals(hex, avatar.hex);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(hex);
+    }
 }
