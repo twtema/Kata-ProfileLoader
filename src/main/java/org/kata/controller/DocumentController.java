@@ -24,18 +24,15 @@ public class DocumentController {
     @Operation(summary = "Получить Document по icp",
             description = "Возвращает DTO Document по ICP")
 
-    @GetMapping("/getActual")
+    @GetMapping
     public ResponseEntity<List<DocumentDto>> getDocument(
-            @Parameter(description = "ICP Document")
-            @RequestParam(required = false) String id,
+            @Parameter(description = "ICP Document") String id,
             @RequestParam(required = false) String type) {
 
-        if (id != null && type != null) {
-            return new ResponseEntity<>(documentService.getDocument(id, type), HttpStatus.OK);
-        } else if (id != null) {
+        if (type == null) {
             return new ResponseEntity<>(documentService.getDocument(id), HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(documentService.getDocument(id, type), HttpStatus.OK);
     }
 
     @PostMapping

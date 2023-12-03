@@ -22,16 +22,15 @@ public class IndividualController {
     private final IndividualService individualService;
 
     @Operation(summary = "Получить Individual по ICP", description = "Возвращает DTO Individual по ICP")
-    @GetMapping("/getActual")
+    @GetMapping
     public ResponseEntity<IndividualDto> getIndividual(
-            @Parameter(description = "ICP Individual") @RequestParam(required = false) String id,
+            @Parameter(description = "ICP Individual") String id,
             @RequestParam(required = false) String type) {
-        if (id != null && type != null) {
-            return new ResponseEntity<>(individualService.getIndividual(id, type), HttpStatus.OK);
-        } else if (id != null) {
+
+        if (type == null) {
             return new ResponseEntity<>(individualService.getIndividual(id), HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(individualService.getIndividual(id, type), HttpStatus.OK);
     }
 
     @Operation(summary = "Создать нового Individual", description = "Сохраняет и возвращает DTO нового индивида")

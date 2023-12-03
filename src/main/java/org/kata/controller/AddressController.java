@@ -15,25 +15,22 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/address")
+@RequestMapping("v1/address")
 public class AddressController {
     private final AddressService addressService;
 
     @Operation(summary = "Получить Address по icp",
-            description= "Возвращает DTO Address по ICP")
+            description = "Возвращает DTO Address по ICP")
 
-    @GetMapping("/getActual")
+    @GetMapping
     public ResponseEntity<AddressDto> getAddress(
-            @Parameter(description = "ICP Address")
-            @RequestParam(required = false) String id,
+            @Parameter(description = "ICP Address") String id,
             @RequestParam(required = false) String type) {
 
-        if (id != null && type != null) {
-            return new ResponseEntity<>(addressService.getAddress(id, type), HttpStatus.OK);
-        } else if (id != null) {
+        if (type == null) {
             return new ResponseEntity<>(addressService.getAddress(id), HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(addressService.getAddress(id, type), HttpStatus.OK);
     }
 
     @Operation(summary = "Создать новый Address", description = "Сохраняет и возвращает DTO нового адреса")
