@@ -41,7 +41,7 @@ services:
 
     volumes:
       - ./scripts/grafana:/var/lib/grafana
-      - ./scripts/grafana/provisioning/dashboards:/var/lib/grafana/provisioning/dashboards
+#      - ./scripts/grafana/provisioning/dashboards:/var/lib/grafana/provisioning/dashboards
     user: "1000:1000"
     environment:
       - GF_SECURITY_ADMIN_USER=admin
