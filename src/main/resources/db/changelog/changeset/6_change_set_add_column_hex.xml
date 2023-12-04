@@ -5,7 +5,7 @@
 
     <changeSet id="add_column_hex" author="defeatedSanity">
         <addColumn tableName="avatar">
-            <column name="hex" type="CHAR(40)"/>
+            <column name="hex" type="VARCHAR(40)"/>
         </addColumn>
     </changeSet>
 
