@@ -9,14 +9,12 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import java.util.List;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-
 public interface DocumentMapper {
 
     Document toEntity(DocumentDto documentDto);
 
     @Mapping(target = "actual", source = "actual", defaultValue = "false")
     DocumentDto toDto(Document documents);
-
 
     @Mapping(target = "actual", source = "actual", defaultValue = "false")
     List<DocumentDto> toDto(List<Document> documents);
