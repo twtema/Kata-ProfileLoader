@@ -21,6 +21,12 @@ import java.util.List;
 public class DocumentController {
     private final DocumentService documentService;
 
+    @Operation(summary = "Get all documents")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful retrieval all documents"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     @GetMapping("/getAll")
     public ResponseEntity<List<DocumentDto>> getDocument(@RequestParam String icp) {
         return new ResponseEntity<>(documentService.getAllDocuments(icp), HttpStatus.OK);
