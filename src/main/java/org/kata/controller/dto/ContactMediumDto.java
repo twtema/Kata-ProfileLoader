@@ -15,7 +15,7 @@ public class ContactMediumDto {
     @Schema(description = "ICP", example = "1234567890")
     private String icp;
 
-    @Schema(description = "Тип контактной среды", example = "email/телефон")
+    @Schema(description = "Тип контактной среды", example = "EMAIL")
     private ContactMediumType type;
 
     @Schema(description = "Значение", example = "example@mail.ru/+7-666-555-44-33")

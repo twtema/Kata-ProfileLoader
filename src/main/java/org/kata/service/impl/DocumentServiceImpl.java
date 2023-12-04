@@ -38,6 +38,8 @@ public class DocumentServiceImpl implements DocumentService {
             if (!documents.isEmpty()) {
                 List<DocumentDto> documentDtos = documentMapper.toDto(documents);
                 documentDtos.forEach(doc -> doc.setIcp(icp));
+                documentDtos.forEach(doc -> doc.setActual(doc.isActual()));
+
                 return documentDtos;
             } else {
                 throw new DocumentsNotFoundException("No Document found for individual with icp: " + icp);
