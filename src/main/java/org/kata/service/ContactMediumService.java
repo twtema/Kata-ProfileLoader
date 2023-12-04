@@ -9,4 +9,5 @@ public interface ContactMediumService {
     List<ContactMediumDto> getContactMedium(String icp);
 
     ContactMediumDto saveContactMedium(ContactMediumDto dto);
+
 }

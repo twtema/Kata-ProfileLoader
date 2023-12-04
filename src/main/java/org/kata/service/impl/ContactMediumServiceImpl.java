@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -35,7 +34,7 @@ public class ContactMediumServiceImpl implements ContactMediumService {
             if (!contacts.isEmpty()) {
                 List<ContactMedium> contactMedium = contacts.stream()
                         .filter(ContactMedium::isActual)
-                        .collect(Collectors.toList());
+                        .toList();
                 List<ContactMediumDto> contactMediumDtos = contactMediumMapper.toDto(contactMedium);
                 contactMediumDtos.forEach(cm -> cm.setIcp(icp));
                 return contactMediumDtos;
@@ -55,7 +54,7 @@ public class ContactMediumServiceImpl implements ContactMediumService {
             List<ContactMedium> contactMediums = ind.getContacts();
             List<ContactMedium> markOldContact = contactMediums.stream()
                     .filter(contact -> dto.getType().equals(contact.getType()))
-                    .collect(Collectors.toList());
+                    .toList();
             markContactMediumAsNotActual(markOldContact);
 
             ContactMedium contactMedium = contactMediumMapper.toEntity(dto);
