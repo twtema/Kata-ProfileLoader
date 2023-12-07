@@ -49,6 +49,9 @@ public class IndividualServiceImp implements IndividualService {
         processCollection(entity.getDocuments(), entity);
         processCollection(entity.getContacts(), entity);
         processCollection(entity.getAvatar(), entity);
+        processCollection(entity.getWallet(), entity);
+
+        entity.getAvatar().get(0).setActual(true);
 
         log.info("Create new Individual: {}", entity);
 
@@ -66,7 +69,16 @@ public class IndividualServiceImp implements IndividualService {
         }
     }
 
+
     private String generateUuid() {
         return UUID.randomUUID().toString();
+    }
+
+    @Override
+    public Individual getIndividualEntity(String icp) {
+        return individualCrudRepository
+                .findByIcp(icp)
+                .orElseThrow(() -> new IndividualNotFoundException(
+                        "Individual with icp " + icp + " not found"));
     }
 }

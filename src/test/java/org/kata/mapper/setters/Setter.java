@@ -1,7 +1,7 @@
 package org.kata.mapper.setters;
 
-public interface Setter {
+public interface Setter<Entity, Dto> {
 
-    void setEntityFields(Object entity);
-    void setDtoFields(Object dto);
+    void setEntityFields(Entity entity);
+    void setDtoFields(Dto dto);
 }
