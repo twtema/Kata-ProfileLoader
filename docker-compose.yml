@@ -35,3 +35,21 @@ services:
       PGADMIN_DEFAULT_PASSWORD: "kata_password"
     ports:
       - "5050:80"  # Маппинг порта 80 контейнера на порт 5050 хоста
+  app:
+    depends_on:
+      - postgres
+      - zookeeper
+      - kafka
+      - pgadmin
+    image: profile-loader
+    container_name: "profile-loader"
+    ports:
+        - 8081:8081
+    restart: always
+    environment:
+
+      SPRING_DATASOURCE_USER: kata
+      SPRING_DATASOURCE_PASSWORD: kata
+      SPRING_DATASOURCE_PORT: 5432
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres/profile-loader
+
