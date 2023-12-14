@@ -31,6 +31,13 @@ public class IndividualServiceImp implements IndividualService {
     }
 
     @Override
+    public IndividualDto getIndividualByPhone(String phone) {
+        Individual entity = individualCrudRepository.findByPhone(phone)
+                .orElseThrow(() -> new IndividualNotFoundException("Individual with phone: " + phone + " not found"));
+        return individualMapper.toDto(entity);
+    }
+
+    @Override
     public IndividualDto saveIndividual(IndividualDto dto) {
         Individual entity = individualMapper.toEntity(dto);
 

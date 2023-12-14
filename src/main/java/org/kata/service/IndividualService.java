@@ -5,6 +5,7 @@ import org.kata.entity.Individual;
 
 public interface IndividualService {
     IndividualDto getIndividual(String icp);
+    IndividualDto getIndividualByPhone(String phone);
 
     IndividualDto saveIndividual(IndividualDto dto);
 
