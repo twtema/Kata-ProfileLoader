@@ -44,12 +44,42 @@ services:
     image: profile-loader
     container_name: "profile-loader"
     ports:
-        - 8081:8081
+        - "8081:8081"
     restart: always
     environment:
-
       SPRING_DATASOURCE_USER: kata
       SPRING_DATASOURCE_PASSWORD: kata
       SPRING_DATASOURCE_PORT: 5432
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres/profile-loader
-
+  grafana:
+    build: './scripts/grafana'
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./scripts/grafana:/var/lib/grafana
+      - ./scripts/grafana/provisioning/dashboards:/var/lib/grafana/provisioning/dashboards
+    user: "1000:1000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      monitoring:
+        aliases:
+          - grafana
+  prometheus:
+      image: prom/prometheus
+      user: root
+      ports:
+        - "9090:9090"
+      volumes:
+        - ./scripts/prometheus.yml:/etc/prometheus/prometheus.yml
+        - ./prometheus:/prometheus
+      extra_hosts:
+        - "host.docker.internal:host-gateway"
+      networks:
+        monitoring:
+          aliases:
+            - prometheus
+networks:
+    monitoring:
