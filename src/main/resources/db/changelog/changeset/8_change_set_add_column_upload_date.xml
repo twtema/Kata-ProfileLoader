@@ -1,0 +1,12 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="add_column_upload_date" author="masamune">
+        <addColumn tableName="avatar">
+            <column name="upload_date" type="TIMESTAMP"/>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>
