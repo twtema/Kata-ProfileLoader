@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
 
-public class IndividualSetter implements Setter {
+public class IndividualSetter implements Setter<Individual, IndividualDto> {
     @Autowired
     @Qualifier("documentSetter")
     private Setter documentSetter;
@@ -27,6 +27,9 @@ public class IndividualSetter implements Setter {
     @Qualifier("addressSetter")
     private Setter addressSetter;
     @Autowired
+    @Qualifier("walletSetter")
+    private Setter walletSetter;
+    @Autowired
     AddressMapper addressMapper;
     @Autowired
     DocumentMapper documentMapper;
@@ -34,28 +37,30 @@ public class IndividualSetter implements Setter {
     ContactMediumMapper contactMediumMapper;
     @Autowired
     AvatarMapper  avatarMapper;
+    @Autowired
+    WalletMapper walletMapper;
 
     @Override
-    public void setEntityFields(Object individualObject) {
-        Individual individual = (Individual) individualObject;
-        StringFieldsSetterUtil.set(individualObject);
+    public void setEntityFields(Individual individual) {
+        StringFieldsSetterUtil.set(individual);
         individual.setAddress(generateEntityList(new Address(), addressSetter));
         individual.setDocuments(generateEntityList(new Document(), documentSetter));
         individual.setAvatar(generateEntityList(new Avatar(), avatarSetter));
         individual.setContacts(generateEntityList(new ContactMedium(), contactSetter));
+        individual.setWallet(generateEntityList(new Wallet(), walletSetter));
         individual.setGender(GenderType.MALE);
         individual.setBirthDate(new Date());
     }
 
     @Override
-    public void setDtoFields(Object individualDtoObject) {
-        IndividualDto individualDto = (IndividualDto) individualDtoObject;
+    public void setDtoFields(IndividualDto individualDto) {
         StringFieldsSetterUtil.set(individualDto);
         individualDto.setGender(GenderType.MALE);
         individualDto.setAddress(generateDtoList(addressMapper.toDto(new Address()), addressSetter));
         individualDto.setDocuments(generateDtoList(documentMapper.toDto(new Document()), documentSetter));
         individualDto.setAvatar(generateDtoList(avatarMapper.toDto(new Avatar()), avatarSetter));
         individualDto.setContacts(generateDtoList(contactMediumMapper.toDto(new ContactMedium()), contactSetter));
+        individualDto.setWallet(generateDtoList(walletMapper.toDto(new Wallet()), walletSetter));
         individualDto.setBirthDate(new Date());
     }
 

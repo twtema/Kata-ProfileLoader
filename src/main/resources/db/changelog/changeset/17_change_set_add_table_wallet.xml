@@ -3,20 +3,21 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
 
-    <changeSet id="2" author="your_name">
-        <createTable tableName="avatar">
+    <changeSet id="17" author="defeatedSanity">
+        <createTable tableName="wallet">
             <column name="uuid" type="VARCHAR(36)">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="filename" type="VARCHAR(100)"/>
-
-            <column name="image_data" type="BLOB"/>
+            <column name="wallet_id" type="VARCHAR(50)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="currency_type" type="CHAR(3)"/>
+            <column name="balance" type="DECIMAL"/>
+            <column name="is_actual" type="BOOLEAN"/>
             <column name="individual_uuid" type="VARCHAR(36)">
                 <constraints nullable="false" foreignKeyName="fk_address_employee" references="individual(uuid)"/>
             </column>
-            <column name="is_actual" type="BOOLEAN">
-                <constraints nullable="false"/>
-            </column>
         </createTable>
     </changeSet>
+
 </databaseChangeLog>

@@ -29,18 +29,17 @@ public class DocumentServiceImpl implements DocumentService {
 
     private final DocumentMapper documentMapper;
 
-    public List<DocumentDto> getDocument(String icp) {
+    public List<DocumentDto> getAllDocuments(String icp) {
         Optional<Individual> individual = individualCrudRepository.findByIcp(icp);
 
         if (individual.isPresent()) {
             List<Document> documents = individual.get().getDocuments();
 
             if (!documents.isEmpty()) {
-                List<Document> documentList = documents.stream()
-                        .filter(Document::isActual)
-                        .collect(Collectors.toList());
-                List<DocumentDto> documentDtos = documentMapper.toDto(documentList);
+                List<DocumentDto> documentDtos = documentMapper.toDto(documents);
                 documentDtos.forEach(doc -> doc.setIcp(icp));
+                documentDtos.forEach(doc -> doc.setActual(doc.isActual()));
+
                 return documentDtos;
             } else {
                 throw new DocumentsNotFoundException("No Document found for individual with icp: " + icp);
@@ -49,6 +48,7 @@ public class DocumentServiceImpl implements DocumentService {
             throw new IndividualNotFoundException("Individual with icp: " + icp + " not found");
         }
     }
+
 
 
     public DocumentDto saveDocument(DocumentDto dto) {
