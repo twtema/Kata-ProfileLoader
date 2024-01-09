@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.kata.controller.dto.IndividualDto;
 import org.kata.entity.Individual;
 import org.kata.entity.IndividualRelatedEntity;
-import org.kata.exception.ContactMediumNotFoundException;
 import org.kata.exception.IndividualNotFoundException;
 import org.kata.repository.IndividualCrudRepository;
 import org.kata.service.IndividualService;

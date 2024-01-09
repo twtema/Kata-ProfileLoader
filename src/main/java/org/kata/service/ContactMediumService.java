@@ -1,6 +1,5 @@
 package org.kata.service;
 
-import org.kata.controller.dto.AvatarDto;
 import org.kata.controller.dto.ContactMediumDto;
 
 import java.util.List;

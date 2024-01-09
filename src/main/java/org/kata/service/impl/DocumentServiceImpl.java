@@ -2,12 +2,9 @@ package org.kata.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.kata.controller.dto.ContactMediumDto;
 import org.kata.controller.dto.DocumentDto;
-import org.kata.entity.ContactMedium;
 import org.kata.entity.Document;
 import org.kata.entity.Individual;
-import org.kata.exception.ContactMediumNotFoundException;
 import org.kata.exception.DocumentsNotFoundException;
 import org.kata.exception.IndividualNotFoundException;
 import org.kata.repository.DocumentCrudRepository;
@@ -52,8 +49,6 @@ public class DocumentServiceImpl implements DocumentService {
         }
     }
 
-
-
     public DocumentDto saveDocument(DocumentDto dto) {
         Optional<Individual> individual = individualCrudRepository.findByIcp(dto.getIcp());
 
@@ -80,9 +75,9 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public List<DocumentDto> getDocument(String icp, String uuid) {
+    public List<DocumentDto> getAllDocuments(String icp, String uuid) {
         if (uuid.equals("uuid")) {
-            return getDocument(icp);
+            return getAllDocuments(icp);
         } else {
             throw new IllegalArgumentException("Invalid type");
         }

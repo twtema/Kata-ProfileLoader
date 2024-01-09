@@ -2,12 +2,6 @@ package org.kata.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.kata.controller.dto.AddressDto;
-import org.kata.controller.dto.AvatarDto;
-import org.kata.entity.Address;
-import org.kata.entity.Avatar;
-import org.kata.entity.Individual;
-import org.kata.exception.AddressNotFoundException;
 import org.kata.controller.dto.AvatarDto;
 import org.kata.entity.Avatar;
 import org.kata.entity.Individual;
@@ -75,8 +69,6 @@ public class AvatarServiceImpl implements AvatarService {
         avatarDto.setIcp(dto.getIcp());
         return avatarDto;
     }
-
-
 
     public List<AvatarDto> getAllAvatarsDto(String icp) {
         List<Avatar> avatars = getIndividual(icp).getAvatar();

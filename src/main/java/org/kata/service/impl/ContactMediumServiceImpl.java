@@ -2,14 +2,9 @@ package org.kata.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.kata.controller.dto.AvatarDto;
 import org.kata.controller.dto.ContactMediumDto;
-import org.kata.entity.Avatar;
 import org.kata.entity.ContactMedium;
 import org.kata.entity.Individual;
-import org.kata.entity.enums.ContactMediumType;
-import org.kata.exception.AddressNotFoundException;
-import org.kata.exception.AvatarNotFoundException;
 import org.kata.exception.ContactMediumNotFoundException;
 import org.kata.exception.IndividualNotFoundException;
 import org.kata.repository.ContactMediumCrudRepository;

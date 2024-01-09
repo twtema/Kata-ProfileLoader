@@ -34,9 +34,9 @@ public class DocumentController {
             @RequestParam(required = false) String type) {
 
         if (type == null) {
-            return new ResponseEntity<>(documentService.getDocument(id), HttpStatus.OK);
+            return new ResponseEntity<>(documentService.getAllDocuments(id), HttpStatus.OK);
         }
-        return new ResponseEntity<>(documentService.getDocument(id, type), HttpStatus.OK);
+        return new ResponseEntity<>(documentService.getAllDocuments(id, type), HttpStatus.OK);
     }
 
     @Operation(summary = "Создать новый Document", description = "Сохраняет и возвращает DTO нового документа")

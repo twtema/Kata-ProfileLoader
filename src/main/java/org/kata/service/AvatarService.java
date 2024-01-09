@@ -8,6 +8,8 @@ public interface AvatarService {
 
     AvatarDto getAvatar(String icp);
 
+    AvatarDto getAvatar(String icp, String uuid);
+
     AvatarDto saveOrUpdateAvatar(AvatarDto dto, String hex);
 
     List<AvatarDto> getAllAvatarsDto(String icp);
