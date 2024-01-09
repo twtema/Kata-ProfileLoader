@@ -70,8 +70,6 @@ public class AvatarServiceImpl implements AvatarService {
         return avatarDto;
     }
 
-
-
     public List<AvatarDto> getAllAvatarsDto(String icp) {
         List<Avatar> avatars = getIndividual(icp).getAvatar();
         if (!avatars.isEmpty()) {
@@ -88,6 +86,15 @@ public class AvatarServiceImpl implements AvatarService {
                 .toList();
         avatars.removeAll(avatarsToDelete);
         avatarCrudRepository.deleteAll(avatarsToDelete);
+    }
+
+    @Override
+    public AvatarDto getAvatar(String icp, String uuid) {
+        if (uuid.equals("uuid")) {
+            return getAvatar(icp);
+        } else {
+            throw new IllegalArgumentException("Invalid type");
+        }
     }
 
     private void markAvatarAsNotActual(List<Avatar> list) {

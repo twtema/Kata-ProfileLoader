@@ -2,9 +2,7 @@ package org.kata.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.kata.controller.dto.DocumentDto;
 import org.kata.controller.dto.WalletDto;
-import org.kata.entity.Document;
 import org.kata.entity.Individual;
 import org.kata.entity.Wallet;
 import org.kata.exception.IndividualNotFoundException;
@@ -18,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j

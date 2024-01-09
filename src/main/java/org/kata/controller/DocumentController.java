@@ -21,18 +21,23 @@ import java.util.List;
 public class DocumentController {
     private final DocumentService documentService;
 
-    @Operation(summary = "Get all documents")
+    @Operation(summary = "Получить Document по icp",
+            description = "Возвращает DTO Document по ICP")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful retrieval all documents"),
             @ApiResponse(responseCode = "400", description = "Bad request"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    @GetMapping("/getAll")
-    public ResponseEntity<List<DocumentDto>> getDocument(@RequestParam String icp) {
-        return new ResponseEntity<>(documentService.getAllDocuments(icp), HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<List<DocumentDto>> getDocument(
+            @Parameter(description = "ICP Document") String id,
+            @RequestParam(required = false) String type) {
+
+        if (type == null) {
+            return new ResponseEntity<>(documentService.getAllDocuments(id), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(documentService.getAllDocuments(id, type), HttpStatus.OK);
     }
-
-
 
     @Operation(summary = "Создать новый Document", description = "Сохраняет и возвращает DTO нового документа")
     @ApiResponses(value = {
@@ -41,7 +46,8 @@ public class DocumentController {
     })
     @PostMapping
     public ResponseEntity<DocumentDto> postDocument(
-            @Parameter(description = "DTO Document для создания") @RequestBody DocumentDto dto) {
+            @Parameter(description = "DTO Document для создания")
+            @RequestBody DocumentDto dto) {
         return new ResponseEntity<>(documentService.saveDocument(dto), HttpStatus.CREATED);
     }
 

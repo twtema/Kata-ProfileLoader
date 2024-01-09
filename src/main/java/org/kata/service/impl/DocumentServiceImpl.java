@@ -49,8 +49,6 @@ public class DocumentServiceImpl implements DocumentService {
         }
     }
 
-
-
     public DocumentDto saveDocument(DocumentDto dto) {
         Optional<Individual> individual = individualCrudRepository.findByIcp(dto.getIcp());
 
@@ -74,6 +72,15 @@ public class DocumentServiceImpl implements DocumentService {
             documentDto.setIcp(dto.getIcp());
             return documentDto;
         }).orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + dto.getIcp() + " not found"));
+    }
+
+    @Override
+    public List<DocumentDto> getAllDocuments(String icp, String uuid) {
+        if (uuid.equals("uuid")) {
+            return getAllDocuments(icp);
+        } else {
+            throw new IllegalArgumentException("Invalid type");
+        }
     }
 
     private void markDocumentAsNotActual(List<Document> list) {

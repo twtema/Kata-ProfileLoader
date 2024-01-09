@@ -12,10 +12,6 @@ import org.springdoc.api.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import java.util.List;
 
@@ -27,11 +23,17 @@ public class AvatarController {
     private final AvatarService avatarService;
 
     @Operation(summary = "Получить Avatar по icp",
-            description= "Возвращает DTO Avatar по ICP")
+            description = "Возвращает DTO Avatar по ICP")
+
     @GetMapping
     public ResponseEntity<AvatarDto> getAvatar(
-            @Parameter(description = "ICP Avatar") @RequestParam String icp) {
-        return new ResponseEntity<>(avatarService.getAvatar(icp), HttpStatus.OK);
+            @Parameter(description = "ICP Avatar") String id,
+            @RequestParam(required = false) String type) {
+
+        if (type == null) {
+            return new ResponseEntity<>(avatarService.getAvatar(id), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(avatarService.getAvatar(id, type), HttpStatus.OK);
     }
 
     @Operation(summary = "Создать новый Avatar", description = "Сохраняет и возвращает DTO нового аватара")
@@ -39,16 +41,19 @@ public class AvatarController {
             @ApiResponse(responseCode = "201", description = "Avatar успешно создан"),
             @ApiResponse(responseCode = "400", description = "Неверный запрос")
     })
+
     @PostMapping
     public ResponseEntity<AvatarDto> postAvatar(@Parameter(description = "DTO Avatar для создания") @RequestBody AvatarDto dto, String hex) {
         return new ResponseEntity<>(avatarService.saveOrUpdateAvatar(dto, hex), HttpStatus.CREATED);
     }
+
     @Operation(summary = "Получить список Avatar по icp",
             description= "Возвращает список DTO Avatar по ICP")
     @GetMapping("/all")
     public ResponseEntity<List<AvatarDto>> getAllAvatars(@Parameter(description = "ICP для получения List<Avatar>") @RequestParam String icp) {
         return new ResponseEntity<>(avatarService.getAllAvatarsDto(icp), HttpStatus.OK);
     }
+
     @Operation(summary = "Запрос на удаление аватаров по icp и списку флагов",
             description = "Запрос на удаление одного или нескольких Avatar по icp и списку boolean (галочки) в соответствии со списком getAllAvatars(String icp)"
             )

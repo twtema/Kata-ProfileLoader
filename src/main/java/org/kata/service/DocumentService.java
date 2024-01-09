@@ -10,5 +10,5 @@ public interface DocumentService {
 
     DocumentDto saveDocument(DocumentDto dto);
 
-
+    List<DocumentDto> getAllDocuments(String icp, String uuid);
 }

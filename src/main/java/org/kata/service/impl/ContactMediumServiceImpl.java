@@ -73,6 +73,16 @@ public class ContactMediumServiceImpl implements ContactMediumService {
         }).orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + dto.getIcp() + " not found"));
     }
 
+
+    @Override
+    public List<ContactMediumDto> getContactMedium(String icp, String uuid) {
+        if (uuid.equals("uuid")) {
+            return getContactMedium(icp);
+        } else {
+            throw new IllegalArgumentException("Invalid type");
+        }
+    }
+
     private void markContactMediumAsNotActual(List<ContactMedium> list) {
         list.forEach(contactMedium -> {
             if (contactMedium.isActual()) {

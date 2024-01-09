@@ -25,6 +25,8 @@ public class AddressServiceImpl implements AddressService {
     private final IndividualCrudRepository individualCrudRepository;
     private final AddressMapper addressMapper;
 
+
+    @Override
     public AddressDto getAddress(String icp) {
         Optional<Individual> individual = individualCrudRepository.findByIcp(icp);
 
@@ -70,6 +72,20 @@ public class AddressServiceImpl implements AddressService {
             return addressDto;
         }).orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + dto.getIcp() + " not found"));
     }
+
+    @Override
+    public AddressDto  getAddress(String icp, String uuid) {
+        if (icp == null || uuid == null) {
+            throw new IllegalArgumentException("Invalid id or type");
+        }
+
+        if (uuid.equals("uuid")) {
+            return getAddress(icp);
+        } else {
+            throw new IllegalArgumentException("Invalid type");
+        }
+    }
+
 
     private void markAddressesAsNotActual(List<Address> list) {
         list.forEach(address -> {

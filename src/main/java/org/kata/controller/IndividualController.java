@@ -24,8 +24,13 @@ public class IndividualController {
     @Operation(summary = "Получить Individual по ICP", description = "Возвращает DTO Individual по ICP")
     @GetMapping
     public ResponseEntity<IndividualDto> getIndividual(
-            @Parameter(description = "ICP Individual") @RequestParam String icp) {
-        return new ResponseEntity<>(individualService.getIndividual(icp), HttpStatus.OK);
+            @Parameter(description = "ICP Individual") String id,
+            @RequestParam(required = false) String type) {
+
+        if (type == null) {
+            return new ResponseEntity<>(individualService.getIndividual(id), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(individualService.getIndividual(id, type), HttpStatus.OK);
     }
 
     @Operation(summary = "Создать нового Individual", description = "Сохраняет и возвращает DTO нового индивида")
