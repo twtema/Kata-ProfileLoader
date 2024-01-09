@@ -38,6 +38,12 @@ public class IndividualController {
             @Parameter(description = "DTO Individual для создания") @RequestBody IndividualDto dto) {
         return new ResponseEntity<>(individualService.saveIndividual(dto), HttpStatus.CREATED);
     }
+    @Operation(summary = "Получить Individual по номеру", description = "Возвращает DTO Individual по номеру")
+    @GetMapping("/byPhone")
+    public ResponseEntity<IndividualDto> individualByPhone(
+            @Parameter(description = "Phone Individual") @RequestParam(required = false) String phone) {
+        return new ResponseEntity<>(individualService.getIndividualByPhone(phone), HttpStatus.OK);
+    }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IndividualNotFoundException.class)

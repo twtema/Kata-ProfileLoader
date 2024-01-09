@@ -1,9 +1,9 @@
 package org.kata.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.kata.controller.dto.DocumentDto;
 import org.kata.exception.DocumentsNotFoundException;
@@ -21,13 +21,18 @@ import java.util.List;
 public class DocumentController {
     private final DocumentService documentService;
 
-    @Operation(summary = "Получить Document по icp",
-            description= "Возвращает DTO Document по ICP")
-    @GetMapping
-    public ResponseEntity<List<DocumentDto>> getDocument(
-            @Parameter(description = "ICP Document") @RequestParam String icp) {
-        return new ResponseEntity<>(documentService.getDocument(icp), HttpStatus.OK);
+    @Operation(summary = "Get all documents")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful retrieval all documents"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping("/getAll")
+    public ResponseEntity<List<DocumentDto>> getDocument(@RequestParam String icp) {
+        return new ResponseEntity<>(documentService.getAllDocuments(icp), HttpStatus.OK);
     }
+
+
 
     @Operation(summary = "Создать новый Document", description = "Сохраняет и возвращает DTO нового документа")
     @ApiResponses(value = {
