@@ -31,7 +31,7 @@ public class IndividualDto {
     @Schema(description = "Полное имя", example = "Иванов Иван Иванович")
     private String fullName;
 
-    @Schema(description = "Пол", example = "Мужской")
+    @Schema(description = "Пол", example = "MALE")
     private GenderType gender;
 
     @Schema(description = "Место рождения", example = "Москва")
@@ -61,4 +61,7 @@ public class IndividualDto {
     @Schema(description = "Аватары")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<AvatarDto> avatar;
+
+    @Schema(description = "Кошелёк")
+    private List<WalletDto> wallet;
 }

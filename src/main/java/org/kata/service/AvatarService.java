@@ -2,12 +2,15 @@ package org.kata.service;
 
 import org.kata.controller.dto.AvatarDto;
 
+import java.util.List;
+
 public interface AvatarService {
 
     AvatarDto getAvatar(String icp);
 
-    AvatarDto saveAvatar(AvatarDto dto);
+    AvatarDto saveOrUpdateAvatar(AvatarDto dto, String hex);
 
-    AvatarDto getAvatar(String icp, String uuid);
+    List<AvatarDto> getAllAvatarsDto(String icp);
 
+    void deleteAvatars(String icp, List<Boolean> flags);
 }
