@@ -1,5 +1,6 @@
 package org.kata.service.impl;
 
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.kata.controller.dto.IndividualDto;
@@ -9,8 +10,12 @@ import org.kata.exception.IndividualNotFoundException;
 import org.kata.repository.IndividualCrudRepository;
 import org.kata.service.IndividualService;
 import org.kata.service.mapper.IndividualMapper;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import redis.clients.jedis.Jedis;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -22,6 +27,9 @@ public class IndividualServiceImp implements IndividualService {
 
     private final IndividualCrudRepository individualCrudRepository;
     private final IndividualMapper individualMapper;
+    private final Jedis jedis;
+    private final ObjectMapper objectMapper;
+
 
     @Override
     public IndividualDto getIndividual(String icp) {
@@ -57,9 +65,20 @@ public class IndividualServiceImp implements IndividualService {
 
         individualCrudRepository.save(entity);
 
+        saveDataToRedis(entity);
+
         return individualMapper.toDto(entity);
     }
 
+    private void saveDataToRedis(Individual entity) {
+        try {
+            String individualJson = objectMapper.writeValueAsString(entity);
+            jedis.setex("individual:" + entity.getUuid(), 7200, individualJson);
+        } catch (JsonProcessingException e) {
+            log.error("Error saving data to Reddis: {}", e.getMessage());
+        }
+
+    }
     private void processCollection(Collection<? extends IndividualRelatedEntity> collection, Individual entity) {
         if (!CollectionUtils.isEmpty(collection)) {
             collection.forEach(item -> {

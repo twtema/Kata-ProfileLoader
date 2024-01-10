@@ -1,5 +1,7 @@
 package org.kata.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 import org.kata.entity.enums.DocumentType;
@@ -33,6 +35,7 @@ public class Document implements IndividualRelatedEntity {
     @Column(name = "expiration_date")
     private Date expirationDate;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "individual_uuid")
     private Individual individual;

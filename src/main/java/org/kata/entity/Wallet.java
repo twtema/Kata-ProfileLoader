@@ -1,5 +1,7 @@
 package org.kata.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.kata.entity.enums.CurrencyType;
@@ -20,6 +22,7 @@ public class Wallet implements IndividualRelatedEntity{
     @Column(name = "wallet_id")
     private String walletId;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "individual_uuid")
     private Individual individual;

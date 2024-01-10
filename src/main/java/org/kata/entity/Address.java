@@ -1,5 +1,7 @@
 package org.kata.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,6 +32,7 @@ public class Address implements IndividualRelatedEntity {
     @Column(name = "country")
     private String country;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "individual_uuid")
     private Individual individual;

@@ -3,6 +3,8 @@ package org.kata.entity;
 import lombok.Getter;
 import lombok.Setter;
 import org.kata.entity.enums.ContactMediumType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 
 import javax.persistence.*;
 
@@ -23,6 +25,7 @@ public class ContactMedium implements IndividualRelatedEntity {
     @Column(name = "value")
     private String value;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "individual_uuid")
     private Individual individual;

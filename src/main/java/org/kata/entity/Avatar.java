@@ -1,5 +1,7 @@
 package org.kata.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
@@ -28,6 +30,7 @@ public class Avatar implements IndividualRelatedEntity {
     @Column(name = "image_data")
     private byte[] imageData;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "individual_uuid")
     private Individual individual;

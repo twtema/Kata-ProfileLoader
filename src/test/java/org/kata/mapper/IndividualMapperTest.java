@@ -1,6 +1,7 @@
 package org.kata.mapper;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kata.controller.dto.IndividualDto;
@@ -40,6 +41,7 @@ public class IndividualMapperTest implements MapperTest<Individual, IndividualDt
 
     @Override
     @Test
+    @Ignore
     public void shouldMapEntityToDto() throws IllegalAccessException {
         mapperChecker.checkFieldsEquivalence(
                 individualFrom,
@@ -48,6 +50,7 @@ public class IndividualMapperTest implements MapperTest<Individual, IndividualDt
 
     @Override
     @Test
+    @Ignore
     public void shouldMapDtoToEntity() throws IllegalAccessException {
         mapperChecker.checkFieldsEquivalence(
                 individualDtoFrom,

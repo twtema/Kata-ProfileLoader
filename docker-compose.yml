@@ -21,13 +21,19 @@ services:
     environment:
       KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_CREATE_TOPICS: "test_topic:1:3"
+      KAFKA_CREATE_TOPICS: "test_topic:1:1"
     depends_on:
       - zookeeper
   redis:
-    image: redis/redis-stack
+    image: redis:latest
     ports:
       - "6379:6379"
+    volumes:
+      - ./redis-data:/data
+    command: [ "redis-server", "--appendonly", "yes" ]
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
   pgadmin:
     image: dpage/pgadmin4
     environment:
@@ -40,6 +46,7 @@ services:
       - postgres
       - zookeeper
       - kafka
+      - redis
       - pgadmin
     image: profile-loader
     container_name: "profile-loader"
@@ -51,35 +58,37 @@ services:
       SPRING_DATASOURCE_PASSWORD: kata
       SPRING_DATASOURCE_PORT: 5432
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres/profile-loader
-  grafana:
-    build: './scripts/grafana'
-    restart: unless-stopped
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./scripts/grafana:/var/lib/grafana
-      - ./scripts/grafana/provisioning/dashboards:/var/lib/grafana/provisioning/dashboards
-    user: "1000:1000"
-    environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-    networks:
-      monitoring:
-        aliases:
-          - grafana
-  prometheus:
-      image: prom/prometheus
-      user: root
-      ports:
-        - "9090:9090"
-      volumes:
-        - ./scripts/prometheus.yml:/etc/prometheus/prometheus.yml
-        - ./prometheus:/prometheus
-      extra_hosts:
-        - "host.docker.internal:host-gateway"
-      networks:
-        monitoring:
-          aliases:
-            - prometheus
-networks:
-    monitoring:
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+#  grafana:
+#    build: './scripts/grafana'
+#    restart: unless-stopped
+#    ports:
+#      - "3000:3000"
+#    volumes:
+#      - ./scripts/grafana:/var/lib/grafana
+#      - ./scripts/grafana/provisioning/dashboards:/var/lib/grafana/provisioning/dashboards
+#    user: "1000:1000"
+#    environment:
+#      - GF_SECURITY_ADMIN_USER=admin
+#      - GF_SECURITY_ADMIN_PASSWORD=admin
+#    networks:
+#      monitoring:
+#        aliases:
+#          - grafana
+#  prometheus:
+#      image: prom/prometheus
+#      user: root
+#      ports:
+#        - "9090:9090"
+#      volumes:
+#        - ./scripts/prometheus.yml:/etc/prometheus/prometheus.yml
+#        - ./prometheus:/prometheus
+#      extra_hosts:
+#        - "host.docker.internal:host-gateway"
+#      networks:
+#        monitoring:
+#          aliases:
+#            - prometheus
+#networks:
+#    monitoring:
