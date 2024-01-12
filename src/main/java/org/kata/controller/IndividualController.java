@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
 import org.kata.controller.dto.IndividualDto;
 import org.kata.exception.IndividualNotFoundException;
@@ -49,6 +50,21 @@ public class IndividualController {
             @Parameter(description = "Phone Individual") @RequestParam(required = false) String phone) {
         return new ResponseEntity<>(individualService.getIndividualByPhone(phone), HttpStatus.OK);
     }
+
+    @Operation(summary = "Delete an individual by icp")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful deleted of Individual"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<HttpStatus> deleteIndividual(@RequestParam String icp) {
+        System.out.println("controller loader delete icp - " + icp);
+        individualService.deleteIndividual(icp);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IndividualNotFoundException.class)

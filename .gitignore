@@ -27,3 +27,10 @@ replay_pid*
 # iml
 *.iml
 
+/.idea/
+
+/target/
+
+profile-loader.iml
+target/
+

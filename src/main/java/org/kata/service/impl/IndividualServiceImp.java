@@ -64,6 +64,17 @@ public class IndividualServiceImp implements IndividualService {
         return individualMapper.toDto(entity);
     }
 
+
+    @Override
+    public void deleteIndividual(String icp) {
+        Individual entity = individualCrudRepository.findByIcp(icp)
+                .orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + icp + " not found"));
+
+        individualCrudRepository.delete(entity);
+    }
+
+
+
     @Override
     public IndividualDto getIndividual(String icp, String uuid) {
         if (uuid.equals("uuid")) {
@@ -83,7 +94,6 @@ public class IndividualServiceImp implements IndividualService {
             });
         }
     }
-
 
     private String generateUuid() {
         return UUID.randomUUID().toString();

@@ -13,4 +13,7 @@ public interface IndividualService {
     Individual getIndividualEntity(String icp);
 
     IndividualDto getIndividual(String icp, String uuid);
+
+    void deleteIndividual(String icp);
+
 }
