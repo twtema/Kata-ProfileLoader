@@ -20,11 +20,17 @@ public class AddressController {
     private final AddressService addressService;
 
     @Operation(summary = "Получить Address по icp",
-            description= "Возвращает DTO Address по ICP")
+            description = "Возвращает DTO Address по ICP")
+
     @GetMapping
     public ResponseEntity<AddressDto> getAddress(
-            @Parameter(description = "ICP Address") @RequestParam String icp) {
-        return new ResponseEntity<>(addressService.getAddress(icp), HttpStatus.OK);
+            @Parameter(description = "ICP Address") String id,
+            @RequestParam(required = false) String type) {
+
+        if (type == null) {
+            return new ResponseEntity<>(addressService.getAddress(id), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(addressService.getAddress(id, type), HttpStatus.OK);
     }
 
     @Operation(summary = "Создать новый Address", description = "Сохраняет и возвращает DTO нового адреса")
@@ -32,9 +38,11 @@ public class AddressController {
             @ApiResponse(responseCode = "201", description = "Address успешно создан"),
             @ApiResponse(responseCode = "400", description = "Неверный запрос")
     })
+
     @PostMapping
     public ResponseEntity<AddressDto> postAddress(
-            @Parameter(description = "DTO Address для создания") @RequestBody AddressDto dto) {
+            @Parameter(description = "DTO Address для создания")
+            @RequestBody AddressDto dto) {
         return new ResponseEntity<>(addressService.saveAddress(dto), HttpStatus.CREATED);
     }
 
@@ -44,3 +52,4 @@ public class AddressController {
         return new ErrorMessage(e.getMessage());
     }
 }
+

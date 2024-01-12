@@ -6,7 +6,9 @@ import java.util.List;
 
 public interface DocumentService {
 
-    List<DocumentDto> getDocument(String icp);
+    List<DocumentDto> getAllDocuments(String icp);
 
     DocumentDto saveDocument(DocumentDto dto);
+
+    List<DocumentDto> getAllDocuments(String icp, String uuid);
 }

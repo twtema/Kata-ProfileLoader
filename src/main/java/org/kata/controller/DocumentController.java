@@ -1,9 +1,9 @@
 package org.kata.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.kata.controller.dto.DocumentDto;
 import org.kata.exception.DocumentsNotFoundException;
@@ -22,11 +22,21 @@ public class DocumentController {
     private final DocumentService documentService;
 
     @Operation(summary = "Получить Document по icp",
-            description= "Возвращает DTO Document по ICP")
+            description = "Возвращает DTO Document по ICP")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful retrieval all documents"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     @GetMapping
     public ResponseEntity<List<DocumentDto>> getDocument(
-            @Parameter(description = "ICP Document") @RequestParam String icp) {
-        return new ResponseEntity<>(documentService.getDocument(icp), HttpStatus.OK);
+            @Parameter(description = "ICP Document") String id,
+            @RequestParam(required = false) String type) {
+
+        if (type == null) {
+            return new ResponseEntity<>(documentService.getAllDocuments(id), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(documentService.getAllDocuments(id, type), HttpStatus.OK);
     }
 
     @Operation(summary = "Создать новый Document", description = "Сохраняет и возвращает DTO нового документа")
@@ -36,7 +46,8 @@ public class DocumentController {
     })
     @PostMapping
     public ResponseEntity<DocumentDto> postDocument(
-            @Parameter(description = "DTO Document для создания") @RequestBody DocumentDto dto) {
+            @Parameter(description = "DTO Document для создания")
+            @RequestBody DocumentDto dto) {
         return new ResponseEntity<>(documentService.saveDocument(dto), HttpStatus.CREATED);
     }
 

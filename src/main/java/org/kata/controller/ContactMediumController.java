@@ -23,11 +23,17 @@ public class ContactMediumController {
     private final ContactMediumService contactMediumService;
 
     @Operation(summary = "Получить ContactMedium по icp",
-            description= "Возвращает DTO ContactMedium по ICP")
+            description = "Возвращает DTO ContactMedium по ICP")
+
     @GetMapping
     public ResponseEntity<List<ContactMediumDto>> getContactMedium(
-            @Parameter(description = "ICP ContactMedium") @RequestParam String icp) {
-        return new ResponseEntity<>(contactMediumService.getContactMedium(icp), HttpStatus.OK);
+            @Parameter(description = "ICP ContactMedium") String id,
+            @RequestParam(required = false) String type) {
+
+        if (type == null) {
+            return new ResponseEntity<>(contactMediumService.getContactMedium(id), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(contactMediumService.getContactMedium(id, type), HttpStatus.OK);
     }
 
     @Operation(summary = "Создать новый ContactMedium", description = "Сохраняет и возвращает DTO нового контакта")
@@ -35,9 +41,11 @@ public class ContactMediumController {
             @ApiResponse(responseCode = "201", description = "ContactMedium успешно создан"),
             @ApiResponse(responseCode = "400", description = "Неверный запрос")
     })
+
     @PostMapping
     public ResponseEntity<ContactMediumDto> postContactMedium(
-            @Parameter(description = "DTO ContactMedium для создания") @RequestBody ContactMediumDto dto) {
+            @Parameter(description = "DTO ContactMedium для создания")
+            @RequestBody ContactMediumDto dto) {
         return new ResponseEntity<>(contactMediumService.saveContactMedium(dto), HttpStatus.CREATED);
     }
 

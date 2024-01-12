@@ -29,18 +29,17 @@ public class DocumentServiceImpl implements DocumentService {
 
     private final DocumentMapper documentMapper;
 
-    public List<DocumentDto> getDocument(String icp) {
+    public List<DocumentDto> getAllDocuments(String icp) {
         Optional<Individual> individual = individualCrudRepository.findByIcp(icp);
 
         if (individual.isPresent()) {
             List<Document> documents = individual.get().getDocuments();
 
             if (!documents.isEmpty()) {
-                List<Document> documentList = documents.stream()
-                        .filter(Document::isActual)
-                        .collect(Collectors.toList());
-                List<DocumentDto> documentDtos = documentMapper.toDto(documentList);
+                List<DocumentDto> documentDtos = documentMapper.toDto(documents);
                 documentDtos.forEach(doc -> doc.setIcp(icp));
+                documentDtos.forEach(doc -> doc.setActual(doc.isActual()));
+
                 return documentDtos;
             } else {
                 throw new DocumentsNotFoundException("No Document found for individual with icp: " + icp);
@@ -49,7 +48,6 @@ public class DocumentServiceImpl implements DocumentService {
             throw new IndividualNotFoundException("Individual with icp: " + icp + " not found");
         }
     }
-
 
     public DocumentDto saveDocument(DocumentDto dto) {
         Optional<Individual> individual = individualCrudRepository.findByIcp(dto.getIcp());
@@ -74,6 +72,15 @@ public class DocumentServiceImpl implements DocumentService {
             documentDto.setIcp(dto.getIcp());
             return documentDto;
         }).orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + dto.getIcp() + " not found"));
+    }
+
+    @Override
+    public List<DocumentDto> getAllDocuments(String icp, String uuid) {
+        if (uuid.equals("uuid")) {
+            return getAllDocuments(icp);
+        } else {
+            throw new IllegalArgumentException("Invalid type");
+        }
     }
 
     private void markDocumentAsNotActual(List<Document> list) {

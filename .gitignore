@@ -1,5 +1,6 @@
 # Compiled class file
 *.class
+target
 
 # Log file
 *.log
@@ -23,6 +24,8 @@
 hs_err_pid*
 replay_pid*
 
+# iml
+*.iml
 
 /.idea/
 
@@ -30,5 +33,4 @@ replay_pid*
 
 profile-loader.iml
 target/
-
 
