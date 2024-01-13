@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
+import java.time.ZonedDateTime;
+
 @Data
 @Builder
 @Jacksonized
@@ -20,4 +22,6 @@ public class AvatarDto {
     @Schema(description = "Данные изображения")
     private byte[] imageData;
 
+    @Schema(description = "Дата и время загрузки изображения")
+    private ZonedDateTime uploadDate;
 }

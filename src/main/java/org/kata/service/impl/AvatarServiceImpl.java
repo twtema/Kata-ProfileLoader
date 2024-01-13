@@ -59,6 +59,7 @@ public class AvatarServiceImpl implements AvatarService {
             avatar.setUuid(UUID.randomUUID().toString());
             avatar.setActual(true);
             avatar.setIndividual(individual);
+            avatar.setUploadDate(dto.getUploadDate());
             avatar.setHex(hex);
             log.info("For icp {} created new Avatar: {}", dto.getIcp(), avatar);
         }
