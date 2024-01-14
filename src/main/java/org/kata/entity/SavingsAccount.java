@@ -2,7 +2,7 @@ package org.kata.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.kata.entity.enums.Currency;
+import org.kata.entity.enums.CurrencyType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,7 +23,7 @@ public class SavingsAccount {
     private String uuid;
 
     @Column(name = "currency")
-    private Currency currency;
+    private CurrencyType currencyType;
 
 
     @Column(name = "info_Of_Percent")
