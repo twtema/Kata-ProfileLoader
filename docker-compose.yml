@@ -21,7 +21,12 @@ services:
     environment:
       KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_CREATE_TOPICS: "test_topic:1:3"
+      KAFKA_CREATE_TOPICS: "test_topic:1:1"
+      # Listener для работы с Kafka UI
+      KAFKA_LISTENERS: OUTSIDE://:9092,INTERNAL://:29092
+      KAFKA_ADVERTISED_LISTENERS: OUTSIDE://localhost:9092,INTERNAL://kafka:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
     depends_on:
       - zookeeper
   redis:
@@ -81,5 +86,17 @@ services:
         monitoring:
           aliases:
             - prometheus
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    container_name: kafka-ui
+    ports:
+      - "8888:8080"
+    depends_on:
+      - zookeeper
+      - kafka
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
 networks:
     monitoring:
