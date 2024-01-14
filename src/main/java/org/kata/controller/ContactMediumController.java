@@ -28,12 +28,17 @@ public class ContactMediumController {
     @GetMapping
     public ResponseEntity<List<ContactMediumDto>> getContactMedium(
             @Parameter(description = "ICP ContactMedium") String id,
-            @RequestParam(required = false) String type) {
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) String usage) {
 
-        if (type == null) {
+        if (type == null && usage == null) {
             return new ResponseEntity<>(contactMediumService.getContactMedium(id), HttpStatus.OK);
+        } else if (type != null && usage == null) {
+            return new ResponseEntity<>(contactMediumService.getContactMediumByType(id, type), HttpStatus.OK);
+        } else if (usage != null && type == null) {
+            return new ResponseEntity<>(contactMediumService.getContactMediumByUsage(id, usage), HttpStatus.OK);
         }
-        return new ResponseEntity<>(contactMediumService.getContactMedium(id, type), HttpStatus.OK);
+        return new ResponseEntity<>(contactMediumService.getContactMediumByTypeAndUsage(id, type, usage), HttpStatus.OK);
     }
 
     @Operation(summary = "Создать новый ContactMedium", description = "Сохраняет и возвращает DTO нового контакта")
