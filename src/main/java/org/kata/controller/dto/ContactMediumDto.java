@@ -22,6 +22,6 @@ public class ContactMediumDto {
     @Schema(description = "Использование контактной среды", example = "BUSINESS")
     private ContactMediumUsage usage;
 
-    @Schema(description = "Значение", example = "example@mail.ru")
+    @Schema(description = "Значение", example = "contact@gmail.com")
     private String value;
 }
