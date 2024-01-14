@@ -49,6 +49,27 @@ public class DocumentServiceImpl implements DocumentService {
         }
     }
 
+    public List<DocumentDto> getArchiveDocuments(String icp) {
+        Optional<Individual> individual = individualCrudRepository.findByIcp(icp);
+
+        if (individual.isPresent()) {
+            List<Document> documents = individual.get().getDocuments();
+
+            if (!documents.isEmpty()) {
+                List<Document> documentList = documents.stream()
+                        .filter(document -> !document.isActual())
+                        .toList();
+                List<DocumentDto> documentDtos = documentMapper.toDto(documentList);
+                documentDtos.forEach(doc -> doc.setIcp(icp));
+
+                return documentDtos;
+            } else {
+                throw new DocumentsNotFoundException("No Document found for individual with icp: " + icp);
+            }
+        } else {
+            throw new IndividualNotFoundException("Individual with icp: " + icp + " not found");
+        }
+    }
 
 
     public DocumentDto saveDocument(DocumentDto dto) {
