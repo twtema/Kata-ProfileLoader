@@ -24,7 +24,6 @@ public class ContactMediumController {
 
     @Operation(summary = "Получить ContactMedium по icp",
             description = "Возвращает DTO ContactMedium по ICP")
-
     @GetMapping
     public ResponseEntity<List<ContactMediumDto>> getContactMedium(
             @Parameter(description = "ICP ContactMedium") String id,
@@ -46,7 +45,6 @@ public class ContactMediumController {
             @ApiResponse(responseCode = "201", description = "ContactMedium успешно создан"),
             @ApiResponse(responseCode = "400", description = "Неверный запрос")
     })
-
     @PostMapping
     public ResponseEntity<ContactMediumDto> postContactMedium(
             @Parameter(description = "DTO ContactMedium для создания")

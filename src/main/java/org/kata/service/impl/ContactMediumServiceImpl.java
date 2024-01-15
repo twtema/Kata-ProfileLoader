@@ -57,7 +57,7 @@ public class ContactMediumServiceImpl implements ContactMediumService {
             List<ContactMedium> contactMediums = ind.getContacts();
             List<ContactMedium> markOldContact = contactMediums.stream()
                     .filter(contact -> dto.getType().equals(contact.getType())
-                    && dto.getUsage().equals(contact.getUsage()))
+                                    && dto.getUsage().equals(contact.getUsage()))
                     .collect(Collectors.toList());
             markContactMediumAsNotActual(markOldContact);
 
