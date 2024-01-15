@@ -27,7 +27,11 @@ public class IndividualServiceImp implements IndividualService {
     public IndividualDto getIndividual(String icp) {
         Individual entity = individualCrudRepository.findByIcp(icp)
                 .orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + icp + " not found"));
-        return individualMapper.toDto(entity);
+        if (!(entity == null)) {
+            return individualMapper.toDto(entity);
+        } else {
+            throw new IndividualNotFoundException("Individual with uuid: " + icp + " not found");
+        }
     }
 
     @Override
@@ -50,7 +54,6 @@ public class IndividualServiceImp implements IndividualService {
         processCollection(entity.getContacts(), entity);
         processCollection(entity.getAvatar(), entity);
         processCollection(entity.getWallet(), entity);
-        processCollection(entity.getWallet(), entity);
 
         entity.getAvatar().get(0).setActual(true);
 
@@ -69,7 +72,6 @@ public class IndividualServiceImp implements IndividualService {
             });
         }
     }
-
 
     private String generateUuid() {
         return UUID.randomUUID().toString();

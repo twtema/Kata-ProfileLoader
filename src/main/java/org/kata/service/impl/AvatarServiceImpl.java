@@ -59,6 +59,7 @@ public class AvatarServiceImpl implements AvatarService {
             avatar.setUuid(UUID.randomUUID().toString());
             avatar.setActual(true);
             avatar.setIndividual(individual);
+            avatar.setUploadDate(dto.getUploadDate());
             avatar.setHex(hex);
             log.info("For icp {} created new Avatar: {}", dto.getIcp(), avatar);
         }
@@ -69,8 +70,6 @@ public class AvatarServiceImpl implements AvatarService {
         avatarDto.setIcp(dto.getIcp());
         return avatarDto;
     }
-
-
 
     public List<AvatarDto> getAllAvatarsDto(String icp) {
         List<Avatar> avatars = getIndividual(icp).getAvatar();
@@ -88,6 +87,15 @@ public class AvatarServiceImpl implements AvatarService {
                 .toList();
         avatars.removeAll(avatarsToDelete);
         avatarCrudRepository.deleteAll(avatarsToDelete);
+    }
+
+    @Override
+    public AvatarDto getAvatar(String icp, String uuid) {
+        if (uuid.equals("uuid")) {
+            return getAvatar(icp);
+        } else {
+            throw new IllegalArgumentException("Invalid type");
+        }
     }
 
     private void markAvatarAsNotActual(List<Avatar> list) {

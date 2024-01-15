@@ -21,7 +21,12 @@ services:
     environment:
       KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_CREATE_TOPICS: "test_topic:1:3"
+      KAFKA_CREATE_TOPICS: "test_topic:1:1"
+      # Listener для работы с Kafka UI
+      KAFKA_LISTENERS: OUTSIDE://:9092,INTERNAL://:29092
+      KAFKA_ADVERTISED_LISTENERS: OUTSIDE://localhost:9092,INTERNAL://kafka:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
     depends_on:
       - zookeeper
   redis:
@@ -44,12 +49,54 @@ services:
     image: profile-loader
     container_name: "profile-loader"
     ports:
-        - 8081:8081
+        - "8081:8081"
     restart: always
     environment:
-
       SPRING_DATASOURCE_USER: kata
       SPRING_DATASOURCE_PASSWORD: kata
       SPRING_DATASOURCE_PORT: 5432
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres/profile-loader
-
+  grafana:
+    build: './scripts/grafana'
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./scripts/grafana:/var/lib/grafana
+      - ./scripts/grafana/provisioning/dashboards:/var/lib/grafana/provisioning/dashboards
+    user: "1000:1000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      monitoring:
+        aliases:
+          - grafana
+  prometheus:
+      image: prom/prometheus
+      user: root
+      ports:
+        - "9090:9090"
+      volumes:
+        - ./scripts/prometheus.yml:/etc/prometheus/prometheus.yml
+        - ./prometheus:/prometheus
+      extra_hosts:
+        - "host.docker.internal:host-gateway"
+      networks:
+        monitoring:
+          aliases:
+            - prometheus
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    container_name: kafka-ui
+    ports:
+      - "8888:8080"
+    depends_on:
+      - zookeeper
+      - kafka
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+networks:
+    monitoring:

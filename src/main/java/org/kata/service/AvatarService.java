@@ -6,7 +6,9 @@ import java.util.List;
 
 public interface AvatarService {
 
-    AvatarDto getAvatar(String uuid);
+    AvatarDto getAvatar(String icp);
+
+    AvatarDto getAvatar(String icp, String uuid);
 
     AvatarDto saveOrUpdateAvatar(AvatarDto dto, String hex);
 

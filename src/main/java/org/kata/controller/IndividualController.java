@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
 import org.kata.controller.dto.IndividualDto;
 import org.kata.exception.IndividualNotFoundException;
@@ -24,8 +25,13 @@ public class IndividualController {
     @Operation(summary = "Получить Individual по ICP", description = "Возвращает DTO Individual по ICP")
     @GetMapping
     public ResponseEntity<IndividualDto> getIndividual(
-            @Parameter(description = "ICP Individual") @RequestParam String icp) {
-        return new ResponseEntity<>(individualService.getIndividual(icp), HttpStatus.OK);
+            @Parameter(description = "ICP Individual") String id,
+            @RequestParam(required = false) String type) {
+
+        if (type == null) {
+            return new ResponseEntity<>(individualService.getIndividual(id), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(individualService.getIndividual(id, type), HttpStatus.OK);
     }
 
     @Operation(summary = "Создать нового Individual", description = "Сохраняет и возвращает DTO нового индивида")
@@ -44,6 +50,21 @@ public class IndividualController {
             @Parameter(description = "Phone Individual") @RequestParam(required = false) String phone) {
         return new ResponseEntity<>(individualService.getIndividualByPhone(phone), HttpStatus.OK);
     }
+
+    @Operation(summary = "Delete an individual by icp")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful deleted of Individual"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<HttpStatus> deleteIndividual(@RequestParam String icp) {
+        System.out.println("controller loader delete icp - " + icp);
+        individualService.deleteIndividual(icp);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IndividualNotFoundException.class)

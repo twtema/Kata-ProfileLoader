@@ -13,4 +13,6 @@ public interface ContactMediumService {
     ContactMediumDto saveContactMedium(ContactMediumDto dto);
 
     ContactMedium getContactMediumByTypeAndValue(ContactMediumType type, String value);
+
+    List<ContactMediumDto> getContactMedium(String icp, String uuid);
 }

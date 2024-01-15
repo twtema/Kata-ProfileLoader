@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.time.ZonedDateTime;
 import java.util.Objects;
 
 @Getter
@@ -27,6 +28,9 @@ public class Avatar implements IndividualRelatedEntity {
     @Type(type="org.hibernate.type.ImageType")
     @Column(name = "image_data")
     private byte[] imageData;
+
+    @Column(name = "upload_date")
+    private ZonedDateTime uploadDate;
 
     @ManyToOne
     @JoinColumn(name = "individual_uuid")
