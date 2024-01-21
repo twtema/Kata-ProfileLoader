@@ -8,6 +8,7 @@ import org.kata.entity.IndividualRelatedEntity;
 import org.kata.exception.IndividualNotFoundException;
 import org.kata.repository.IndividualCrudRepository;
 import org.kata.service.IndividualService;
+import org.kata.service.KafkaMessageSender;
 import org.kata.service.mapper.IndividualMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -18,10 +19,11 @@ import java.util.UUID;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class IndividualServiceImp implements IndividualService {
+public class IndividualServiceImpl implements IndividualService {
 
     private final IndividualCrudRepository individualCrudRepository;
     private final IndividualMapper individualMapper;
+    private final KafkaMessageSender kafkaMessageSender;
 
     @Override
     public IndividualDto getIndividual(String icp) {
@@ -74,6 +76,13 @@ public class IndividualServiceImp implements IndividualService {
     }
 
 
+
+    @Override
+    public IndividualDto saveIndividualAndSendMessage(IndividualDto dto) {
+        saveIndividual(dto);
+        kafkaMessageSender.sendMessage(dto);
+        return dto;
+    }
 
     @Override
     public IndividualDto getIndividual(String icp, String uuid) {
