@@ -6,8 +6,10 @@ import org.kata.controller.dto.ContactMediumDto;
 import org.kata.entity.ContactMedium;
 import org.kata.entity.Individual;
 import org.kata.entity.enums.ContactMediumType;
-import org.kata.entity.enums.ContactMediumUsage;
+import org.kata.entity.enums.ContactMediumUsageType;
 import org.kata.exception.ContactMediumNotFoundException;
+import org.kata.exception.ContactMediumTypeNotFoundException;
+import org.kata.exception.ContactMediumUsageNotFoundException;
 import org.kata.exception.IndividualNotFoundException;
 import org.kata.repository.ContactMediumCrudRepository;
 import org.kata.repository.IndividualCrudRepository;
@@ -56,8 +58,8 @@ public class ContactMediumServiceImpl implements ContactMediumService {
         return individual.map(ind -> {
             List<ContactMedium> contactMediums = ind.getContacts();
             List<ContactMedium> markOldContact = contactMediums.stream()
-                    .filter(contact -> dto.getType().equals(contact.getType())
-                                    && dto.getUsage().equals(contact.getUsage()))
+                    .filter(contact -> dto.getType().equals(contact.getType()))
+                    .filter(contact -> dto.getUsage().equals(contact.getUsage()))
                     .collect(Collectors.toList());
             markContactMediumAsNotActual(markOldContact);
 
@@ -78,51 +80,35 @@ public class ContactMediumServiceImpl implements ContactMediumService {
 
     @Override
     public List<ContactMediumDto> getContactMediumByType(String icp, String type) {
-        List<String> allTypes = Arrays.stream(ContactMediumType.values())
-                .map(Enum::toString)
-                .toList();
-        if (allTypes.contains(type)) {
+        if (getAllTypes().contains(type)) {
             return getContactMedium(icp).stream()
-                    .filter(c -> c.getType().toString().equals(type))
+                    .filter(contact -> type.equals(contact.getType().toString()))
                     .toList();
-        } else {
-            throw new IllegalArgumentException
-                    ("Invalid type");
         }
+        throw new ContactMediumTypeNotFoundException("Invalid type: " + type);
     }
 
     @Override
     public List<ContactMediumDto> getContactMediumByUsage(String icp, String usage) {
-        List<String> allUsages = Arrays.stream(ContactMediumUsage.values())
-                .map(Enum::toString)
-                .toList();
-        if (allUsages.contains(usage)) {
+        if (getAllUsages().contains(usage)) {
             return getContactMedium(icp).stream()
-                    .filter(c -> c.getUsage().toString().equals(usage))
+                    .filter(contact -> usage.equals(contact.getUsage().toString()))
                     .toList();
-        } else {
-            throw new IllegalArgumentException
-                    ("Invalid usage type");
         }
+        throw new ContactMediumUsageNotFoundException("Invalid usage type: " + usage);
     }
 
     @Override
     public List<ContactMediumDto> getContactMediumByTypeAndUsage(String icp, String type, String usage) {
-        List<String> allTypes = Arrays.stream(ContactMediumType.values())
-                .map(Enum::toString)
-                .toList();
-        List<String> allUsages = Arrays.stream(ContactMediumUsage.values())
-                .map(Enum::toString)
-                .toList();
-        if (!allTypes.contains(type)) {
-            throw new IllegalArgumentException
-                    ("Invalid type");
-        } else if (!allUsages.contains(usage)) {
-            throw new IllegalArgumentException
-                    ("Invalid usage type");
+        if (!getAllTypes().contains(type)) {
+            throw new ContactMediumTypeNotFoundException("Invalid type: " + type);
+        }
+        if (!getAllUsages().contains(usage)) {
+            throw new ContactMediumUsageNotFoundException("Invalid usage type: " + usage);
         }
         return getContactMedium(icp).stream()
-                .filter(c -> c.getType().toString().equals(type) && c.getUsage().toString().equals(usage))
+                .filter(contact -> type.equals(contact.getType().toString()))
+                .filter(contact -> usage.equals(contact.getUsage().toString()))
                 .toList();
     }
 
@@ -132,5 +118,17 @@ public class ContactMediumServiceImpl implements ContactMediumService {
                 contactMedium.setActual(false);
             }
         });
+    }
+
+    private List<String> getAllTypes() {
+        return Arrays.stream(ContactMediumType.values())
+                .map(Enum::toString)
+                .toList();
+    }
+
+    private List<String> getAllUsages() {
+        return Arrays.stream(ContactMediumUsageType.values())
+                .map(Enum::toString)
+                .toList();
     }
 }
