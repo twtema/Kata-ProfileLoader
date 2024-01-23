@@ -6,12 +6,19 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.kata.controller.dto.ContactMediumDto;
+import org.kata.controller.dto.RequestContactMediumDto;
 import org.kata.exception.ContactMediumNotFoundException;
 import org.kata.service.ContactMediumService;
 import org.springdoc.api.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -22,22 +29,15 @@ public class ContactMediumController {
 
     private final ContactMediumService contactMediumService;
 
-    @Operation(summary = "Получить ContactMedium по icp",
-            description = "Возвращает DTO ContactMedium по ICP")
+    @Operation(summary = "Получить ContactMedium по ICP", description = "Возвращает DTO ContactMedium по ICP")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "ContactMedium успешно получен"),
+            @ApiResponse(responseCode = "400", description = "Неверный запрос")
+    })
     @GetMapping
     public ResponseEntity<List<ContactMediumDto>> getContactMedium(
-            @Parameter(description = "ICP ContactMedium") String id,
-            @RequestParam(required = false) String type,
-            @RequestParam(required = false) String usage) {
-
-        if (type == null && usage == null) {
-            return new ResponseEntity<>(contactMediumService.getContactMedium(id), HttpStatus.OK);
-        } else if (type != null && usage == null) {
-            return new ResponseEntity<>(contactMediumService.getContactMediumByType(id, type), HttpStatus.OK);
-        } else if (usage != null && type == null) {
-            return new ResponseEntity<>(contactMediumService.getContactMediumByUsage(id, usage), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(contactMediumService.getContactMediumByTypeAndUsage(id, type, usage), HttpStatus.OK);
+            @Parameter(description = "DTO ContactMedium для запроса") RequestContactMediumDto dto) {
+        return new ResponseEntity<>(contactMediumService.getContactMedium(dto), HttpStatus.OK);
     }
 
     @Operation(summary = "Создать новый ContactMedium", description = "Сохраняет и возвращает DTO нового контакта")

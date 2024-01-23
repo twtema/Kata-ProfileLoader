@@ -3,6 +3,7 @@ package org.kata.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.kata.controller.dto.ContactMediumDto;
+import org.kata.controller.dto.RequestContactMediumDto;
 import org.kata.entity.ContactMedium;
 import org.kata.entity.Individual;
 import org.kata.entity.enums.ContactMediumType;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class ContactMediumServiceImpl implements ContactMediumService {
+
     private final ContactMediumCrudRepository contactMediumCrudRepository;
     private final IndividualCrudRepository individualCrudRepository;
     private final ContactMediumMapper contactMediumMapper;
@@ -79,37 +81,19 @@ public class ContactMediumServiceImpl implements ContactMediumService {
     }
 
     @Override
-    public List<ContactMediumDto> getContactMediumByType(String icp, String type) {
-        if (getAllTypes().contains(type)) {
-            return getContactMedium(icp).stream()
-                    .filter(contact -> type.equals(contact.getType().toString()))
-                    .toList();
+    public List<ContactMediumDto> getContactMedium(RequestContactMediumDto dto) {
+        List<ContactMediumDto> contacts = getContactMedium(dto.getIcp());
+        if (dto.getType() != null) {
+            contacts = filterByType(contacts, dto.getType());
         }
-        throw new ContactMediumTypeNotFoundException("Invalid type: " + type);
-    }
-
-    @Override
-    public List<ContactMediumDto> getContactMediumByUsage(String icp, String usage) {
-        if (getAllUsages().contains(usage)) {
-            return getContactMedium(icp).stream()
-                    .filter(contact -> usage.equals(contact.getUsage().toString()))
-                    .toList();
+        if (dto.getUsage() != null) {
+            contacts = filterByUsage(contacts, dto.getUsage());
         }
-        throw new ContactMediumUsageNotFoundException("Invalid usage type: " + usage);
-    }
-
-    @Override
-    public List<ContactMediumDto> getContactMediumByTypeAndUsage(String icp, String type, String usage) {
-        if (!getAllTypes().contains(type)) {
-            throw new ContactMediumTypeNotFoundException("Invalid type: " + type);
+        if (contacts.isEmpty()) {
+            throw new ContactMediumNotFoundException(
+                    "No ContactMedium with parameters found for individual with icp: " + dto.getIcp());
         }
-        if (!getAllUsages().contains(usage)) {
-            throw new ContactMediumUsageNotFoundException("Invalid usage type: " + usage);
-        }
-        return getContactMedium(icp).stream()
-                .filter(contact -> type.equals(contact.getType().toString()))
-                .filter(contact -> usage.equals(contact.getUsage().toString()))
-                .toList();
+        return contacts;
     }
 
     private void markContactMediumAsNotActual(List<ContactMedium> list) {
@@ -130,5 +114,25 @@ public class ContactMediumServiceImpl implements ContactMediumService {
         return Arrays.stream(ContactMediumUsageType.values())
                 .map(Enum::toString)
                 .toList();
+    }
+
+    private List<ContactMediumDto> filterByType(List<ContactMediumDto> contacts, String type) {
+        if (getAllTypes().contains(type)) {
+            return contacts.stream()
+                    .filter(contact -> type.equals(contact.getType().toString()))
+                    .toList();
+        } else {
+            throw new ContactMediumTypeNotFoundException("Invalid type: " + type);
+        }
+    }
+
+    private List<ContactMediumDto> filterByUsage(List<ContactMediumDto> contacts, String usage) {
+        if (getAllUsages().contains(usage)) {
+            return contacts.stream()
+                    .filter(contact -> usage.equals(contact.getUsage().toString()))
+                    .toList();
+        } else {
+            throw new ContactMediumUsageNotFoundException("Invalid usage: " + usage);
+        }
     }
 }
