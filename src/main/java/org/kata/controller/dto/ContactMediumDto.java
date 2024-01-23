@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 import org.kata.entity.enums.ContactMediumType;
-import org.kata.entity.enums.ContactMediumUsage;
+import org.kata.entity.enums.ContactMediumUsageType;
 
 @Data
 @Builder
@@ -20,7 +20,7 @@ public class ContactMediumDto {
     private ContactMediumType type;
 
     @Schema(description = "Использование контактной среды", example = "BUSINESS")
-    private ContactMediumUsage usage;
+    private ContactMediumUsageType usage;
 
     @Schema(description = "Значение", example = "contact@gmail.com")
     private String value;

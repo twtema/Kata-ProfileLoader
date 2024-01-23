@@ -3,7 +3,7 @@ package org.kata.entity;
 import lombok.Getter;
 import lombok.Setter;
 import org.kata.entity.enums.ContactMediumType;
-import org.kata.entity.enums.ContactMediumUsage;
+import org.kata.entity.enums.ContactMediumUsageType;
 
 import javax.persistence.*;
 
@@ -23,7 +23,7 @@ public class ContactMedium implements IndividualRelatedEntity {
 
     @Column(name = "usage")
     @Enumerated(EnumType.STRING)
-    private ContactMediumUsage usage;
+    private ContactMediumUsageType usage;
 
     @Column(name = "value")
     private String value;
