@@ -10,6 +10,7 @@ import org.kata.controller.dto.RequestContactMediumDto;
 import org.kata.exception.ContactMediumNotFoundException;
 import org.kata.service.ContactMediumService;
 import org.springdoc.api.ErrorMessage;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -35,8 +36,7 @@ public class ContactMediumController {
             @ApiResponse(responseCode = "400", description = "Неверный запрос")
     })
     @GetMapping
-    public ResponseEntity<List<ContactMediumDto>> getContactMedium(
-            @Parameter(description = "DTO ContactMedium для запроса") RequestContactMediumDto dto) {
+    public ResponseEntity<List<ContactMediumDto>> getContactMedium(@ParameterObject RequestContactMediumDto dto) {
         return new ResponseEntity<>(contactMediumService.getContactMedium(dto), HttpStatus.OK);
     }
 
