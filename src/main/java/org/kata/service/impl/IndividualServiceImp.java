@@ -21,6 +21,7 @@ import java.util.UUID;
 public class IndividualServiceImp implements IndividualService {
 
     private final IndividualCrudRepository individualCrudRepository;
+
     private final IndividualMapper individualMapper;
 
     @Override
@@ -64,7 +65,6 @@ public class IndividualServiceImp implements IndividualService {
         return individualMapper.toDto(entity);
     }
 
-
     @Override
     public void deleteIndividual(String icp) {
         Individual entity = individualCrudRepository.findByIcp(icp)
@@ -72,8 +72,6 @@ public class IndividualServiceImp implements IndividualService {
 
         individualCrudRepository.delete(entity);
     }
-
-
 
     @Override
     public IndividualDto getIndividual(String icp, String uuid) {
@@ -84,7 +82,6 @@ public class IndividualServiceImp implements IndividualService {
         }
 
     }
-
 
     private void processCollection(Collection<? extends IndividualRelatedEntity> collection, Individual entity) {
         if (!CollectionUtils.isEmpty(collection)) {

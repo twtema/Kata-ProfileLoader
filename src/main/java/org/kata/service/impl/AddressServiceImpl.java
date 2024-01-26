@@ -21,10 +21,12 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 public class AddressServiceImpl implements AddressService {
-    private final AddressCrudRepository addressCrudRepository;
-    private final IndividualCrudRepository individualCrudRepository;
-    private final AddressMapper addressMapper;
 
+    private final AddressCrudRepository addressCrudRepository;
+
+    private final IndividualCrudRepository individualCrudRepository;
+
+    private final AddressMapper addressMapper;
 
     @Override
     public AddressDto getAddress(String icp) {
@@ -50,7 +52,6 @@ public class AddressServiceImpl implements AddressService {
         }
     }
 
-
     public AddressDto saveAddress(AddressDto dto) {
         Optional<Individual> individual = individualCrudRepository.findByIcp(dto.getIcp());
 
@@ -74,7 +75,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public AddressDto  getAddress(String icp, String uuid) {
+    public AddressDto getAddress(String icp, String uuid) {
         if (icp == null || uuid == null) {
             throw new IllegalArgumentException("Invalid id or type");
         }
@@ -85,7 +86,6 @@ public class AddressServiceImpl implements AddressService {
             throw new IllegalArgumentException("Invalid type");
         }
     }
-
 
     private void markAddressesAsNotActual(List<Address> list) {
         list.forEach(address -> {

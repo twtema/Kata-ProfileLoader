@@ -9,5 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface ContactMediumCrudRepository extends CrudRepository<ContactMedium, String> {
+
     Optional<ContactMedium> findByTypeAndValue(ContactMediumType type, String value);
 }
