@@ -1,7 +1,5 @@
 package org.kata.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,8 +8,6 @@ import org.kata.controller.dto.IndividualDto;
 import org.kata.controller.dto.RequestContactMediumDto;
 import org.kata.entity.ContactMedium;
 import org.kata.entity.Individual;
-import org.kata.entity.enums.ContactMediumType;
-import org.kata.entity.enums.ContactMediumUsageType;
 import org.kata.exception.ContactMediumNotFoundException;
 import org.kata.exception.ContactMediumTypeNotFoundException;
 import org.kata.exception.ContactMediumUsageNotFoundException;
@@ -22,10 +18,8 @@ import org.kata.service.impl.ContactMediumServiceImpl;
 import org.kata.service.mapper.ContactMediumMapper;
 import org.kata.util.FileUtil;
 import org.kata.util.MapperUtil;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
@@ -34,14 +28,11 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
