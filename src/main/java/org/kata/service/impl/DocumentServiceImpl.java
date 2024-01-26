@@ -90,4 +90,25 @@ public class DocumentServiceImpl implements DocumentService {
             }
         });
     }
+
+    @Override
+    public DocumentDto updateDocumentActualState(DocumentDto dto) {
+        Optional<Individual> individual = individualCrudRepository.findByIcp(dto.getIcp());
+        return individual.map(ind -> {
+            List<Document> documents = ind.getDocuments()
+                    .stream()
+                    .filter(document -> document.getDocumentType().equals(dto.getDocumentType()))
+                    .toList();
+            markDocumentAsNotActual(documents);
+            Document document = documentMapper.toEntity(dto);
+            document.setUuid(UUID.randomUUID().toString());
+            document.setIndividual(ind);
+            document.setActual(true);
+            log.info("For icp {} created new Document: {}", dto.getIcp(), document);
+            documentCrudRepository.save(document);
+            DocumentDto documentDto = documentMapper.toDto(document);
+            documentDto.setIcp(dto.getIcp());
+            return documentDto;
+        }).orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + dto.getIcp() + " not found"));
+    }
 }

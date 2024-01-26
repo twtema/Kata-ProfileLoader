@@ -1,9 +1,9 @@
 package org.kata.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.kata.controller.dto.DocumentDto;
 import org.kata.exception.DocumentsNotFoundException;
@@ -49,6 +49,21 @@ public class DocumentController {
             @Parameter(description = "DTO Document для создания")
             @RequestBody DocumentDto dto) {
         return new ResponseEntity<>(documentService.saveDocument(dto), HttpStatus.CREATED);
+    }
+
+    @Operation(
+            summary = "Деактивация актуального документа",
+            description = "Деактивирует актуальный документ если более новый есть в топике Kafka")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Document успешно деактивирован"),
+            @ApiResponse(responseCode = "400", description = "Неверный запрос"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @PostMapping("/updateActualState")
+    public ResponseEntity<DocumentDto> updateActualState(
+            @Parameter(description = "DTO Document для деактивации")
+            @RequestBody DocumentDto dto) {
+        return new ResponseEntity<>(documentService.updateDocumentActualState(dto), HttpStatus.CREATED);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
