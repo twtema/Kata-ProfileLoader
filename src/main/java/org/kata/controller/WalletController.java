@@ -43,8 +43,6 @@ public class WalletController {
         return new ResponseEntity<>(walletService.saveWallet(dto), HttpStatus.CREATED);
     }
     @Operation(summary = "Получить Wallet по номеру телефона и валюте", description = "Возвращает WalletDto")
-    @ApiResponses(value = {
-    })
     @GetMapping("/byMobileAndCurrency")
     public ResponseEntity<WalletDto> getWalletByMobileAndCurrency(String mobile, CurrencyType currency) {
         return new ResponseEntity<>(walletService.getWalletByPhoneAndCurrency(mobile, currency), HttpStatus.OK);
