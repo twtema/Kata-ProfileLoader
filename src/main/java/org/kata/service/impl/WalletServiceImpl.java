@@ -11,15 +11,15 @@ import org.kata.exception.IndividualNotFoundException;
 import org.kata.exception.WalletNotFoundException;
 import org.kata.repository.IndividualCrudRepository;
 import org.kata.repository.WalletCrudRepository;
+import org.kata.service.ContactMediumService;
 import org.kata.service.WalletService;
 import org.kata.service.mapper.WalletMapper;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import org.kata.service.ContactMediumService;
 
 @Service
 @Slf4j
@@ -34,53 +34,59 @@ public class WalletServiceImpl implements WalletService {
 
     private final ContactMediumService contactMediumService;
 
-
-
     @Override
     public List<WalletDto> getWallet(String icp) {
-        List<Wallet> wallets = getIndividual(icp).getWallet();
-        if (!wallets.isEmpty()) {
-            return wallets
-                    .stream()
-                    .filter(Wallet::isActual)
-                    .map(wallet -> {
-                        WalletDto walletDto = walletMapper.toDto(wallet);
-                        walletDto.setIcp(icp);
-                        return walletDto;
-                    })
-                    .toList();
+        Optional<Individual> individual = individualCrudRepository.findByIcp(icp);
+
+        if (individual.isPresent()) {
+            List<Wallet> wallets = individual.get().getWallet();
+
+            if (!wallets.isEmpty()) {
+                List<Wallet> actualWallets = wallets.stream()
+                        .filter(Wallet::isActual)
+                        .toList();
+                List<WalletDto> walletDtos = walletMapper.toDto(actualWallets);
+                walletDtos.forEach(w -> w.setIcp(icp));
+                return walletDtos;
+            } else {
+                throw new WalletNotFoundException("No wallets for icp " + icp + " found");
+            }
+        } else {
+            throw new IndividualNotFoundException("Individual with icp: " + icp + " not found");
         }
-        throw new WalletNotFoundException("No wallets for icp "
-                + icp
-                + " found");
     }
 
     @Override
     public WalletDto saveWallet(WalletDto dto) {
-        Individual ind = getIndividual(dto.getIcp());
-        List<Wallet> wallets = ind.getWallet();
-        List<Wallet> oldWallet = wallets.stream()
-                .filter(wallet -> dto.getCurrencyType().equals(wallet.getCurrencyType()) && wallet.isActual())
-                .toList();
-        oldWallet.forEach(wal -> {
-            dto.setBalance(dto.getBalance().add(wal.getBalance()));
-            wal.setBalance(BigDecimal.ZERO);
-        });
-        markWalletAsNotActual(oldWallet);
+        Optional<Individual> individual = individualCrudRepository.findByIcp(dto.getIcp());
 
-        Wallet wallet = walletMapper.toEntity(dto);
-        wallet.setUuid(UUID.randomUUID().toString());
-        wallet.setActual(true);
-        wallet.setIndividual(ind);
+        return individual.map(ind -> {
+            List<Wallet> wallets = ind.getWallet();
+            List<Wallet> markOldWallet = wallets.stream()
+                    .filter(Wallet::isActual)
+                    .filter(wallet -> dto.getCurrencyType().equals(wallet.getCurrencyType()))
+                    .toList();
+            markOldWallet.forEach(old -> {
+                dto.setBalance(dto.getBalance().add(old.getBalance()));
+                old.setBalance(BigDecimal.ZERO);
+            });
+            markWalletAsNotActual(markOldWallet);
 
-        log.info("For icp {} created new Wallet: {}", dto.getIcp(), wallet);
+            Wallet wallet = walletMapper.toEntity(dto);
+            wallet.setUuid(UUID.randomUUID().toString());
+            wallet.setActual(true);
+            wallet.setIndividual(ind);
 
-        walletCrudRepository.save(wallet);
+            log.info("For icp {} created new Wallet: {}", dto.getIcp(), wallet);
 
-        WalletDto walletDto = walletMapper.toDto(wallet);
-        walletDto.setIcp(dto.getIcp());
-        return walletDto;
+            walletCrudRepository.save(wallet);
+
+            WalletDto walletDto = walletMapper.toDto(wallet);
+            walletDto.setIcp(dto.getIcp());
+            return walletDto;
+        }).orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + dto.getIcp() + " not found"));
     }
+
     private void markWalletAsNotActual(List<Wallet> list) {
         list.forEach(wallet -> {
             if (wallet.isActual()) {
@@ -101,38 +107,28 @@ public class WalletServiceImpl implements WalletService {
                 .findByWalletId(walletId)
                 .filter(Wallet::isActual)
                 .orElseThrow(() -> new WalletNotFoundException(
-                        "Wallet with id "
-                                + walletId
-                                + " not found"
+                        "Wallet with id " + walletId + " not found"
                 ));
     }
 
-    public WalletDto getWalletByMobileAndCurrency(String mobile, CurrencyType currencyType) {
-
+    public WalletDto getWalletByPhoneAndCurrency(String phone, CurrencyType currencyType) {
         return walletMapper.toDto(contactMediumService
-                .getContactMediumByTypeAndValue(ContactMediumType.PHONE, mobile)
+                .getContactMediumByTypeAndValue(ContactMediumType.PHONE, phone)
                 .getIndividual()
                 .getWallet()
                 .stream()
-                .filter(wallet -> wallet.getCurrencyType().compareTo(currencyType) == 0
-                        && wallet.isActual())
+                .filter(Wallet::isActual)
+                .filter(wallet -> wallet.getCurrencyType().compareTo(currencyType) == 0)
                 .findFirst()
                 .orElseThrow(() -> new WalletNotFoundException(
-                        "Wallet for mobile "
-                                + mobile
-                                + " with currency "
-                                + currencyType
-                                + " not found"
-
+                        "Wallet for phone " + phone + " with currency " + currencyType + " not found"
                 )));
     }
 
     @Override
-    public WalletDto update(String walletId, BigDecimal balance) {
-        Wallet wallet = walletCrudRepository.findByWalletId(walletId).orElseThrow(
-                () -> new WalletNotFoundException("Wallet with walletId "
-                        + walletId
-                        + " not found")
+    public WalletDto updateWallet(String walletId, BigDecimal balance) {
+        Wallet wallet = walletCrudRepository.findByWalletId(walletId).orElseThrow(() -> new WalletNotFoundException(
+                "Wallet with walletId " + walletId + " not found")
         );
         wallet.setBalance(balance);
         return walletMapper.toDto(walletCrudRepository.save(wallet));

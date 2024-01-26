@@ -10,8 +10,8 @@ public interface WalletService {
 
     WalletDto saveWallet(WalletDto dto);
 
-    WalletDto getWalletByMobileAndCurrency(String mobile, CurrencyType currencyType);
+    WalletDto getWalletByPhoneAndCurrency(String phone, CurrencyType currencyType);
 
-    WalletDto update(String walletId, BigDecimal balance);
+    WalletDto updateWallet(String walletId, BigDecimal balance);
 
 }

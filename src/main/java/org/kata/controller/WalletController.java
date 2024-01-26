@@ -22,14 +22,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("v1/wallet")
 public class WalletController {
+    
     private final WalletService walletService;
 
-    @Operation(summary = "Получить Wallet по icp",
-            description= "Возвращает DTO Wallet по ICP")
+    @Operation(summary = "Получить Wallet по icp", description= "Возвращает DTO Wallet по ICP")
     @GetMapping
     public ResponseEntity<List<WalletDto>> getWallet(
-            @Parameter(description = "ICP Wallet") @RequestParam String icp) {
-        return new ResponseEntity<>(walletService.getWallet(icp), HttpStatus.OK);
+            @Parameter(description = "ICP Wallet") @RequestParam String id) {
+        return new ResponseEntity<>(walletService.getWallet(id), HttpStatus.OK);
     }
 
     @Operation(summary = "Создать новый Wallet", description = "Сохраняет и возвращает DTO нового кошелька")
@@ -47,7 +47,7 @@ public class WalletController {
     })
     @GetMapping("/byMobileAndCurrency")
     public ResponseEntity<WalletDto> getWalletByMobileAndCurrency(String mobile, CurrencyType currency) {
-        return new ResponseEntity<>(walletService.getWalletByMobileAndCurrency(mobile, currency), HttpStatus.OK);
+        return new ResponseEntity<>(walletService.getWalletByPhoneAndCurrency(mobile, currency), HttpStatus.OK);
     }
 
     @Operation(summary = "Обновляет баланс Wallet по номеру кошелька", description = "Возвращает DTO обновлённого Wallet")
@@ -56,8 +56,8 @@ public class WalletController {
             @ApiResponse(responseCode = "400", description = "Неверный запрос")
     })
     @PatchMapping()
-    public ResponseEntity<WalletDto> update(String walletId, BigDecimal balance) {
-        return new ResponseEntity<>(walletService.update(walletId, balance), HttpStatus.ACCEPTED);
+    public ResponseEntity<WalletDto> updateWallet(String walletId, BigDecimal balance) {
+        return new ResponseEntity<>(walletService.updateWallet(walletId, balance), HttpStatus.ACCEPTED);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
