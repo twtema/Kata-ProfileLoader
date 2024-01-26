@@ -12,6 +12,7 @@ import org.kata.repository.ContactMediumCrudRepository;
 import org.kata.repository.IndividualCrudRepository;
 import org.kata.service.ContactMediumService;
 import org.kata.service.mapper.ContactMediumMapper;
+import org.kata.util.PhoneNumberValidator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -63,6 +64,7 @@ public class ContactMediumServiceImpl implements ContactMediumService {
             contactMedium.setUuid(UUID.randomUUID().toString());
             contactMedium.setActual(true);
             contactMedium.setIndividual(ind);
+            validatePhoneContact(dto);
 
             log.info("For icp {} created new ContactMedium: {}", dto.getIcp(), contactMedium);
 
@@ -72,6 +74,12 @@ public class ContactMediumServiceImpl implements ContactMediumService {
             contactMediumDto.setIcp(dto.getIcp());
             return contactMediumDto;
         }).orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + dto.getIcp() + " not found"));
+    }
+
+    private void validatePhoneContact(ContactMediumDto contact) {
+        if (ContactMediumType.PHONE.equals(contact.getType())) {
+            PhoneNumberValidator.validatePhoneNumbers(contact.getValue());
+        }
     }
 
     public ContactMedium getContactMediumByTypeAndValue(ContactMediumType type, String value) {

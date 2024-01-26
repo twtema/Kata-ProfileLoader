@@ -5,14 +5,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.kata.controller.dto.IndividualDto;
 import org.kata.entity.Individual;
 import org.kata.entity.IndividualRelatedEntity;
+import org.kata.entity.enums.ContactMediumType;
 import org.kata.exception.IndividualNotFoundException;
 import org.kata.repository.IndividualCrudRepository;
 import org.kata.service.IndividualService;
 import org.kata.service.mapper.IndividualMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.kata.controller.dto.ContactMediumDto;
+import org.kata.util.PhoneNumberValidator;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -56,6 +60,7 @@ public class IndividualServiceImp implements IndividualService {
         processCollection(entity.getWallet(), entity);
 
         entity.getAvatar().get(0).setActual(true);
+        validatePhoneContacts(dto.getContacts());
 
         log.info("Create new Individual: {}", entity);
 
@@ -64,6 +69,13 @@ public class IndividualServiceImp implements IndividualService {
         return individualMapper.toDto(entity);
     }
 
+    private void validatePhoneContacts(List<ContactMediumDto> contacts) {
+        for (ContactMediumDto contact : contacts) {
+            if (ContactMediumType.PHONE.equals(contact.getType())) {
+                PhoneNumberValidator.validatePhoneNumbers(contact.getValue());
+            }
+        }
+    }
 
     @Override
     public void deleteIndividual(String icp) {
