@@ -9,6 +9,7 @@ import org.kata.exception.IndividualNotFoundException;
 import org.kata.repository.IndividualCrudRepository;
 import org.kata.service.IndividualService;
 import org.kata.service.mapper.IndividualMapper;
+import org.kata.utill.EmailValidation;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -22,6 +23,7 @@ public class IndividualServiceImp implements IndividualService {
 
     private final IndividualCrudRepository individualCrudRepository;
     private final IndividualMapper individualMapper;
+    private final EmailValidation emailValidation;
 
     @Override
     public IndividualDto getIndividual(String icp) {
@@ -59,6 +61,10 @@ public class IndividualServiceImp implements IndividualService {
 
         log.info("Create new Individual: {}", entity);
 
+        if (emailValidation.emailSearch(dto)) {
+            emailValidation.validateEmail(emailValidation.getEmailValue(dto));
+        }
+
         individualCrudRepository.save(entity);
 
         return individualMapper.toDto(entity);
@@ -83,5 +89,15 @@ public class IndividualServiceImp implements IndividualService {
                 .findByIcp(icp)
                 .orElseThrow(() -> new IndividualNotFoundException(
                         "Individual with icp " + icp + " not found"));
+    }
+
+    @Override
+    public IndividualDto getIndividual(String icp, String uuid) {
+        return null;
+    }
+
+    @Override
+    public void deleteIndividual(String icp) {
+
     }
 }

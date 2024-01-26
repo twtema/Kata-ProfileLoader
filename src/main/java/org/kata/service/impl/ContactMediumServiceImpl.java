@@ -12,6 +12,7 @@ import org.kata.repository.ContactMediumCrudRepository;
 import org.kata.repository.IndividualCrudRepository;
 import org.kata.service.ContactMediumService;
 import org.kata.service.mapper.ContactMediumMapper;
+import org.kata.utill.EmailValidation;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class ContactMediumServiceImpl implements ContactMediumService {
     private final ContactMediumCrudRepository contactMediumCrudRepository;
     private final IndividualCrudRepository individualCrudRepository;
     private final ContactMediumMapper contactMediumMapper;
+    private final EmailValidation emailValidation;
 
     public List<ContactMediumDto> getContactMedium(String icp) {
         Optional<Individual> individual = individualCrudRepository.findByIcp(icp);
@@ -63,6 +65,10 @@ public class ContactMediumServiceImpl implements ContactMediumService {
             contactMedium.setUuid(UUID.randomUUID().toString());
             contactMedium.setActual(true);
             contactMedium.setIndividual(ind);
+
+            if (emailValidation.emailSearch(dto)) {
+                emailValidation.validateEmail(emailValidation.getEmailValue(dto));
+            }
 
             log.info("For icp {} created new ContactMedium: {}", dto.getIcp(), contactMedium);
 

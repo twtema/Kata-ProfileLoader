@@ -6,9 +6,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.kata.controller.dto.IndividualDto;
 import org.kata.exception.IndividualNotFoundException;
 import org.kata.service.IndividualService;
+import org.kata.utill.EmailValidation;
 import org.springdoc.api.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,8 @@ import org.springframework.web.bind.annotation.*;
 public class IndividualController {
 
     private final IndividualService individualService;
+
+    private final EmailValidation emailValidation;
 
     @Operation(summary = "Получить Individual по ICP", description = "Возвращает DTO Individual по ICP")
     @GetMapping
