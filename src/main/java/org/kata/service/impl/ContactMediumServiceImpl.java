@@ -30,9 +30,12 @@ import java.util.stream.Collectors;
 public class ContactMediumServiceImpl implements ContactMediumService {
 
     private final ContactMediumCrudRepository contactMediumCrudRepository;
+
     private final IndividualCrudRepository individualCrudRepository;
+
     private final ContactMediumMapper contactMediumMapper;
 
+    @Override
     public List<ContactMediumDto> getContactMedium(String icp) {
         Optional<Individual> individual = individualCrudRepository.findByIcp(icp);
 
@@ -54,6 +57,7 @@ public class ContactMediumServiceImpl implements ContactMediumService {
         }
     }
 
+    @Override
     public ContactMediumDto saveContactMedium(ContactMediumDto dto) {
         Optional<Individual> individual = individualCrudRepository.findByIcp(dto.getIcp());
 
@@ -91,9 +95,18 @@ public class ContactMediumServiceImpl implements ContactMediumService {
         }
         if (contacts.isEmpty()) {
             throw new ContactMediumNotFoundException(
-                    "No ContactMedium with parameters found for individual with icp: " + dto.getIcp());
+                    "No ContactMedium with parameters found for individual with icp: " + dto.getIcp()
+            );
         }
         return contacts;
+    }
+
+    public ContactMedium getContactMediumByTypeAndValue(ContactMediumType type, String value) {
+        return contactMediumCrudRepository
+                .findByTypeAndValue(type, value)
+                .orElseThrow(() -> new ContactMediumNotFoundException(
+                        "No contact medium found with type " + type + " and value " + value
+                ));
     }
 
     private void markContactMediumAsNotActual(List<ContactMedium> list) {
