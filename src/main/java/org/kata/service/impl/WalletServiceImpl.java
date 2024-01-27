@@ -11,6 +11,7 @@ import org.kata.exception.IndividualNotFoundException;
 import org.kata.exception.WalletNotFoundException;
 import org.kata.repository.IndividualCrudRepository;
 import org.kata.repository.WalletCrudRepository;
+import org.kata.service.ContactMediumService;
 import org.kata.service.WalletService;
 import org.kata.service.mapper.WalletMapper;
 import org.springframework.stereotype.Service;
@@ -18,8 +19,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import org.kata.service.ContactMediumService;
 
 @Service
 @Slf4j
@@ -33,7 +32,6 @@ public class WalletServiceImpl implements WalletService {
     private final WalletMapper walletMapper;
 
     private final ContactMediumService contactMediumService;
-
 
 
     @Override
@@ -81,6 +79,7 @@ public class WalletServiceImpl implements WalletService {
         walletDto.setIcp(dto.getIcp());
         return walletDto;
     }
+
     private void markWalletAsNotActual(List<Wallet> list) {
         list.forEach(wallet -> {
             if (wallet.isActual()) {

@@ -1,19 +1,29 @@
 version: "3.9"
 services:
+
   postgres:
     image: postgres:14.8-alpine3.18
     environment:
       POSTGRES_DB: "profile-loader"
-      POSTGRES_USER: "kata"
-      POSTGRES_PASSWORD: "kata"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
     volumes:
       - .:/docker-entrypoint-initdb.d
     ports:
       - "5433:5432"
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '0.50'
+#          memory: 512M
+#        reservations:
+#          cpus: '0.25'
+#          memory: 128M
   zookeeper:
     image: wurstmeister/zookeeper
     ports:
       - "2181:2181"
+
   kafka:
     image: wurstmeister/kafka
     ports:
@@ -24,32 +34,34 @@ services:
       KAFKA_CREATE_TOPICS: "test_topic:1:3"
     depends_on:
       - zookeeper
+
   redis:
     image: redis/redis-stack
     ports:
-      - "6379:6379"
+      - "6378:6379"
   pgadmin:
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: "kata_user@gmail.com"
       PGADMIN_DEFAULT_PASSWORD: "kata_password"
     ports:
-      - "5050:80"  # Маппинг порта 80 контейнера на порт 5050 хоста
-  app:
-    depends_on:
-      - postgres
-      - zookeeper
-      - kafka
-      - pgadmin
-    image: profile-loader
-    container_name: "profile-loader"
-    ports:
-        - 8081:8081
-    restart: always
-    environment:
+      - "5051:80"  # Маппинг порта 80 контейнера на порт 5050 хоста
 
-      SPRING_DATASOURCE_USER: kata
-      SPRING_DATASOURCE_PASSWORD: kata
-      SPRING_DATASOURCE_PORT: 5432
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres/profile-loader
+#  app:
+#    depends_on:
+#      - postgres
+#      - zookeeper
+#      - kafka
+#      - pgadmin
+#    image: profile-loader
+#    container_name: "profile-loader"
+#    ports:
+#        - 8081:8081
+#    restart: always
+#    environment:
+#
+#      SPRING_DATASOURCE_USER: kata
+#      SPRING_DATASOURCE_PASSWORD: kata
+#      SPRING_DATASOURCE_PORT: 5432
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres/profile-loader
 

@@ -1,8 +1,10 @@
 package org.kata.service;
+
 import org.kata.controller.dto.WalletDto;
-import java.util.List;
-import java.math.BigDecimal;
 import org.kata.entity.enums.CurrencyType;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 public interface WalletService {
 

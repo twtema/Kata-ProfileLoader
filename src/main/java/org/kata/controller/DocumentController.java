@@ -11,7 +11,15 @@ import org.kata.service.DocumentService;
 import org.springdoc.api.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -44,6 +52,15 @@ public class DocumentController {
             @Parameter(description = "DTO Document для создания") @RequestBody DocumentDto dto) {
         return new ResponseEntity<>(documentService.saveDocument(dto), HttpStatus.CREATED);
     }
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Document успешно j,yjdkty"),
+            @ApiResponse(responseCode = "400", description = "Неверный запрос")
+    })
+    @PatchMapping("/update")
+    public ResponseEntity<DocumentDto> putDocument(@RequestBody DocumentDto dto) {
+        return new ResponseEntity<>(documentService.updateDocument(dto), HttpStatus.OK);
+    }
+
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(DocumentsNotFoundException.class)

@@ -4,7 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 import org.kata.entity.enums.DocumentType;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.util.Date;
 
 @Getter
@@ -39,6 +46,9 @@ public class Document implements IndividualRelatedEntity {
 
     @Column(name = "is_actual")
     private boolean isActual;
+
+    @Column(name = "external_date")
+    private Date externalDate;
 
     @Override
     public void setUuid(String uuid) {

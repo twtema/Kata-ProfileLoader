@@ -13,6 +13,8 @@ import org.kata.service.DocumentService;
 import org.kata.service.mapper.DocumentMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -71,8 +73,49 @@ public class DocumentServiceImpl implements DocumentService {
         }
     }
 
+    @Override
+    public DocumentDto updateDocument(DocumentDto dto) {
+
+        Optional<Individual> individual = individualCrudRepository.findByIcp(dto.getIcp());
+
+
+        if (individual.isPresent()) {
+            List<Document> documents = individual.get().getDocuments();
+
+
+            List<Document> oldDoc = documents.stream()
+                    .filter(doc -> dto.getDocumentType().equals(doc.getDocumentType()))
+                    .toList();
+
+            if (!oldDoc.isEmpty()) {
+                Document document = documentMapper.toEntity(dto);
+                for (Document doc : oldDoc) {
+                    if (doc.getDocumentSerial().equals(dto.getDocumentSerial())) {
+                        document.setUuid(doc.getUuid());
+                        document.setActual(true);
+                        document.setIndividual(individual.get());
+                        document.setExternalDate(Date.from(Instant.now()));
+                        document.setDocumentNumber(dto.getDocumentNumber());
+                        document.setDocumentSerial(dto.getDocumentSerial());
+                        document.setDocumentType(dto.getDocumentType());
+                        document.setIssueDate(dto.getIssueDate());
+                        document.setExpirationDate(dto.getExpirationDate());
+
+                    }
+                }
+                documentCrudRepository.save(document);
+                return documentMapper.toDto(document);
+            } else {
+                throw new DocumentsNotFoundException("No Document found for individual with icp: " + dto.getIcp());
+            }
+        } else {
+            throw new IndividualNotFoundException("Individual with icp: " + dto.getIcp() + " not found");
+        }
+    }
+
 
     public DocumentDto saveDocument(DocumentDto dto) {
+
         Optional<Individual> individual = individualCrudRepository.findByIcp(dto.getIcp());
 
         return individual.map(ind -> {
@@ -83,9 +126,11 @@ public class DocumentServiceImpl implements DocumentService {
             markDocumentAsNotActual(markOldDoc);
 
             Document document = documentMapper.toEntity(dto);
+
             document.setUuid(UUID.randomUUID().toString());
             document.setActual(true);
             document.setIndividual(ind);
+            document.setExternalDate(Date.from(Instant.now()));
 
             log.info("For icp {} created new Document: {}", dto.getIcp(), document);
 

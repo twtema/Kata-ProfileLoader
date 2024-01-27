@@ -34,4 +34,7 @@ public class DocumentDto {
 
     private boolean actual;
 
+    @Schema(description = "Дата создания или изменения", example = "01.01.2010")
+    private Date externalDate;
+
 }

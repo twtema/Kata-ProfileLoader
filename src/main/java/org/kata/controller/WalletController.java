@@ -13,7 +13,15 @@ import org.kata.service.WalletService;
 import org.springdoc.api.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -25,7 +33,7 @@ public class WalletController {
     private final WalletService walletService;
 
     @Operation(summary = "Получить Wallet по icp",
-            description= "Возвращает DTO Wallet по ICP")
+            description = "Возвращает DTO Wallet по ICP")
     @GetMapping
     public ResponseEntity<List<WalletDto>> getWallet(
             @Parameter(description = "ICP Wallet") @RequestParam String icp) {
@@ -42,6 +50,7 @@ public class WalletController {
             @Parameter(description = "DTO Wallet для создания") @RequestBody WalletDto dto) {
         return new ResponseEntity<>(walletService.saveWallet(dto), HttpStatus.CREATED);
     }
+
     @Operation(summary = "Получить Wallet по номеру телефона и валюте", description = "Возвращает WalletDto")
     @ApiResponses(value = {
     })

@@ -12,7 +12,11 @@ import org.kata.service.IndividualService;
 import org.kata.service.mapper.AvatarMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Slf4j
