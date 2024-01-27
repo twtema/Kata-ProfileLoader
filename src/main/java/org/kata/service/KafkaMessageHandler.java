@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.kata.controller.dto.ContactChangeMessageDTO;
+import org.kata.controller.dto.DocumentDto;
 import org.kata.controller.dto.IndividualDto;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ public class KafkaMessageHandler {
 
     private final IndividualService individualService;
     private final ContactConfirmationService contactConfirmationService;
-
+    private final DocumentService documentService;
     private final ObjectMapper objectMapper;
 
 
@@ -33,5 +34,11 @@ public class KafkaMessageHandler {
     @KafkaListener(topics = "${kafka.topic.listen}")
     public void handlerContactChangeMessage(String message) throws JsonProcessingException {
         contactConfirmationService.save(objectMapper.readValue(message, ContactChangeMessageDTO.class));
+    }
+
+    @KafkaListener(topics = "${kafka.topic.create2}", groupId = "profile-loader")
+    public void handleDocumentMessage(String message) throws JsonProcessingException {
+        DocumentDto dto = objectMapper.readValue(message, DocumentDto.class);
+        documentService.updateDocumentActualState(dto);
     }
 }
