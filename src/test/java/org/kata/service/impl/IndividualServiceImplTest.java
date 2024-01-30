@@ -31,9 +31,8 @@ public class IndividualServiceImplTest {
     private IndividualMapper individualMapper;
     @Mock
     private IndividualCrudRepository individualCrudRepository;
-
     @Mock
-    KafkaMessageSender kafkaMessageSender;
+    private KafkaMessageSender kafkaMessageSender;
 
     @InjectMocks
     private IndividualServiceImpl individualServiceImpl;
