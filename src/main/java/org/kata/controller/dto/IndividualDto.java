@@ -2,8 +2,10 @@ package org.kata.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.jackson.Jacksonized;
 import org.kata.entity.enums.GenderType;
 
@@ -13,6 +15,8 @@ import java.util.List;
 @Data
 @Builder
 @Jacksonized
+@AllArgsConstructor
+@RequiredArgsConstructor
 @Schema(description = "DTO представляющий индивида")
 public class IndividualDto {
 

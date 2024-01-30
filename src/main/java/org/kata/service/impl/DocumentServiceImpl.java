@@ -11,6 +11,7 @@ import org.kata.repository.DocumentCrudRepository;
 import org.kata.repository.IndividualCrudRepository;
 import org.kata.service.DocumentService;
 import org.kata.service.mapper.DocumentMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class DocumentServiceImpl implements DocumentService {
 
     private final DocumentCrudRepository documentCrudRepository;
