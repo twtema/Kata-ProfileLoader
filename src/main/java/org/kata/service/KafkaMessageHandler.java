@@ -19,7 +19,8 @@ public class KafkaMessageHandler {
     private final ObjectMapper objectMapper;
 
 
-    @KafkaListener(topics = "${kafka.topic.create}", groupId = "${spring.kafka.consumer.group-id}")
+    @KafkaListener(topics = "${kafka.topic.create}", groupId = "${spring.kafka.consumer.group-id}",
+            containerFactory = "filterKafkaListenerContainerFactory")
     public void handleMessage(String message) throws JsonProcessingException {
         IndividualDto dto = objectMapper.readValue(message, IndividualDto.class);
         individualService.saveIndividual(dto);

@@ -58,7 +58,7 @@ public class MapperChecker {
             if (Collection.class.isAssignableFrom(field.getType())) {
                 field.setAccessible(true);
                 try {
-                    if (!((List<Object>) field.get(o)).isEmpty()) {
+                    if (field.get(o) != null && !((List<Object>) field.get(o)).isEmpty()) {
                         fromCollectionFields.add(field);
                     }
                 } catch (IllegalAccessException e) {
