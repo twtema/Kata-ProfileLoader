@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
 import org.kata.controller.dto.IndividualDto;
 import org.kata.exception.IndividualNotFoundException;
@@ -44,6 +43,7 @@ public class IndividualController {
             @Parameter(description = "DTO Individual для создания") @RequestBody IndividualDto dto) {
         return new ResponseEntity<>(individualService.saveIndividual(dto), HttpStatus.CREATED);
     }
+
     @Operation(summary = "Получить Individual по номеру", description = "Возвращает DTO Individual по номеру")
     @GetMapping("/byPhone")
     public ResponseEntity<IndividualDto> individualByPhone(
@@ -57,12 +57,22 @@ public class IndividualController {
             @ApiResponse(responseCode = "400", description = "Bad request"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-
     @DeleteMapping("/delete")
     public ResponseEntity<HttpStatus> deleteIndividual(@RequestParam String icp) {
-        System.out.println("controller loader delete icp - " + icp);
         individualService.deleteIndividual(icp);
         return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @Operation(summary = "Получить процент заполненности профиля Individual",
+            description = "Возвращает значение заполненности профиля Individual в процентах")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful get Individual completion percentage"),
+            @ApiResponse(responseCode = "300", description = "Bad request"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping("/completionPercentage")
+    public ResponseEntity<Long> getProfileCompletionInPercentage(@Parameter(description = "ICP Individual") String icp) {
+        return new ResponseEntity<>(individualService.getProfileCompletionInPercentage(icp), HttpStatus.OK);
     }
 
 
