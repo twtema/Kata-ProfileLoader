@@ -14,6 +14,8 @@ public interface IndividualService {
 
     IndividualDto getIndividual(String icp, String uuid);
 
+    long getProfileCompletionInPercentage(String icp);
+
     void deleteIndividual(String icp);
 
 }

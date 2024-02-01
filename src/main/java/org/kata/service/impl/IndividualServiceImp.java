@@ -12,7 +12,9 @@ import org.kata.service.mapper.IndividualMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -69,10 +71,9 @@ public class IndividualServiceImp implements IndividualService {
     public void deleteIndividual(String icp) {
         Individual entity = individualCrudRepository.findByIcp(icp)
                 .orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + icp + " not found"));
-
+        log.info("Delete Individual with icp: {}", icp);
         individualCrudRepository.delete(entity);
     }
-
 
 
     @Override
@@ -83,6 +84,27 @@ public class IndividualServiceImp implements IndividualService {
             throw new IllegalArgumentException("Invalid Type");
         }
 
+    }
+
+    @Override
+    public long getProfileCompletionInPercentage(String icp) {
+        Individual individual = individualCrudRepository.findByIcp(icp)
+                .orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + icp + " not found"));
+        List<Boolean> ifTrue = new ArrayList<>();
+        ifTrue.add(!individual.getName().isEmpty());
+        ifTrue.add(!individual.getSurname().isEmpty());
+        ifTrue.add(!individual.getPatronymic().isEmpty());
+        ifTrue.add(!individual.getFullName().isEmpty());
+        ifTrue.add(!individual.getPlaceOfBirth().isEmpty());
+        ifTrue.add(!individual.getCountryOfBirth().isEmpty());
+        ifTrue.add(individual.getBirthDate() != null);
+        ifTrue.add(!individual.getDocuments().isEmpty());
+        ifTrue.add(!individual.getContacts().isEmpty());
+        ifTrue.add(!individual.getAddress().isEmpty());
+        ifTrue.add(!individual.getAvatar().isEmpty());
+        ifTrue.add(!individual.getWallet().isEmpty());
+        long trueCount =  ifTrue.stream().filter(element -> element.equals(true)).count();
+        return 100 * trueCount / 12;
     }
 
 
