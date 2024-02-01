@@ -10,6 +10,8 @@ public interface IndividualService {
 
     IndividualDto saveIndividual(IndividualDto dto);
 
+    IndividualDto saveIndividualAndSendMessage(IndividualDto dto);
+
     Individual getIndividualEntity(String icp);
 
     IndividualDto getIndividual(String icp, String uuid);

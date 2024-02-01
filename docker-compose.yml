@@ -49,7 +49,7 @@ services:
     image: profile-loader
     container_name: "profile-loader"
     ports:
-        - "8081:8081"
+      - "8081:8081"
     restart: always
     environment:
       SPRING_DATASOURCE_USER: kata
@@ -99,4 +99,4 @@ services:
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
       KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
 networks:
-    monitoring:
+  monitoring:
