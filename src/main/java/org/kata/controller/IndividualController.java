@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
 import org.kata.controller.dto.IndividualDto;
 import org.kata.exception.IndividualNotFoundException;
@@ -44,6 +43,12 @@ public class IndividualController {
             @Parameter(description = "DTO Individual для создания") @RequestBody IndividualDto dto) {
         return new ResponseEntity<>(individualService.saveIndividual(dto), HttpStatus.CREATED);
     }
+
+    @GetMapping("/create")
+    public ResponseEntity<IndividualDto> addTestIndividual() {
+        return new ResponseEntity<>(individualService.saveIndividual(individualService.getTestIndividual()), HttpStatus.CREATED);
+    }
+
     @Operation(summary = "Получить Individual по номеру", description = "Возвращает DTO Individual по номеру")
     @GetMapping("/byPhone")
     public ResponseEntity<IndividualDto> individualByPhone(

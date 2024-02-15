@@ -10,6 +10,7 @@ import org.kata.repository.IndividualCrudRepository;
 import org.kata.service.IndividualService;
 import org.kata.service.KafkaMessageSender;
 import org.kata.service.mapper.IndividualMapper;
+import org.kata.staticObjects.ForTestIndividual;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -24,6 +25,8 @@ public class IndividualServiceImpl implements IndividualService {
     private final IndividualCrudRepository individualCrudRepository;
     private final IndividualMapper individualMapper;
     private final KafkaMessageSender kafkaMessageSender;
+    private final ForTestIndividual testIndividual;
+
 
     @Override
     public IndividualDto getIndividual(String icp) {
@@ -41,6 +44,11 @@ public class IndividualServiceImpl implements IndividualService {
         Individual entity = individualCrudRepository.findByPhone(phone)
                 .orElseThrow(() -> new IndividualNotFoundException("Individual with phone: " + phone + " not found"));
         return individualMapper.toDto(entity);
+    }
+
+    @Override
+    public IndividualDto getTestIndividual() {
+        return individualMapper.toDto(testIndividual.getTestIndividual());
     }
 
     @Override
