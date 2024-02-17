@@ -15,6 +15,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import redis.clients.jedis.Jedis;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -29,7 +30,8 @@ public class IndividualServiceImpl implements IndividualService {
     private final KafkaMessageSender kafkaMessageSender;
 
 
-    private RedisTemplate<String, Object> redisTemplate;
+//    @Autowired
+//    private RedisTemplate<Object, Object> redisTemplate;
 
     @Override
     @Cacheable(key = "#icp", value = "icp")
@@ -53,6 +55,23 @@ public class IndividualServiceImpl implements IndividualService {
     @Override
     public IndividualDto saveIndividual(IndividualDto dto) {
         Individual entity = individualMapper.toEntity(dto);
+        log.warn("dto.getIcp is {}", dto.getIcp());
+
+        Jedis jedis = new Jedis("localhost", 6379);
+        String key = dto.getIcp();
+        String value = jedis.get("icp::044-03-8896");
+        System.out.println("Value: " + value);
+
+
+
+//        log.warn("DTO from redis {}", redisTemplate.opsForValue().get("icp::044-03-8896"));
+//        String key = (String) redisTemplate.opsForValue().get("icp::"+dto.getIcp());
+//        log.warn("Created cache Redis entity key {}", key);
+
+//        if (redisTemplate.opsForValue().get(dto.getIcp()) != null) {
+//            redisTemplate.opsForValue().set(dto.getIcp(), dto);
+//            log.warn("Updated cache Redis entity DTO {}", dto);
+//        }
 
         if (entity.getUuid() == null) {
             entity.setUuid(generateUuid());
@@ -70,9 +89,7 @@ public class IndividualServiceImpl implements IndividualService {
 
         individualCrudRepository.save(entity);
 
-        if (redisTemplate.opsForValue().get(dto.getIcp()) != null) {
-            redisTemplate.opsForValue().set(dto.getIcp(), dto);
-        }
+
 
         return individualMapper.toDto(entity);
     }

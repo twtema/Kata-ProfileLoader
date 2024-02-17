@@ -1,21 +1,30 @@
 package org.kata.config;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
+import redis.clients.jedis.Jedis;
 
 import java.time.Duration;
-import java.util.HashMap;
 
 @Configuration
 @EnableCaching
+@PropertySource(value = "classpath:application.properties")
 public class CacheConfig {
+
+    @Value("${spring.redis.host}")
+    private String host;
+
+    @Value("${spring.redis.port}")
+    private int port;
 
 
     @Bean
@@ -30,9 +39,14 @@ public class CacheConfig {
                 .build();
     }
 
+    @Bean
+    public Jedis jedis() {
+        return new Jedis(host, port);
+    }
+
 
 //    @Bean
-//    public RedisTemplate<String, Object> redisTemplate(){
-//        return  new RedisTemplate<String, Object>();
+//    public RedisTemplate<Object, Object> redisTemplate(){
+//        return  new RedisTemplate<Object, Object>();
 //    }
 }
