@@ -44,6 +44,11 @@ public class IndividualController {
         return new ResponseEntity<>(individualService.saveIndividual(dto), HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Создать тестового Individual", description = "Сохраняет и возвращает DTO тестового индивида")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Individual успешно создан"),
+            @ApiResponse(responseCode = "400", description = "Неверный запрос")
+    })
     @GetMapping("/create")
     public ResponseEntity<IndividualDto> addTestIndividual() {
         return new ResponseEntity<>(individualService.saveIndividual(individualService.getTestIndividual()), HttpStatus.CREATED);

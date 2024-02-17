@@ -11,18 +11,20 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+//класс для генерации тестового пользователя
 @Component
 public class ForTestIndividual extends Individual {
-
+//Генерация индивидуала
     Individual testIndividual = new Individual();
 
+//Установка Icp и Uuid
     public Individual createIndividual() {
         testIndividual.setUuid("100");
         testIndividual.setIcp("100");
         return testIndividual;
     }
 
-
+//Генерация документа
     public List<Document> getTestDocument() {
         Document testDocument = new Document();
         testDocument.setUuid("100");
@@ -36,7 +38,7 @@ public class ForTestIndividual extends Individual {
 
         return Collections.singletonList(testDocument);
     }
-
+//Генерация контактов
     public List<ContactMedium> getTestContact() {
         ContactMedium testContact = new ContactMedium();
         testContact.setUuid("100");
@@ -46,7 +48,7 @@ public class ForTestIndividual extends Individual {
         testContact.setValue("+7(900)-140-25-13");
         return Collections.singletonList(testContact);
     }
-
+//Генерация адреса
     public List<Address> getTestAddress() {
         Address testAddress = new Address();
         testAddress.setUuid("100");
@@ -59,9 +61,9 @@ public class ForTestIndividual extends Individual {
         testAddress.setPostCode("45785");
         return Collections.singletonList(testAddress);
     }
-
+//Генерация аватара
     public List<Avatar> getTestAvatar() throws IOException {
-        File file = new File("C:/Users/bogbu/Downloads/ProfileLoader-develop/ProfileLoader-develop/src/main/resources/static/avatarTestIndividual.jpg");
+        File file = new File("src\\main\\resources\\static\\avatarTestIndividual.jpg");
         InputStream inputStream = new FileInputStream(file);
         byte[] buffer = new byte[1024];
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -80,7 +82,7 @@ public class ForTestIndividual extends Individual {
         testAvatar.setActual(true);
         return Collections.singletonList(testAvatar);
     }
-
+//Генерация платежки
     public List<Wallet> getTestWallet() {
         Wallet testWsllet = new Wallet();
         testWsllet.setUuid("100");
@@ -102,7 +104,7 @@ public class ForTestIndividual extends Individual {
         testAccount.setDepositTerm((short) 15);
         return Collections.singletonList(testAccount);
     }
-
+//Заполнение данных индивидуала
     public Individual getTestIndividual() {
         Individual testIndividual = createIndividual();
         testIndividual.setName("Петр");
