@@ -10,6 +10,9 @@ import org.kata.repository.IndividualCrudRepository;
 import org.kata.service.IndividualService;
 import org.kata.service.KafkaMessageSender;
 import org.kata.service.mapper.IndividualMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -25,7 +28,11 @@ public class IndividualServiceImpl implements IndividualService {
     private final IndividualMapper individualMapper;
     private final KafkaMessageSender kafkaMessageSender;
 
+
+    private RedisTemplate<String, Object> redisTemplate;
+
     @Override
+    @Cacheable(key = "#icp", value = "icp")
     public IndividualDto getIndividual(String icp) {
         Individual entity = individualCrudRepository.findByIcp(icp)
                 .orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + icp + " not found"));
@@ -62,6 +69,10 @@ public class IndividualServiceImpl implements IndividualService {
         log.info("Create new Individual: {}", entity);
 
         individualCrudRepository.save(entity);
+
+        if (redisTemplate.opsForValue().get(dto.getIcp()) != null) {
+            redisTemplate.opsForValue().set(dto.getIcp(), dto);
+        }
 
         return individualMapper.toDto(entity);
     }
