@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import org.kata.service.ContactMediumService;
 
 @Service
@@ -75,7 +74,12 @@ public class WalletServiceImpl implements WalletService {
 
         log.info("For icp {} created new Wallet: {}", dto.getIcp(), wallet);
 
-        walletCrudRepository.save(wallet);
+        try {
+            walletCrudRepository.save(wallet);
+            log.debug("Saved wallet to the database: {}", wallet);
+        } catch (Exception e) {
+            log.warn("Failed to save wallet to the database.", e);
+        }
 
         WalletDto walletDto = walletMapper.toDto(wallet);
         walletDto.setIcp(dto.getIcp());

@@ -9,6 +9,7 @@ import org.kata.controller.dto.DocumentDto;
 import org.kata.exception.DocumentsNotFoundException;
 import org.kata.service.DocumentService;
 import org.springdoc.api.ErrorMessage;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +49,12 @@ public class DocumentController {
     public ResponseEntity<DocumentDto> postDocument(
             @Parameter(description = "DTO Document для создания")
             @RequestBody DocumentDto dto) {
-        return new ResponseEntity<>(documentService.saveDocument(dto), HttpStatus.CREATED);
+        DocumentDto documentDto = documentService.saveDocument(dto);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("X-Debug-Info", documentDto.getDocumentType() + " successfully saved to the database!");
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .headers(responseHeaders)
+                .body(documentDto);
     }
 
     @Operation(

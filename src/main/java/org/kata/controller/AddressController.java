@@ -9,6 +9,7 @@ import org.kata.controller.dto.AddressDto;
 import org.kata.exception.AddressNotFoundException;
 import org.kata.service.AddressService;
 import org.springdoc.api.ErrorMessage;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +44,12 @@ public class AddressController {
     public ResponseEntity<AddressDto> postAddress(
             @Parameter(description = "DTO Address для создания")
             @RequestBody AddressDto dto) {
-        return new ResponseEntity<>(addressService.saveAddress(dto), HttpStatus.CREATED);
+        AddressDto addressDto = addressService.saveAddress(dto);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("X-Debug-Info","Address with icp: " + addressDto.getIcp() + ", successfully saved to the database!");
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .headers(responseHeaders)
+                .body(addressDto);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

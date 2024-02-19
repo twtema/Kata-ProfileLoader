@@ -9,6 +9,7 @@ import org.kata.controller.dto.ContactMediumDto;
 import org.kata.exception.ContactMediumNotFoundException;
 import org.kata.service.ContactMediumService;
 import org.springdoc.api.ErrorMessage;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +47,12 @@ public class ContactMediumController {
     public ResponseEntity<ContactMediumDto> postContactMedium(
             @Parameter(description = "DTO ContactMedium для создания")
             @RequestBody ContactMediumDto dto) {
-        return new ResponseEntity<>(contactMediumService.saveContactMedium(dto), HttpStatus.CREATED);
+        ContactMediumDto contactMediumDto = contactMediumService.saveContactMedium(dto);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("X-Debug-Info", contactMediumDto.getType() + " successfully saved to the database!");
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .headers(responseHeaders)
+                .body(contactMediumDto);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
