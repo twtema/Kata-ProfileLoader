@@ -49,9 +49,9 @@ public class IndividualController {
             @ApiResponse(responseCode = "201", description = "Individual успешно создан"),
             @ApiResponse(responseCode = "400", description = "Неверный запрос")
     })
-    @GetMapping("/create")
+    @PostMapping("/create")
     public ResponseEntity<IndividualDto> addTestIndividual() {
-        return new ResponseEntity<>(individualService.saveIndividual(individualService.getTestIndividual()), HttpStatus.CREATED);
+        return new ResponseEntity<>(individualService.saveIndividual(individualService.buildTestIndividual()), HttpStatus.CREATED);
     }
 
     @Operation(summary = "Получить Individual по номеру", description = "Возвращает DTO Individual по номеру")
@@ -67,7 +67,6 @@ public class IndividualController {
             @ApiResponse(responseCode = "400", description = "Bad request"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-
     @DeleteMapping("/delete")
     public ResponseEntity<HttpStatus> deleteIndividual(@RequestParam String icp) {
         System.out.println("controller loader delete icp - " + icp);
