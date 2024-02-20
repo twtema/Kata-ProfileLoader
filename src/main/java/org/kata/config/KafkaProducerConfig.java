@@ -3,8 +3,7 @@ package org.kata.config;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.kata.servlet.LoggableDispatcherServlet;
-import org.kata.servlet.filter.LoggingFilterChain;
+import org.kata.filter.LoggingFilterChain;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletAutoConfiguration;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -38,18 +37,5 @@ public class KafkaProducerConfig {
         return new KafkaTemplate<>(producerFactory());
     }
 
-    @Bean
-    public ServletRegistrationBean dispatcherRegistration() {
-        return new ServletRegistrationBean(dispatcherServlet());
-    }
 
-    @Bean(name = DispatcherServletAutoConfiguration.DEFAULT_DISPATCHER_SERVLET_BEAN_NAME)
-    public DispatcherServlet dispatcherServlet() {
-        return new LoggableDispatcherServlet(loggingFilterChain());
-    }
-
-    @Bean
-    public LoggingFilterChain loggingFilterChain() {
-        return new LoggingFilterChain();
-    }
 }
