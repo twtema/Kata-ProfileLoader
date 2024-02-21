@@ -3,6 +3,7 @@ package org.kata.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.kata.controller.dto.ContactMediumDto;
+import org.kata.controller.dto.IndividualDto;
 import org.kata.entity.ContactMedium;
 import org.kata.entity.Individual;
 import org.kata.entity.enums.ContactMediumType;
@@ -12,6 +13,10 @@ import org.kata.repository.ContactMediumCrudRepository;
 import org.kata.repository.IndividualCrudRepository;
 import org.kata.service.ContactMediumService;
 import org.kata.service.mapper.ContactMediumMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +32,10 @@ public class ContactMediumServiceImpl implements ContactMediumService {
     private final IndividualCrudRepository individualCrudRepository;
     private final ContactMediumMapper contactMediumMapper;
 
+    @Autowired
+    private CacheManager cacheManager;
+
+    @Cacheable(key = "#icp", value = "icpContactMedium")
     public List<ContactMediumDto> getContactMedium(String icp) {
         Optional<Individual> individual = individualCrudRepository.findByIcp(icp);
 
@@ -67,6 +76,21 @@ public class ContactMediumServiceImpl implements ContactMediumService {
             log.info("For icp {} created new ContactMedium: {}", dto.getIcp(), contactMedium);
 
             contactMediumCrudRepository.save(contactMedium);
+
+            Cache cacheContactMedium = cacheManager.getCache("icpContactMedium");
+            Cache cacheIndividual = cacheManager.getCache("icpIndividual");
+
+            if (cacheContactMedium != null && cacheContactMedium.get(dto.getIcp()) != null) {
+                // Update the cache only if there is an address with the prefix "icpContactMedium" in the cache
+                cacheContactMedium.put(dto.getIcp(), dto);
+            }
+
+            if (cacheIndividual != null && cacheIndividual.get(dto.getIcp()) != null) {
+                // Update the cache only if there is an address with the prefix "icpIndividual" in the cache
+                IndividualDto individualDto = (IndividualDto) cacheIndividual.get(dto.getIcp()).get();
+                individualDto.getContacts().add(dto);
+                cacheIndividual.put(dto.getIcp(), individualDto);
+            }
 
             ContactMediumDto contactMediumDto = contactMediumMapper.toDto(contactMedium);
             contactMediumDto.setIcp(dto.getIcp());

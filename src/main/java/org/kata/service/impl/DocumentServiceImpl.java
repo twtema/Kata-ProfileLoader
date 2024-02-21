@@ -3,6 +3,7 @@ package org.kata.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.kata.controller.dto.DocumentDto;
+import org.kata.controller.dto.IndividualDto;
 import org.kata.entity.Document;
 import org.kata.entity.Individual;
 import org.kata.exception.DocumentsNotFoundException;
@@ -11,6 +12,10 @@ import org.kata.repository.DocumentCrudRepository;
 import org.kata.repository.IndividualCrudRepository;
 import org.kata.service.DocumentService;
 import org.kata.service.mapper.DocumentMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,6 +34,10 @@ public class DocumentServiceImpl implements DocumentService {
 
     private final DocumentMapper documentMapper;
 
+    @Autowired
+    private CacheManager cacheManager;
+
+    @Cacheable(key = "#icp", value = "icpDocuments")
     public List<DocumentDto> getAllDocuments(String icp) {
         Optional<Individual> individual = individualCrudRepository.findByIcp(icp);
 
@@ -67,6 +76,25 @@ public class DocumentServiceImpl implements DocumentService {
             log.info("For icp {} created new Document: {}", dto.getIcp(), document);
 
             documentCrudRepository.save(document);
+
+            Cache cacheDocuments = cacheManager.getCache("icpDocuments");
+            Cache cacheIndividual = cacheManager.getCache("icpIndividual");
+
+            if (cacheDocuments != null && cacheDocuments.get(dto.getIcp()) != null) {
+                // Update the cache only if there is an address with the prefix "icpDocuments" in the cache
+                cacheDocuments.put(dto.getIcp(), dto);
+            }
+
+            if (cacheIndividual != null && cacheIndividual.get(dto.getIcp()) != null) {
+                // Update the cache only if there is an address with the prefix "icpIndividual" in the cache
+                IndividualDto individualDto = (IndividualDto) cacheIndividual.get(dto.getIcp()).get();
+                List<DocumentDto> documentsToUpdate = individualDto.getDocuments().stream()
+                        .filter(doc -> doc.getDocumentType().equals(dto.getDocumentType()))
+                        .toList();
+                documentsToUpdate.forEach(doc -> doc.setActual(false));
+                individualDto.getDocuments().add(dto);
+                cacheIndividual.put(dto.getIcp(), individualDto);
+            }
 
             DocumentDto documentDto = documentMapper.toDto(document);
             documentDto.setIcp(dto.getIcp());

@@ -2,6 +2,8 @@ package org.kata.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.kata.controller.dto.DocumentDto;
+import org.kata.controller.dto.IndividualDto;
 import org.kata.controller.dto.WalletDto;
 import org.kata.entity.Individual;
 import org.kata.entity.Wallet;
@@ -13,6 +15,10 @@ import org.kata.repository.IndividualCrudRepository;
 import org.kata.repository.WalletCrudRepository;
 import org.kata.service.WalletService;
 import org.kata.service.mapper.WalletMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -34,9 +40,12 @@ public class WalletServiceImpl implements WalletService {
 
     private final ContactMediumService contactMediumService;
 
+    @Autowired
+    private CacheManager cacheManager;
 
 
     @Override
+    @Cacheable(key = "#icp", value = "icpWallet")
     public List<WalletDto> getWallet(String icp) {
         List<Wallet> wallets = getIndividual(icp).getWallet();
         if (!wallets.isEmpty()) {
@@ -76,6 +85,21 @@ public class WalletServiceImpl implements WalletService {
         log.info("For icp {} created new Wallet: {}", dto.getIcp(), wallet);
 
         walletCrudRepository.save(wallet);
+
+        Cache cacheWallet = cacheManager.getCache("icpWallet");
+        Cache cacheIndividual = cacheManager.getCache("icpIndividual");
+
+        if (cacheWallet != null && cacheWallet.get(dto.getIcp()) != null) {
+            // Update the cache only if there is an address with the prefix "icpWallet" in the cache
+            cacheWallet.put(dto.getIcp(), dto);
+        }
+
+        if (cacheIndividual != null && cacheIndividual.get(dto.getIcp()) != null) {
+            // Update the cache only if there is an address with the prefix "icpIndividual" in the cache
+            IndividualDto individualDto = (IndividualDto) cacheIndividual.get(dto.getIcp()).get();
+            individualDto.getWallet().add(dto);
+            cacheIndividual.put(dto.getIcp(), individualDto);
+        }
 
         WalletDto walletDto = walletMapper.toDto(wallet);
         walletDto.setIcp(dto.getIcp());

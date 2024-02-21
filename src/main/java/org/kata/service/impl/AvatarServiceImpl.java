@@ -3,6 +3,7 @@ package org.kata.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.kata.controller.dto.AvatarDto;
+import org.kata.controller.dto.IndividualDto;
 import org.kata.entity.Avatar;
 import org.kata.entity.Individual;
 import org.kata.exception.AvatarNotFoundException;
@@ -10,6 +11,10 @@ import org.kata.repository.AvatarCrudRepository;
 import org.kata.service.AvatarService;
 import org.kata.service.IndividualService;
 import org.kata.service.mapper.AvatarMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -17,7 +22,7 @@ import java.util.*;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class AvatarServiceImpl implements AvatarService {
+public class  AvatarServiceImpl implements AvatarService {
 
     private final AvatarCrudRepository avatarCrudRepository;
 
@@ -25,6 +30,10 @@ public class AvatarServiceImpl implements AvatarService {
 
     private final AvatarMapper avatarMapper;
 
+    @Autowired
+    private CacheManager cacheManager;
+
+    @Cacheable(key = "#icp", value = "icpAvatar")
     public AvatarDto getAvatar(String icp) {
         List<Avatar> avatars = getIndividual(icp).getAvatar();
 
@@ -66,6 +75,21 @@ public class AvatarServiceImpl implements AvatarService {
 
         avatarCrudRepository.save(avatar);
 
+        Cache cacheAvatar = cacheManager.getCache("icpAvatar");
+        Cache cacheIndividual = cacheManager.getCache("icpIndividual");
+
+        if (cacheAvatar != null && cacheAvatar.get(dto.getIcp()) != null) {
+            // Update the cache only if there is an address with the prefix "icpAvatar" in the cache
+            cacheAvatar.put(dto.getIcp(), dto);
+        }
+
+        if (cacheIndividual != null && cacheIndividual.get(dto.getIcp()) != null) {
+            // Update the cache only if there is an address with the prefix "icpIndividual" in the cache
+            IndividualDto individualDto = (IndividualDto) cacheIndividual.get(dto.getIcp()).get();
+            individualDto.getAvatar().add(dto);
+            cacheIndividual.put(dto.getIcp(), individualDto);
+        }
+
         AvatarDto avatarDto = avatarMapper.toDto(avatar);
         avatarDto.setIcp(dto.getIcp());
         return avatarDto;
@@ -90,6 +114,7 @@ public class AvatarServiceImpl implements AvatarService {
     }
 
     @Override
+    @Cacheable(key = "#icp", value = "icpAvatar")
     public AvatarDto getAvatar(String icp, String uuid) {
         if (uuid.equals("uuid")) {
             return getAvatar(icp);

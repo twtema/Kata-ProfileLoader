@@ -12,7 +12,6 @@ public class ProfileLoaderApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ProfileLoaderApplication.class, args);
-
     }
 
 }
