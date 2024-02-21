@@ -28,6 +28,8 @@ replay_pid*
 *.iml
 
 /.idea/
+/prometheus
+/scripts
 
 /target/
 
