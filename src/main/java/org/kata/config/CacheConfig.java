@@ -1,5 +1,9 @@
 package org.kata.config;
 
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -14,10 +18,7 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializationContext;
-import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.data.redis.serializer.SerializationException;
+import org.springframework.data.redis.serializer.*;
 import redis.clients.jedis.Jedis;
 
 import java.lang.reflect.Method;
@@ -38,12 +39,29 @@ public class CacheConfig {
     private int port;
 
 
+//    @Bean
+//    public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
+//        RedisCacheConfiguration cacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
+//                .entryTtl(Duration.ofHours(3)) // Установите время жизни для кэша
+//                .disableCachingNullValues() // Не кэшируйте null значения
+//                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
+//
+//        return RedisCacheManager.builder(redisConnectionFactory)
+//                .cacheDefaults(cacheConfiguration)
+//                .build();
+//    }
+
+    @Bean
+    public CacheResolver setCacheResolver(CacheManager cacheManager) {
+        return new SimpleCacheResolver(cacheManager);
+    }
+
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
         RedisCacheConfiguration cacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofHours(3)) // Установите время жизни для кэша
-                .disableCachingNullValues() // Не кэшируйте null значения
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
+                .entryTtl(Duration.ofHours(3))
+                .disableCachingNullValues()
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new SetRedisSerializer()));
 
         return RedisCacheManager.builder(redisConnectionFactory)
                 .cacheDefaults(cacheConfiguration)
@@ -75,27 +93,34 @@ public class CacheConfig {
 //        };
 //    }
 
-    private static class SetRedisSerializer implements RedisSerializer<Set<?>> {
-
-        private final RedisSerializer<String> stringSerializer = RedisSerializer.string();
-
-        @Override
-        public byte[] serialize(Set<?> set) throws SerializationException {
-            // Преобразуйте Set в массив байтов
-            // Например, можно использовать JSON сериализацию
-            return stringSerializer.serialize(set.toString());
-        }
-
-        @Override
-        public Set<?> deserialize(byte[] bytes) throws SerializationException {
-            // Преобразуйте массив байтов обратно в Set
-            // Например, можно использовать JSON десериализацию
-            String setString = stringSerializer.deserialize(bytes);
-            // В данном примере, предполагается, что Set был сериализован в виде строки
-            // и будет десериализован обратно в Set
-            return new HashSet<>(Arrays.asList(setString.split(",")));
-        }
-    }
+//    private static class SetRedisSerializer implements RedisSerializer<Set<?>> {
+//
+////        private final RedisSerializer<String> stringSerializer = RedisSerializer.string();
+//        private final RedisSerializer<String> stringSerializer = new StringRedisSerializer();
+//
+//
+//        @Override
+//        public byte[] serialize(Set<?> set) throws SerializationException {
+//            // Преобразуйте Set в массив байтов
+//            // Например, можно использовать JSON сериализацию
+//            ObjectMapper objectMapper = new ObjectMapper();
+//            try {
+//                return objectMapper.writeValueAsBytes(set);
+//            } catch (JsonProcessingException e) {
+//                throw new SerializationException("Error serializing set", e);
+//            }
+//        }
+//
+//        @Override
+//        public Set<?> deserialize(byte[] bytes) throws SerializationException {
+//            // Преобразуйте массив байтов обратно в Set
+//            // Например, можно использовать JSON десериализацию
+//            String setString = stringSerializer.deserialize(bytes);
+//            // В данном примере, предполагается, что Set был сериализован в виде строки
+//            // и будет десериализован обратно в Set
+//            return new HashSet<>(Arrays.asList(setString.split(",")));
+//        }
+//    }
 
 
 //    @Bean
