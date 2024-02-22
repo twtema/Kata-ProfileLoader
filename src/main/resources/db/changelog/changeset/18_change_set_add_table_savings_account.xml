@@ -5,12 +5,12 @@
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
     <changeSet id="18" author="vadim">
-        <createTable tableName="saving_account">
+        <createTable tableName="savings_account">
             <column name="uuid" type="VARCHAR(36)">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="currency" type="VARCHAR(3)"/>
-            <column name="info_Of_Percent" type="VARCHAR(30)"/>
+            <column name="info_of_percent" type="VARCHAR(30)"/>
             <column name="final_sum" type="DECIMAL"/>
             <column name="deposit_term" type="SMALLINT"/>
             <column name="individual_uuid" type="VARCHAR(36)">
