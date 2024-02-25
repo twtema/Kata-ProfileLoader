@@ -11,11 +11,11 @@ import org.kata.exception.ContactMediumNotFoundException;
 import org.kata.exception.WalletNotFoundException;
 import org.kata.service.WalletService;
 import org.springdoc.api.ErrorMessage;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -40,12 +40,10 @@ public class WalletController {
     })
     @PostMapping
     public ResponseEntity<WalletDto> postWallet(
-            @Parameter(description = "DTO Wallet для создания") @RequestBody WalletDto dto) {
+            @Parameter(description = "DTO Wallet для создания") @RequestBody WalletDto dto, HttpServletResponse response) {
             WalletDto walletDto = walletService.saveWallet(dto);
-            HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.set("X-Debug-Info", "Wallet with ID: " + walletDto.getWalletId() + ", successfully saved to the database!");
+            response.addHeader("X-Debug-Info", "Wallet with ID: " + walletDto.getWalletId() + ", successfully saved to the database!");
             return ResponseEntity.status(HttpStatus.CREATED)
-                    .headers(responseHeaders)
                     .body(walletDto);
     }
     @Operation(summary = "Получить Wallet по номеру телефона и валюте", description = "Возвращает WalletDto")

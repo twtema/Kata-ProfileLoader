@@ -9,11 +9,11 @@ import org.kata.controller.dto.AvatarDto;
 import org.kata.exception.AvatarNotFoundException;
 import org.kata.service.AvatarService;
 import org.springdoc.api.ErrorMessage;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
@@ -44,12 +44,11 @@ public class AvatarController {
     })
 
     @PostMapping
-    public ResponseEntity<AvatarDto> postAvatar(@Parameter(description = "DTO Avatar для создания") @RequestBody AvatarDto dto, String hex) {
+    public ResponseEntity<AvatarDto> postAvatar(@Parameter(description = "DTO Avatar для создания")
+                                                    @RequestBody AvatarDto dto, String hex, HttpServletResponse response) {
         AvatarDto avatarDto = avatarService.saveOrUpdateAvatar(dto, hex);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("X-Debug-Info", "Avatar with name: " + avatarDto.getFilename() + ", successfully saved to the database!");
+        response.addHeader("X-Debug-Info", "Avatar with name: " + avatarDto.getFilename() + ", successfully saved to the database!");
         return ResponseEntity.status(HttpStatus.CREATED)
-                .headers(responseHeaders)
                 .body(avatarDto);
     }
 

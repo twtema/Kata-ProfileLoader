@@ -9,10 +9,11 @@ import org.kata.controller.dto.IndividualDto;
 import org.kata.exception.IndividualNotFoundException;
 import org.kata.service.IndividualService;
 import org.springdoc.api.ErrorMessage;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
 
 
 @RestController
@@ -41,12 +42,10 @@ public class IndividualController {
     })
     @PostMapping
     public ResponseEntity<IndividualDto> postIndividual(
-            @Parameter(description = "DTO Individual для создания") @RequestBody IndividualDto dto) {
+            @Parameter(description = "DTO Individual для создания") @RequestBody IndividualDto dto, HttpServletResponse response) {
         IndividualDto individualDto = individualService.saveIndividual(dto);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("X-Debug-Info","Individual with icp: " + individualDto.getIcp() + " successfully saved to the database!");
+        response.addHeader("X-Debug-Info","Individual with icp: " + individualDto.getIcp() + " successfully saved to the database!");
         return ResponseEntity.status(HttpStatus.CREATED)
-                .headers(responseHeaders)
                 .body(individualDto);
     }
     @Operation(summary = "Получить Individual по номеру", description = "Возвращает DTO Individual по номеру")
