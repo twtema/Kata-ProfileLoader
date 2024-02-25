@@ -37,7 +37,7 @@ public class AddressServiceImpl implements AddressService {
 
 
     @Override
-    @Cacheable(key = "#icp", value = "icpAddress", cacheResolver = "setCacheResolver")
+    @Cacheable(key = "#icp", value = "icpAddress")
     public AddressDto getAddress(String icp) {
         Optional<Individual> individual = individualCrudRepository.findByIcp(icp);
 
@@ -62,7 +62,6 @@ public class AddressServiceImpl implements AddressService {
 
     }
 
-//    @Cacheable(key = "#dto.getIcp()", value = "icp")
     public AddressDto saveAddress(AddressDto dto) {
         Optional<Individual> individual = individualCrudRepository.findByIcp(dto.getIcp());
 
@@ -83,12 +82,10 @@ public class AddressServiceImpl implements AddressService {
             Cache cacheIndividual = cacheManager.getCache("icpIndividual");
 
             if (cacheAddress != null && cacheAddress.get(dto.getIcp()) != null) {
-                // Update the cache only if there is an address with the prefix "icpAddress" in the cache
                 cacheAddress.put(dto.getIcp(), dto);
             }
 
             if (cacheIndividual != null && cacheIndividual.get(dto.getIcp()) != null) {
-                // Update the cache only if there is an address with the prefix "icpIndividual" in the cache
                 IndividualDto individualDto = (IndividualDto) cacheIndividual.get(dto.getIcp()).get();
                 individualDto.getAddress().add(dto);
                 cacheIndividual.put(dto.getIcp(), individualDto);
@@ -101,7 +98,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    @Cacheable(key = "#icp", value = "icpAddress", cacheResolver = "setCacheResolver")
+    @Cacheable(key = "#icp", value = "icpAddress")
     public AddressDto  getAddress(String icp, String uuid) {
         if (icp == null || uuid == null) {
             throw new IllegalArgumentException("Invalid id or type");

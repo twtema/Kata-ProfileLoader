@@ -3,6 +3,7 @@ package org.kata.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.kata.controller.dto.AvatarDto;
+import org.kata.controller.dto.DocumentDto;
 import org.kata.controller.dto.IndividualDto;
 import org.kata.entity.Avatar;
 import org.kata.entity.Individual;
@@ -14,6 +15,7 @@ import org.kata.service.mapper.AvatarMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -79,12 +81,10 @@ public class  AvatarServiceImpl implements AvatarService {
         Cache cacheIndividual = cacheManager.getCache("icpIndividual");
 
         if (cacheAvatar != null && cacheAvatar.get(dto.getIcp()) != null) {
-            // Update the cache only if there is an address with the prefix "icpAvatar" in the cache
             cacheAvatar.put(dto.getIcp(), dto);
         }
 
         if (cacheIndividual != null && cacheIndividual.get(dto.getIcp()) != null) {
-            // Update the cache only if there is an address with the prefix "icpIndividual" in the cache
             IndividualDto individualDto = (IndividualDto) cacheIndividual.get(dto.getIcp()).get();
             individualDto.getAvatar().add(dto);
             cacheIndividual.put(dto.getIcp(), individualDto);
@@ -103,6 +103,8 @@ public class  AvatarServiceImpl implements AvatarService {
         return new ArrayList<>();
     }
 
+
+    @CacheEvict(key = "#icp", value = "icpAvatar")
     public void deleteAvatars(String icp, List<Boolean> flags) {
         List<Avatar> avatars = getIndividual(icp).getAvatar();
         Iterator<Boolean> iterator = flags.listIterator();
@@ -111,6 +113,18 @@ public class  AvatarServiceImpl implements AvatarService {
                 .toList();
         avatars.removeAll(avatarsToDelete);
         avatarCrudRepository.deleteAll(avatarsToDelete);
+
+        Cache cacheIndividual = cacheManager.getCache("icpIndividual");
+
+
+        if (cacheIndividual != null && cacheIndividual.get(icp) != null) {
+            IndividualDto individualDto = (IndividualDto) cacheIndividual.get(icp).get();
+            List<AvatarDto> avatarsToUpdate = individualDto.getAvatar().stream()
+                    .filter(avatar -> avatar.equals(avatarsToDelete))
+                    .toList();
+            individualDto.getAvatar().removeIf(avatar -> avatarsToUpdate.contains(avatar));
+            cacheIndividual.put(icp, individualDto);
+        }
     }
 
     @Override

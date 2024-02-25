@@ -1,8 +1,5 @@
 package org.kata.service.impl;
 
-import io.swagger.v3.core.util.Json;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.kata.controller.dto.IndividualDto;
@@ -13,14 +10,10 @@ import org.kata.repository.IndividualCrudRepository;
 import org.kata.service.IndividualService;
 import org.kata.service.KafkaMessageSender;
 import org.kata.service.mapper.IndividualMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import redis.clients.jedis.Jedis;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -33,19 +26,6 @@ public class IndividualServiceImpl implements IndividualService {
     private final IndividualCrudRepository individualCrudRepository;
     private final IndividualMapper individualMapper;
     private final KafkaMessageSender kafkaMessageSender;
-
-//    private Jedis jedis;
-
-//    @Autowired
-//    public IndividualServiceImpl(IndividualCrudRepository individualCrudRepository, IndividualMapper individualMapper, KafkaMessageSender kafkaMessageSender, Jedis jedis) {
-//        this.individualCrudRepository = individualCrudRepository;
-//        this.individualMapper = individualMapper;
-//        this.kafkaMessageSender = kafkaMessageSender;
-//        this.jedis = jedis;
-//    }
-
-//    @Autowired
-//    private RedisTemplate<Object, Object> redisTemplate;
 
     @Override
     @Cacheable(key = "#icp", value = "icpIndividual")
@@ -72,25 +52,6 @@ public class IndividualServiceImpl implements IndividualService {
         log.warn("dto.getIcp is {}", dto.getIcp());
 
 
-//        String value = jedis.get("icp::044-03-8896");
-//        System.out.println("Value: " + value);
-//        if(!jedis.get("icp::" + dto.getIcp()).isEmpty()) {
-//            log.warn("if working", "icp::" + dto.getIcp());
-//            jedis.reset();
-//            jedis.set("icp::" + dto.getIcp(), Json.mapper(dto));
-//        }
-
-
-
-//        log.warn("DTO from redis {}", redisTemplate.opsForValue().get("icp::044-03-8896"));
-//        String key = (String) redisTemplate.opsForValue().get("icp::"+dto.getIcp());
-//        log.warn("Created cache Redis entity key {}", key);
-
-//        if (redisTemplate.opsForValue().get(dto.getIcp()) != null) {
-//            redisTemplate.opsForValue().set(dto.getIcp(), dto);
-//            log.warn("Updated cache Redis entity DTO {}", dto);
-//        }
-
         if (entity.getUuid() == null) {
             entity.setUuid(generateUuid());
         }
@@ -114,6 +75,7 @@ public class IndividualServiceImpl implements IndividualService {
 
 
     @Override
+    @CacheEvict(key = "#icp", value = {"icpIndividual", "icpAddress", "icpAvatar", "icpContactMedium", "icpDocuments", "icpWallet"})
     public void deleteIndividual(String icp) {
         Individual entity = individualCrudRepository.findByIcp(icp)
                 .orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + icp + " not found"));

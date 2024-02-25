@@ -81,12 +81,10 @@ public class DocumentServiceImpl implements DocumentService {
             Cache cacheIndividual = cacheManager.getCache("icpIndividual");
 
             if (cacheDocuments != null && cacheDocuments.get(dto.getIcp()) != null) {
-                // Update the cache only if there is an address with the prefix "icpDocuments" in the cache
                 cacheDocuments.put(dto.getIcp(), dto);
             }
 
             if (cacheIndividual != null && cacheIndividual.get(dto.getIcp()) != null) {
-                // Update the cache only if there is an address with the prefix "icpIndividual" in the cache
                 IndividualDto individualDto = (IndividualDto) cacheIndividual.get(dto.getIcp()).get();
                 List<DocumentDto> documentsToUpdate = individualDto.getDocuments().stream()
                         .filter(doc -> doc.getDocumentType().equals(dto.getDocumentType()))

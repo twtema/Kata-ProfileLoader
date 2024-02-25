@@ -90,12 +90,10 @@ public class WalletServiceImpl implements WalletService {
         Cache cacheIndividual = cacheManager.getCache("icpIndividual");
 
         if (cacheWallet != null && cacheWallet.get(dto.getIcp()) != null) {
-            // Update the cache only if there is an address with the prefix "icpWallet" in the cache
             cacheWallet.put(dto.getIcp(), dto);
         }
 
         if (cacheIndividual != null && cacheIndividual.get(dto.getIcp()) != null) {
-            // Update the cache only if there is an address with the prefix "icpIndividual" in the cache
             IndividualDto individualDto = (IndividualDto) cacheIndividual.get(dto.getIcp()).get();
             individualDto.getWallet().add(dto);
             cacheIndividual.put(dto.getIcp(), individualDto);
