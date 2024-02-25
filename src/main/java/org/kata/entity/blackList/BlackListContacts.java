@@ -13,14 +13,14 @@ import java.util.UUID;
 public class BlackListContacts extends ContactMedium {
 
     public BlackListContacts() {
-        nombervalue.add("89001001010");
-        nombervalue.add("89001654010");
-        nombervalue.add("89074001010");
-        nombervalue.add("89001012221");
-        nombervalue.add("89844563210");
-        nombervalue.add("89001077710");
+        numbervalue.add("89001001010");
+        numbervalue.add("89001654010");
+        numbervalue.add("89074001010");
+        numbervalue.add("89001012221");
+        numbervalue.add("89844563210");
+        numbervalue.add("89001077710");
     }
 
     private String uuid = UUID.randomUUID().toString();
-    private List<String> nombervalue = new ArrayList<>();
+    private List<String> numbervalue = new ArrayList<>();
 }
