@@ -98,7 +98,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    @Cacheable(key = "#icp", value = "icpAddress")
+//    @Cacheable(key = "#icp", value = "icpAddress")
     public AddressDto  getAddress(String icp, String uuid) {
         if (icp == null || uuid == null) {
             throw new IllegalArgumentException("Invalid id or type");
