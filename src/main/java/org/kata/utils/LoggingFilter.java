@@ -22,10 +22,10 @@ public class LoggingFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        log.info("Conversation id: {}, Method: {}, URI: {}, Headers: {}",
+        log.info("conversationId: {}, Method: {}, URI: {}, Headers: {}",
                 response.getHeader("conversationId"), request.getMethod(), request.getRequestURI(), getHeaders(request));
         filterChain.doFilter(request, response);
-        log.info("Conversation id: {}, Response Status: {}, Content Type: {}, Headers: {}",
+        log.info("conversationId: {}, Response Status: {}, Content Type: {}, Headers: {}",
                 response.getHeader("conversationId"), response.getStatus(), response.getContentType(), getHeaders(response));
     }
 
