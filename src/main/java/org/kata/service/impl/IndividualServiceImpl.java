@@ -88,6 +88,7 @@ public class IndividualServiceImpl implements IndividualService {
         Individual entity = individualCrudRepository.findByIcp(icp)
                 .orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + icp + " not found"));
 
+
         individualCrudRepository.delete(entity);
     }
 

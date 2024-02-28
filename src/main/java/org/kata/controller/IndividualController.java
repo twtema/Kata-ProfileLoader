@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
 import org.kata.controller.dto.IndividualDto;
 import org.kata.exception.IndividualNotFoundException;
@@ -68,7 +67,6 @@ public class IndividualController {
             @ApiResponse(responseCode = "400", description = "Bad request"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-
     @DeleteMapping("/delete")
     public ResponseEntity<HttpStatus> deleteIndividual(@RequestParam String icp) {
         System.out.println("controller loader delete icp - " + icp);
