@@ -107,22 +107,29 @@ public class  AvatarServiceImpl implements AvatarService {
     @CacheEvict(key = "#icp", value = "icpAvatar")
     public void deleteAvatars(String icp, List<Boolean> flags) {
         List<Avatar> avatars = getIndividual(icp).getAvatar();
-        Iterator<Boolean> iterator = flags.listIterator();
+//        Iterator<Boolean> iterator = flags.listIterator();
+//        List <Avatar> avatarsToDelete = avatars.stream()
+//                .filter(ava -> iterator.next())
+//                .toList();
+//        avatars.removeAll(avatarsToDelete);
+//        avatarCrudRepository.deleteAll(avatarsToDelete);
+            Iterator<Boolean> iterator = flags.listIterator();
         List <Avatar> avatarsToDelete = avatars.stream()
-                .filter(ava -> iterator.next())
-                .toList();
-        avatars.removeAll(avatarsToDelete);
-        avatarCrudRepository.deleteAll(avatarsToDelete);
+                    .filter(ava -> iterator.hasNext() && iterator.next())
+                    .toList();
+            avatars.removeAll(avatarsToDelete);
+            avatarCrudRepository.deleteAll(avatarsToDelete);
 
         Cache cacheIndividual = cacheManager.getCache("icpIndividual");
 
 
-        if (cacheIndividual != null && cacheIndividual.get(icp) != null) {
+        if (!avatarsToDelete.isEmpty() && cacheIndividual != null && cacheIndividual.get(icp) != null) {
             IndividualDto individualDto = (IndividualDto) cacheIndividual.get(icp).get();
-            List<AvatarDto> avatarsToUpdate = individualDto.getAvatar().stream()
-                    .filter(avatar -> avatar.equals(avatarsToDelete))
-                    .toList();
-            individualDto.getAvatar().removeIf(avatar -> avatarsToUpdate.contains(avatar));
+//            List<AvatarDto> avatarsToUpdate = individualDto.getAvatar().stream()
+//                    .filter(avatar -> avatar.equals(avatarsToDelete))
+//                    .toList();
+//            individualDto.getAvatar().removeIf(avatar -> avatarsToUpdate.contains(avatar));
+            individualDto.getAvatar().removeIf(avatar -> avatarsToDelete.contains(avatar));
             cacheIndividual.put(icp, individualDto);
         }
     }
