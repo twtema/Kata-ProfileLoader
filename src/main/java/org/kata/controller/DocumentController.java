@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.kata.controller.dto.DocumentDto;
 import org.kata.exception.DocumentsNotFoundException;
+import org.kata.service.DebtCheckService;
 import org.kata.service.DocumentService;
 import org.springdoc.api.ErrorMessage;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import java.util.List;
 @RequestMapping("v1/document")
 public class DocumentController {
     private final DocumentService documentService;
+    private final DebtCheckService debtCheckService;
 
     @Operation(summary = "Получить Document по icp",
             description = "Возвращает DTO Document по ICP")
