@@ -38,3 +38,6 @@ prometheus/
 profile-loader.iml
 target/
 
+/.idea/
+/prometheus/
+/scripts/
