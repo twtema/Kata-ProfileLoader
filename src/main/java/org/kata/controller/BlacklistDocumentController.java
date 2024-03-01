@@ -17,7 +17,7 @@ public class BlacklistDocumentController {
     private final DebtCheckService debtCheckService;
     @Operation(summary = "Создать черный список клиентов", description = "Сохраняет черный список клиентов по номеру и серии документа")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Avatar успешно создан"),
+            @ApiResponse(responseCode = "201", description = "Черный список успешно создан"),
             @ApiResponse(responseCode = "400", description = "Неверный запрос")
     })
     @PostMapping

@@ -6,7 +6,6 @@ import org.kata.controller.dto.DocumentDto;
 import org.kata.controller.dto.IndividualDto;
 import org.kata.entity.BlackListDocument;
 import org.kata.entity.enums.BlackListDocumentType;
-import org.kata.exception.BlacklistDocumentException;
 import org.kata.repository.DebtCheckCrudRepository;
 import org.kata.service.DebtCheckService;
 import org.springframework.stereotype.Service;
@@ -51,12 +50,14 @@ public class DebtCheckServiceImpl implements DebtCheckService {
         List<DocumentDto> documentDto = dto.getDocuments();
         for (BlackListDocument blackListDocument : blackListDocuments) {
             if (documentDto.stream().anyMatch(existingDocument -> isBlacklisted(blackListDocument, existingDocument))) {
-                throw new BlacklistDocumentException(dto.getFullName() + " потенциально нежелательный клиент, обратитесь к Диане для введения нового статуса!");
+                dto.setUnwantedCustomer(true);
+                log.info(dto.getFullName() + " потенциально нежелательный клиент, обратитесь к Диане для введения нового статуса!");
+                break;
             }
         }
     }
 
-    private boolean isBlacklisted(BlackListDocument blackListDocument, DocumentDto documentDto) {
+    public boolean isBlacklisted(BlackListDocument blackListDocument, DocumentDto documentDto) {
         return blackListDocument.getDocumentNumber().equals(documentDto.getDocumentNumber()) &&
                 blackListDocument.getDocumentSerial().equals(documentDto.getDocumentSerial());
     }

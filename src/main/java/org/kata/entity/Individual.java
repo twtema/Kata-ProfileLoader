@@ -49,6 +49,9 @@ public class Individual {
     @Column(name = "birth_date")
     private Date birthDate;
 
+    @Column(name = "is_unwanted_customer")
+    private boolean isUnwantedCustomer;
+
     @OneToMany(mappedBy = "individual", cascade = CascadeType.ALL)
     private List<Document> documents;
 
