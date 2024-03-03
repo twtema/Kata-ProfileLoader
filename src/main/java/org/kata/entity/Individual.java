@@ -1,9 +1,7 @@
 package org.kata.entity;
 
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.kata.entity.enums.GenderType;
 
 import javax.persistence.*;
@@ -15,6 +13,8 @@ import java.util.List;
 @Table(name = "individual")
 @Entity
 @ToString
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class Individual {
 
     @Id

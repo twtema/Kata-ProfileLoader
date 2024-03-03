@@ -6,6 +6,7 @@ import org.kata.controller.dto.IndividualDto;
 import org.kata.entity.Individual;
 import org.kata.entity.IndividualRelatedEntity;
 import org.kata.exception.IndividualNotFoundException;
+import org.kata.initTestIndiv.TestIndividualBuilder;
 import org.kata.repository.IndividualCrudRepository;
 import org.kata.service.IndividualService;
 import org.kata.service.KafkaMessageSender;
@@ -24,6 +25,8 @@ public class IndividualServiceImpl implements IndividualService {
     private final IndividualCrudRepository individualCrudRepository;
     private final IndividualMapper individualMapper;
     private final KafkaMessageSender kafkaMessageSender;
+    private final TestIndividualBuilder testIndividualBuilder;
+
 
     @Override
     public IndividualDto getIndividual(String icp) {
@@ -41,6 +44,11 @@ public class IndividualServiceImpl implements IndividualService {
         Individual entity = individualCrudRepository.findByPhone(phone)
                 .orElseThrow(() -> new IndividualNotFoundException("Individual with phone: " + phone + " not found"));
         return individualMapper.toDto(entity);
+    }
+
+    @Override
+    public IndividualDto buildTestIndividual() {
+        return individualMapper.toDto(testIndividualBuilder.individualInitializer());
     }
 
     @Override
@@ -73,6 +81,7 @@ public class IndividualServiceImpl implements IndividualService {
     public void deleteIndividual(String icp) {
         Individual entity = individualCrudRepository.findByIcp(icp)
                 .orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + icp + " not found"));
+
 
         individualCrudRepository.delete(entity);
     }

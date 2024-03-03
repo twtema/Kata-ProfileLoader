@@ -18,4 +18,6 @@ public interface IndividualService {
 
     void deleteIndividual(String icp);
 
+    IndividualDto buildTestIndividual();
+
 }
