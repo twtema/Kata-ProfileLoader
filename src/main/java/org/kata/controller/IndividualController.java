@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.kata.controller.dto.IndividualDto;
 import org.kata.exception.IndividualNotFoundException;
 import org.kata.service.IndividualService;
+import org.kata.service.TerroristDetectionService;
 import org.springdoc.api.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class IndividualController {
 
     private final IndividualService individualService;
+    private final TerroristDetectionService terroristDetectionService;
 
     @Operation(summary = "Получить Individual по ICP", description = "Возвращает DTO Individual по ICP")
     @GetMapping
@@ -41,6 +43,7 @@ public class IndividualController {
     @PostMapping
     public ResponseEntity<IndividualDto> postIndividual(
             @Parameter(description = "DTO Individual для создания") @RequestBody IndividualDto dto) {
+        terroristDetectionService.checkIndividual(dto);
         return new ResponseEntity<>(individualService.saveIndividual(dto), HttpStatus.CREATED);
     }
 
