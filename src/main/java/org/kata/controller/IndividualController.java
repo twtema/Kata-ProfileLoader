@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.kata.controller.dto.IndividualDto;
 import org.kata.exception.IndividualNotFoundException;
+import org.kata.service.DebtCheckService;
 import org.kata.exception.IntrudersDetectionException;
 import org.kata.service.IndividualService;
 import org.kata.service.IntrudersDetectionService;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class IndividualController {
 
     private final IndividualService individualService;
+    private final DebtCheckService debtCheckService;
 
     private final IntrudersDetectionService intrudersDetectionService;
 
@@ -49,6 +51,8 @@ public class IndividualController {
     @PostMapping
     public ResponseEntity<IndividualDto> postIndividual(
             @Parameter(description = "DTO Individual для создания") @RequestBody IndividualDto dto) {
+
+        debtCheckService.checkBlackListDocumentsWithExisting(dto);
 
         intrudersDetectionService.checkIndividual(dto);
 

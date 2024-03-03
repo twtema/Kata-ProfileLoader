@@ -65,4 +65,7 @@ public class IndividualDto {
 
     @Schema(description = "Кошелёк")
     private List<WalletDto> wallet;
+
+    @Schema(description = "Нежелательный клиент")
+    private boolean isUnwantedCustomer;
 }
