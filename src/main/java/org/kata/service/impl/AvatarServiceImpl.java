@@ -3,6 +3,7 @@ package org.kata.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.kata.controller.dto.AvatarDto;
+import org.kata.controller.dto.ContactChangeMessageDTO;
 import org.kata.controller.dto.DocumentDto;
 import org.kata.controller.dto.IndividualDto;
 import org.kata.entity.Avatar;
@@ -10,6 +11,7 @@ import org.kata.entity.Individual;
 import org.kata.exception.AvatarNotFoundException;
 import org.kata.repository.AvatarCrudRepository;
 import org.kata.service.AvatarService;
+import org.kata.service.ContactConfirmationService;
 import org.kata.service.IndividualService;
 import org.kata.service.mapper.AvatarMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,34 +106,33 @@ public class  AvatarServiceImpl implements AvatarService {
     }
 
 
-    @CacheEvict(key = "#icp", value = "icpAvatar")
+    @CacheEvict(key = "#icp", value = {"icpIndividual", "icpAvatar"})
     public void deleteAvatars(String icp, List<Boolean> flags) {
         List<Avatar> avatars = getIndividual(icp).getAvatar();
-//        Iterator<Boolean> iterator = flags.listIterator();
-//        List <Avatar> avatarsToDelete = avatars.stream()
-//                .filter(ava -> iterator.next())
-//                .toList();
-//        avatars.removeAll(avatarsToDelete);
-//        avatarCrudRepository.deleteAll(avatarsToDelete);
-            Iterator<Boolean> iterator = flags.listIterator();
+        Iterator<Boolean> iterator = flags.listIterator();
         List <Avatar> avatarsToDelete = avatars.stream()
-                    .filter(ava -> iterator.hasNext() && iterator.next())
-                    .toList();
-            avatars.removeAll(avatarsToDelete);
-            avatarCrudRepository.deleteAll(avatarsToDelete);
-
-        Cache cacheIndividual = cacheManager.getCache("icpIndividual");
-
-
-        if (!avatarsToDelete.isEmpty() && cacheIndividual != null && cacheIndividual.get(icp) != null) {
-            IndividualDto individualDto = (IndividualDto) cacheIndividual.get(icp).get();
-//            List<AvatarDto> avatarsToUpdate = individualDto.getAvatar().stream()
-//                    .filter(avatar -> avatar.equals(avatarsToDelete))
-//                    .toList();
-//            individualDto.getAvatar().removeIf(avatar -> avatarsToUpdate.contains(avatar));
-            individualDto.getAvatar().removeIf(avatar -> avatarsToDelete.contains(avatar));
-            cacheIndividual.put(icp, individualDto);
-        }
+                .filter(ava -> iterator.next())
+                .toList();
+        avatars.removeAll(avatarsToDelete);
+        avatarCrudRepository.deleteAll(avatarsToDelete);
+        /**
+         * This method does not work correctly and needs to be fixed.
+         * Until the method is fixed, calling this method will remove avatars and individuals from the cache by @CacheEvict based on ICP.
+         *
+         * After correcting this method, you need to remove the annotation @CacheEvict.
+         * And it is also necessary to prescribe the logic of checking the cache based on cacheManager call.
+         */
+//        Cache cacheAvatar = cacheManager.getCache("icpAvatar");
+//        Cache cacheIndividual = cacheManager.getCache("icpIndividual");
+//
+//
+//         if (cacheAvatar != null && cacheAvatar.get(dto.getIcp()) != null) {
+//                *** TO_DO ***
+//            }
+//
+//         if (cacheIndividual != null && cacheIndividual.get(dto.getIcp()) != null) {
+//                *** TO_DO ***
+//            }
     }
 
     @Override
