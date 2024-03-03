@@ -27,10 +27,17 @@ replay_pid*
 # iml
 *.iml
 
+
 /.idea/
+/prometheus/
+/scripts/
+
+.idea/
+script/
+prometheus/
+
 
 /target/
-
-profile-loader.iml
 target/
+
 

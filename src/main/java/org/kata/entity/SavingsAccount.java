@@ -26,7 +26,7 @@ public class SavingsAccount {
     private Currency currency;
 
 
-    @Column(name = "info_Of_Percent")
+    @Column(name = "info_of_percent")
     private String infoOfPercent;
 
     @Column(name = "final_sum")
