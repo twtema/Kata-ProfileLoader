@@ -12,7 +12,7 @@ import java.util.UUID;
 @Setter
 public class BlackListDocuments extends Document {
     public BlackListDocuments() {
-        series.add("1111");
+        series.add("0011");
         series.add("2222");
         numbers.add("333333");
         numbers.add("444444");

@@ -13,6 +13,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 public class TerroristDetectionServiceImpl implements TerroristDetectionService {
+
+
     public void checkIndividual(IndividualDto dto) {
         if (dto != null) {
             BlackListDocuments documents = new BlackListDocuments();
@@ -36,8 +38,11 @@ public class TerroristDetectionServiceImpl implements TerroristDetectionService 
                     cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH) &&
                     cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH));
 
-            if (isBlackListBirthDate.get() && isBlackListContacts.get() && isBlackListDocument.get())
+            if (isBlackListBirthDate.get() && isBlackListContacts.get() && isBlackListDocument.get()) {
                 throw new TerroristDetectedException("ВЫ ТЕРРОРИСТ!!!!!!!!!!!!!!!!!!");
+            } else if (isBlackListBirthDate.get() || isBlackListContacts.get() || isBlackListDocument.get()) {
+                dto.setUnwantedCustomer(true);
+            }
         }
     }
 }

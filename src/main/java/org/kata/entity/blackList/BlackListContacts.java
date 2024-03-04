@@ -13,7 +13,7 @@ import java.util.UUID;
 public class BlackListContacts extends ContactMedium {
 
     public BlackListContacts() {
-        numbervalue.add("89001001010");
+        numbervalue.add("+489001001010");
         numbervalue.add("89001654010");
         numbervalue.add("89074001010");
         numbervalue.add("89001012221");

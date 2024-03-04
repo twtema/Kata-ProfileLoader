@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.kata.controller.dto.ContactMediumDto;
 import org.kata.controller.dto.DocumentDto;
 import org.kata.controller.dto.IndividualDto;
+import org.kata.entity.enums.ContactMediumType;
 import org.kata.exception.IntrudersDetectionException;
 import org.kata.service.IntrudersDetectionService;
 import org.springframework.stereotype.Service;
@@ -25,12 +26,13 @@ public class IntrudersDetectionServiceImpl implements IntrudersDetectionService 
 
     private boolean isInvalidPhoneNumber(IndividualDto dto) {
         for (ContactMediumDto contactDto : dto.getContacts()) {
-            String phoneNumber = contactDto.getValue();
-            if (!phoneNumber.startsWith("+7") && !phoneNumber.startsWith("8")) {
-                log.info("номер телефона {} не прошел валидацию", contactDto.getValue());
-                return true;
+            if(contactDto.getType() == ContactMediumType.PHONE) {
+                String phoneNumber = contactDto.getValue();
+                if (!phoneNumber.startsWith("+7") && !phoneNumber.startsWith("8")) {
+                    log.info("номер телефона {} не прошел валидацию", contactDto.getValue());
+                    return true;
+                }
             }
-
         }
         return false;
     }
