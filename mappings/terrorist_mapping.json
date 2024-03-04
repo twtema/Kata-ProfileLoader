@@ -1,0 +1,13 @@
+{
+  "request" : {
+    "method" : "GET",
+    "url" : "/getTerrorists"
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "terrorists.json",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

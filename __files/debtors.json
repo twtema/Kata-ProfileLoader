@@ -1,0 +1,173 @@
+[
+  {
+    "icp": "456411555",
+    "name": "Должник_первый",
+    "surname": "Иванов",
+    "patronymic": "Иванович",
+    "fullName": "Иванов Иван Иванович",
+    "gender": "MALE",
+    "placeOfBirth": "Питер",
+    "countryOfBirth": "Россия",
+    "birthDate": "2024-03-04T19:02:58.645Z",
+    "documents": [
+      {
+        "icp": "456411555",
+        "documentType": "RF_PASSPORT",
+        "documentNumber": "121121",
+        "documentSerial": "5555",
+        "issueDate": "2024-03-04T19:02:58.645Z",
+        "expirationDate": "2024-03-04T19:02:58.645Z",
+        "actual": true
+      }
+    ],
+    "contacts": [
+      {
+        "icp": "456411555",
+        "type": "EMAIL",
+        "value": "example@mail.ru"
+      }
+    ],
+    "address": [
+      {
+        "icp": "456411555",
+        "street": "Пушкина",
+        "city": "Казань",
+        "state": "Российская Федерация",
+        "postCode": "101000",
+        "country": "Россия"
+      }
+    ],
+    "avatar": [
+      {
+        "icp": "456411555",
+        "filename": "имя файла",
+        "imageData": [
+          null
+        ],
+        "uploadDate": "2024-03-04T19:02:58.646Z"
+      }
+    ],
+    "wallet": [
+      {
+        "icp": "456411555",
+        "walletId": "456411555",
+        "currencyType": "BYN",
+        "balance": 123.45
+      }
+    ]
+  },
+  {
+    "icp": "017877532",
+    "name": "Должник_второй",
+    "surname": "Иванов",
+    "patronymic": "Иванович",
+    "fullName": "Иванов Иван Иванович",
+    "gender": "MALE",
+    "placeOfBirth": "Саратов",
+    "countryOfBirth": "Россия",
+    "birthDate": "2021-03-04T19:02:58.645Z",
+    "documents": [
+      {
+        "icp": "017877532",
+        "documentType": "RF_PASSPORT",
+        "documentNumber": "654123",
+        "documentSerial": "8888",
+        "issueDate": "2024-03-04T19:02:58.645Z",
+        "expirationDate": "2024-03-04T19:02:58.645Z",
+        "actual": true
+      }
+    ],
+    "contacts": [
+      {
+        "icp": "017877532",
+        "type": "EMAIL",
+        "value": "test@mail.ru"
+      }
+    ],
+    "address": [
+      {
+        "icp": "017877532",
+        "street": "Пушкина",
+        "city": "Саратов",
+        "state": "Российская Федерация",
+        "postCode": "101000",
+        "country": "Россия"
+      }
+    ],
+    "avatar": [
+      {
+        "icp": "017877532",
+        "filename": "имя файла",
+        "imageData": [
+          null
+        ],
+        "uploadDate": "2024-03-04T19:02:58.646Z"
+      }
+    ],
+    "wallet": [
+      {
+        "icp": "017877532",
+        "walletId": "017877532",
+        "currencyType": "BYN",
+        "balance": 123.45
+      }
+    ]
+  },
+  {
+    "icp": "774415000",
+    "name": "Должник_третий",
+    "surname": "Иванов",
+    "patronymic": "Иванович",
+    "fullName": "Иванов Иван Иванович",
+    "gender": "MALE",
+    "placeOfBirth": "Рязань",
+    "countryOfBirth": "Россия",
+    "birthDate": "2024-03-04T19:02:58.645Z",
+    "documents": [
+      {
+        "icp": "774415000",
+        "documentType": "RF_PASSPORT",
+        "documentNumber": "989454",
+        "documentSerial": "9879",
+        "issueDate": "2024-03-04T19:02:58.645Z",
+        "expirationDate": "2024-03-04T19:02:58.645Z",
+        "actual": true
+      }
+    ],
+    "contacts": [
+      {
+        "icp": "774415000",
+        "type": "EMAIL",
+        "value": "+7-666-555-44-33"
+      }
+    ],
+    "address": [
+      {
+        "icp": "774415000",
+        "street": "Пушкина",
+        "city": "Рязань",
+        "state": "Российская Федерация",
+        "postCode": "101000",
+        "country": "Россия"
+      }
+    ],
+    "avatar": [
+      {
+        "icp": "774415000",
+        "filename": "имя файла",
+        "imageData": [
+          null
+        ],
+        "uploadDate": "2024-03-04T19:02:58.646Z"
+      }
+    ],
+    "wallet": [
+      {
+        "icp": "774415000",
+        "walletId": "774415000",
+        "currencyType": "BYN",
+        "balance": 123.45
+      }
+    ]
+  }
+]

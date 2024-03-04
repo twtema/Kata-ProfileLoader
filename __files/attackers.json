@@ -1,0 +1,173 @@
+[
+  {
+    "icp": "456455165",
+    "name": "Злоумышленник_первый",
+    "surname": "Иванов",
+    "patronymic": "Иванович",
+    "fullName": "Иванов Иван Иванович",
+    "gender": "MALE",
+    "placeOfBirth": "Питер",
+    "countryOfBirth": "Россия",
+    "birthDate": "2024-03-04T19:02:58.645Z",
+    "documents": [
+      {
+        "icp": "456455165",
+        "documentType": "RF_PASSPORT",
+        "documentNumber": "121121",
+        "documentSerial": "0000",
+        "issueDate": "2024-03-04T19:02:58.645Z",
+        "expirationDate": "2024-03-04T19:02:58.645Z",
+        "actual": true
+      }
+    ],
+    "contacts": [
+      {
+        "icp": "456455165",
+        "type": "EMAIL",
+        "value": "example@mail.ru"
+      }
+    ],
+    "address": [
+      {
+        "icp": "456455165",
+        "street": "Пушкина",
+        "city": "Казань",
+        "state": "Российская Федерация",
+        "postCode": "101000",
+        "country": "Россия"
+      }
+    ],
+    "avatar": [
+      {
+        "icp": "456455165",
+        "filename": "имя файла",
+        "imageData": [
+          null
+        ],
+        "uploadDate": "2024-03-04T19:02:58.646Z"
+      }
+    ],
+    "wallet": [
+      {
+        "icp": "456455165",
+        "walletId": "456455165",
+        "currencyType": "BYN",
+        "balance": 123.45
+      }
+    ]
+  },
+  {
+    "icp": "13564235",
+    "name": "Злоумышленник_второй",
+    "surname": "Иванов",
+    "patronymic": "Иванович",
+    "fullName": "Иванов Иван Иванович",
+    "gender": "MALE",
+    "placeOfBirth": "Саратов",
+    "countryOfBirth": "Россия",
+    "birthDate": "2021-03-04T19:02:58.645Z",
+    "documents": [
+      {
+        "icp": "13564235",
+        "documentType": "RF_PASSPORT",
+        "documentNumber": "654123",
+        "documentSerial": "0012",
+        "issueDate": "2024-03-04T19:02:58.645Z",
+        "expirationDate": "2024-03-04T19:02:58.645Z",
+        "actual": true
+      }
+    ],
+    "contacts": [
+      {
+        "icp": "13564235",
+        "type": "EMAIL",
+        "value": "+7-985-458-78-78/test@mail.ru"
+      }
+    ],
+    "address": [
+      {
+        "icp": "13564235",
+        "street": "Пушкина",
+        "city": "Саратов",
+        "state": "Российская Федерация",
+        "postCode": "101000",
+        "country": "Россия"
+      }
+    ],
+    "avatar": [
+      {
+        "icp": "13564235",
+        "filename": "имя файла",
+        "imageData": [
+          null
+        ],
+        "uploadDate": "2024-03-04T19:02:58.646Z"
+      }
+    ],
+    "wallet": [
+      {
+        "icp": "13564235",
+        "walletId": "13564235",
+        "currencyType": "BYN",
+        "balance": 123.45
+      }
+    ]
+  },
+  {
+    "icp": "9788465",
+    "name": "Злоумышленник_третий",
+    "surname": "Иванов",
+    "patronymic": "Иванович",
+    "fullName": "Иванов Иван Иванович",
+    "gender": "MALE",
+    "placeOfBirth": "Рязань",
+    "countryOfBirth": "Россия",
+    "birthDate": "2024-03-04T19:02:58.645Z",
+    "documents": [
+      {
+        "icp": "9788465",
+        "documentType": "RF_PASSPORT",
+        "documentNumber": "989454",
+        "documentSerial": "9879",
+        "issueDate": "2024-03-04T19:02:58.645Z",
+        "expirationDate": "2024-03-04T19:02:58.645Z",
+        "actual": true
+      }
+    ],
+    "contacts": [
+      {
+        "icp": "9788465",
+        "type": "EMAIL",
+        "value": "+5-666-555-44-33"
+      }
+    ],
+    "address": [
+      {
+        "icp": "9788465",
+        "street": "Пушкина",
+        "city": "Рязань",
+        "state": "Российская Федерация",
+        "postCode": "101000",
+        "country": "Россия"
+      }
+    ],
+    "avatar": [
+      {
+        "icp": "9788465",
+        "filename": "имя файла",
+        "imageData": [
+          null
+        ],
+        "uploadDate": "2024-03-04T19:02:58.646Z"
+      }
+    ],
+    "wallet": [
+      {
+        "icp": "9788465",
+        "walletId": "9788465",
+        "currencyType": "BYN",
+        "balance": 123.45
+      }
+    ]
+  }
+]

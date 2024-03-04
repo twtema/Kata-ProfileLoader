@@ -1,0 +1,173 @@
+[
+  {
+    "icp": "9879879",
+    "name": "Мошенник_первый",
+    "surname": "Мошенников",
+    "patronymic": "Мошенникович",
+    "fullName": "Иванов Иван Иванович",
+    "gender": "MALE",
+    "placeOfBirth": "Питер",
+    "countryOfBirth": "Россия",
+    "birthDate": "2024-03-04T19:02:58.645Z",
+    "documents": [
+      {
+        "icp": "9879879",
+        "documentType": "RF_PASSPORT",
+        "documentNumber": "121121",
+        "documentSerial": "5555",
+        "issueDate": "2024-03-04T19:02:58.645Z",
+        "expirationDate": "2024-03-04T19:02:58.645Z",
+        "actual": true
+      }
+    ],
+    "contacts": [
+      {
+        "icp": "9879879",
+        "type": "EMAIL",
+        "value": "example@mail.ru"
+      }
+    ],
+    "address": [
+      {
+        "icp": "9879879",
+        "street": "Пушкина",
+        "city": "Казань",
+        "state": "Российская Федерация",
+        "postCode": "101000",
+        "country": "Россия"
+      }
+    ],
+    "avatar": [
+      {
+        "icp": "9879879",
+        "filename": "имя файла",
+        "imageData": [
+          null
+        ],
+        "uploadDate": "2024-03-04T19:02:58.646Z"
+      }
+    ],
+    "wallet": [
+      {
+        "icp": "9879879",
+        "walletId": "1234567890",
+        "currencyType": "BYN",
+        "balance": 123.45
+      }
+    ]
+  },
+  {
+    "icp": "54125",
+    "name": "Мошенник_второй",
+    "surname": "Иванов",
+    "patronymic": "Иванович",
+    "fullName": "Иванов Иван Иванович",
+    "gender": "MALE",
+    "placeOfBirth": "Саратов",
+    "countryOfBirth": "Россия",
+    "birthDate": "2021-03-04T19:02:58.645Z",
+    "documents": [
+      {
+        "icp": "54125",
+        "documentType": "RF_PASSPORT",
+        "documentNumber": "654123",
+        "documentSerial": "8888",
+        "issueDate": "2024-03-04T19:02:58.645Z",
+        "expirationDate": "2024-03-04T19:02:58.645Z",
+        "actual": true
+      }
+    ],
+    "contacts": [
+      {
+        "icp": "54125",
+        "type": "EMAIL",
+        "value": "test@mail.ru"
+      }
+    ],
+    "address": [
+      {
+        "icp": "54125",
+        "street": "Пушкина",
+        "city": "Саратов",
+        "state": "Российская Федерация",
+        "postCode": "101000",
+        "country": "Россия"
+      }
+    ],
+    "avatar": [
+      {
+        "icp": "54125",
+        "filename": "имя файла",
+        "imageData": [
+          null
+        ],
+        "uploadDate": "2024-03-04T19:02:58.646Z"
+      }
+    ],
+    "wallet": [
+      {
+        "icp": "54125",
+        "walletId": "54125",
+        "currencyType": "BYN",
+        "balance": 123.45
+      }
+    ]
+  },
+  {
+    "icp": "54787125",
+    "name": "Мошенник_третий",
+    "surname": "Иванов",
+    "patronymic": "Иванович",
+    "fullName": "Иванов Иван Иванович",
+    "gender": "MALE",
+    "placeOfBirth": "Рязань",
+    "countryOfBirth": "Россия",
+    "birthDate": "2024-03-04T19:02:58.645Z",
+    "documents": [
+      {
+        "icp": "54787125",
+        "documentType": "RF_PASSPORT",
+        "documentNumber": "989454",
+        "documentSerial": "9879",
+        "issueDate": "2024-03-04T19:02:58.645Z",
+        "expirationDate": "2024-03-04T19:02:58.645Z",
+        "actual": true
+      }
+    ],
+    "contacts": [
+      {
+        "icp": "54787125",
+        "type": "EMAIL",
+        "value": "+7-666-555-44-33"
+      }
+    ],
+    "address": [
+      {
+        "icp": "54787125",
+        "street": "Пушкина",
+        "city": "Рязань",
+        "state": "Российская Федерация",
+        "postCode": "101000",
+        "country": "Россия"
+      }
+    ],
+    "avatar": [
+      {
+        "icp": "54787125",
+        "filename": "имя файла",
+        "imageData": [
+          null
+        ],
+        "uploadDate": "2024-03-04T19:02:58.646Z"
+      }
+    ],
+    "wallet": [
+      {
+        "icp": "54787125",
+        "walletId": "54787125",
+        "currencyType": "BYN",
+        "balance": 123.45
+      }
+    ]
+  }
+]
