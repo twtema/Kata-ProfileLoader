@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
 
+
 @Service
 public class TerroristDetectionServiceImpl implements TerroristDetectionService {
 
