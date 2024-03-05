@@ -9,10 +9,32 @@ import org.kata.service.TerroristDetectionService;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
-import java.util.concurrent.atomic.AtomicBoolean;
+
 
 @Service
 public class TerroristDetectionServiceImpl implements TerroristDetectionService {
+
+
+    public boolean isBlackListDocument(IndividualDto dto, BlackListDocuments documents) {
+        return dto.getDocuments().stream()
+                .anyMatch(docDto -> documents.getSeries().stream()
+                        .anyMatch(seriesBlackList -> docDto.getDocumentSerial().equals(seriesBlackList)
+                                && documents.getNumbers().stream()
+                                .anyMatch(nomberBlackList -> docDto.getDocumentNumber().equals(nomberBlackList))));
+    }
+
+    public boolean isBlackListContacts(IndividualDto dto, BlackListContacts contacts) {
+        return dto.getContacts().stream()
+                .anyMatch(contactDto -> contacts.getNumbervalue().stream()
+                        .anyMatch(contactBlackList -> contactDto.getValue().equals(contactBlackList)));
+    }
+
+    public boolean isBlackListBirthDate(Calendar cal1, Calendar cal2) {
+        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH) &&
+                cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH);
+    }
+
 
 
     public void checkIndividual(IndividualDto dto) {
@@ -24,23 +46,10 @@ public class TerroristDetectionServiceImpl implements TerroristDetectionService 
             Calendar cal2 = Calendar.getInstance();
             cal2.setTime(new BlackListIndividualBirthDate().getBirthDate());
 
-            AtomicBoolean isBlackListDocument = new AtomicBoolean(dto.getDocuments().stream()
-                    .anyMatch(docDto -> documents.getSeries().stream()
-                            .anyMatch(seriesBlackList -> docDto.getDocumentSerial().equals(seriesBlackList)
-                                    && documents.getNumbers().stream()
-                                    .anyMatch(nomberBlackList -> docDto.getDocumentNumber().equals(nomberBlackList)))));
 
-            AtomicBoolean isBlackListContacts = new AtomicBoolean(dto.getContacts().stream()
-                    .anyMatch(contactDto -> contacts.getNumbervalue().stream()
-                            .anyMatch(contactBlackList -> contactDto.getValue().equals(contactBlackList))));
-
-            AtomicBoolean isBlackListBirthDate = new AtomicBoolean(cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-                    cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH) &&
-                    cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH));
-
-            if (isBlackListBirthDate.get() && isBlackListContacts.get() && isBlackListDocument.get()) {
-                throw new TerroristDetectedException("ВЫ ТЕРРОРИСТ!!!!!!!!!!!!!!!!!!");
-            } else if (isBlackListBirthDate.get() || isBlackListContacts.get() || isBlackListDocument.get()) {
+            if (isBlackListDocument(dto, documents) && isBlackListContacts(dto, contacts) && isBlackListBirthDate(cal1, cal2)) {
+              throw new TerroristDetectedException("ВЫ ТЕРРОРИСТ!!!!!!!!!!!!!!!!!!");
+            } else if (isBlackListDocument(dto, documents) || isBlackListContacts(dto, contacts) || isBlackListBirthDate(cal1, cal2)) {
                 dto.setUnwantedCustomer(true);
             }
         }
