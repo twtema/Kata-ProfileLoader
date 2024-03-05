@@ -15,18 +15,20 @@ import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Order(2)
+@Order(1)
 @Component
 @WebFilter(filterName = "LoggingFilter", urlPatterns = "/*")
 public class LoggingFilter extends OncePerRequestFilter {
 
+    private static final String CONVERSATION_ID = "conversationID";
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.info("conversationId: {}, Method: {}, URI: {}, Headers: {}",
-                response.getHeader("conversationId"), request.getMethod(), request.getRequestURI(), getHeaders(request));
+                request.getHeader(CONVERSATION_ID), request.getMethod(), request.getRequestURI(), getHeaders(request));
         filterChain.doFilter(request, response);
         log.info("conversationId: {}, Response Status: {}, Content Type: {}, Headers: {}",
-                response.getHeader("conversationId"), response.getStatus(), response.getContentType(), getHeaders(response));
+                response.getHeader(CONVERSATION_ID), response.getStatus(), response.getContentType(), getHeaders(response));
     }
 
     private String getHeaders(HttpServletRequest request) {
