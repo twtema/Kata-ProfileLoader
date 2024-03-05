@@ -1,173 +1,50 @@
 [
   {
-    "icp": "4564555",
-    "name": "Террорист_первый",
-    "surname": "Террористов",
-    "patronymic": "Террористович",
-    "fullName": "Террористов террорист террористович",
-    "gender": "MALE",
-    "placeOfBirth": "Питер",
-    "countryOfBirth": "Россия",
-    "birthDate": "2024-03-04T19:02:58.645Z",
-    "documents": [
-      {
-        "icp": "4564555",
-        "documentType": "RF_PASSPORT",
-        "documentNumber": "121121",
-        "documentSerial": "5555",
-        "issueDate": "2024-03-04T19:02:58.645Z",
-        "expirationDate": "2024-03-04T19:02:58.645Z",
-        "actual": true
-      }
-    ],
-    "contacts": [
-      {
-        "icp": "4564555",
-        "type": "EMAIL",
-        "value": "example@mail.ru"
-      }
-    ],
-    "address": [
-      {
-        "icp": "4564555",
-        "street": "Пушкина",
-        "city": "Казань",
-        "state": "Российская Федерация",
-        "postCode": "101000",
-        "country": "Россия"
-      }
-    ],
-    "avatar": [
-      {
-        "icp": "4564555",
-        "filename": "имя файла",
-        "imageData": [
-          null
-        ],
-        "uploadDate": "2024-03-04T19:02:58.646Z"
-      }
-    ],
-    "wallet": [
-      {
-        "icp": "4564555",
-        "walletId": "1234567890",
-        "currencyType": "BYN",
-        "balance": 123.45
-      }
-    ]
+    "icp": "123456789",
+    "name": "Ахмед",
+    "surname": "Абдулов",
+    "birthdate": "1990-05-12",
+    "document": {
+      "series": "AB",
+      "number": "123456"
+    },
+    "phone_number": "+1234567890",
+    "nationality": "Чеченский",
+    "address": "ул. Ленина, д. 15, кв. 7",
+    "occupation": "Студент",
+    "weapons": ["Калашников", "Граната"],
+    "target": "Государственные учреждения"
   },
   {
-    "icp": "7877532",
-    "name": "Террорист_второй",
-    "surname": "Террористов",
-    "patronymic": "Террористович",
-    "fullName": "Террористов террорист террористович",
-    "gender": "MALE",
-    "placeOfBirth": "Саратов",
-    "countryOfBirth": "Россия",
-    "birthDate": "2021-03-04T19:02:58.645Z",
-    "documents": [
-      {
-        "icp": "7877532",
-        "documentType": "RF_PASSPORT",
-        "documentNumber": "654123",
-        "documentSerial": "8888",
-        "issueDate": "2024-03-04T19:02:58.645Z",
-        "expirationDate": "2024-03-04T19:02:58.645Z",
-        "actual": true
-      }
-    ],
-    "contacts": [
-      {
-        "icp": "7877532",
-        "type": "EMAIL",
-        "value": "test@mail.ru"
-      }
-    ],
-    "address": [
-      {
-        "icp": "7877532",
-        "street": "Пушкина",
-        "city": "Саратов",
-        "state": "Российская Федерация",
-        "postCode": "101000",
-        "country": "Россия"
-      }
-    ],
-    "avatar": [
-      {
-        "icp": "7877532",
-        "filename": "имя файла",
-        "imageData": [
-          null
-        ],
-        "uploadDate": "2024-03-04T19:02:58.646Z"
-      }
-    ],
-    "wallet": [
-      {
-        "icp": "7877532",
-        "walletId": "7877532",
-        "currencyType": "BYN",
-        "balance": 123.45
-      }
-    ]
+    "icp": "120056789",
+    "name": "Абдул",
+    "surname": "Ахмедов",
+    "birthdate": "1980-07-22",
+    "document": {
+      "series": "1315",
+      "number": "875896"
+    },
+    "phone_number": "+7-900-465-85-09",
+    "nationality": "Чеченский",
+    "address": "ул. Ленина, д. 15, кв. 7",
+    "occupation": "Безработный",
+    "weapons": ["Калашников", "Граната"],
+    "target": "Государственные учреждения"
   },
   {
-    "icp": "774415",
-    "name": "Террорист_третий",
-    "surname": "Террористов",
-    "patronymic": "Террористович",
-    "fullName": "Террористов террорист террористович",
-    "gender": "MALE",
-    "placeOfBirth": "Рязань",
-    "countryOfBirth": "Россия",
-    "birthDate": "2024-03-04T19:02:58.645Z",
-    "documents": [
-      {
-        "icp": "774415",
-        "documentType": "RF_PASSPORT",
-        "documentNumber": "989454",
-        "documentSerial": "9879",
-        "issueDate": "2024-03-04T19:02:58.645Z",
-        "expirationDate": "2024-03-04T19:02:58.645Z",
-        "actual": true
-      }
-    ],
-    "contacts": [
-      {
-        "icp": "774415",
-        "type": "EMAIL",
-        "value": "+7-666-555-44-33"
-      }
-    ],
-    "address": [
-      {
-        "icp": "774415",
-        "street": "Пушкина",
-        "city": "Рязань",
-        "state": "Российская Федерация",
-        "postCode": "101000",
-        "country": "Россия"
-      }
-    ],
-    "avatar": [
-      {
-        "icp": "774415",
-        "filename": "имя файла",
-        "imageData": [
-          null
-        ],
-        "uploadDate": "2024-03-04T19:02:58.646Z"
-      }
-    ],
-    "wallet": [
-      {
-        "icp": "774415",
-        "walletId": "774415",
-        "currencyType": "BYN",
-        "balance": 123.45
-      }
-    ]
+    "icp": "166954789",
+    "name": "Магомед",
+    "surname": "Магомедов",
+    "birthdate": "1996-08-12",
+    "document": {
+      "series": "AB78",
+      "number": "123456"
+    },
+    "phone_number": "+1234567890",
+    "nationality": "Чеченский",
+    "address": "ул. Гагарина, д. 15, кв. 23",
+    "occupation": "Студент",
+    "weapons": ["Калашников", "Граната"],
+    "target": "Государственные учреждения"
   }
 ]
