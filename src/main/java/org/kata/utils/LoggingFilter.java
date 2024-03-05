@@ -24,11 +24,23 @@ public class LoggingFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        log.info("conversationId: {}, Method: {}, URI: {}, Headers: {}",
-                request.getHeader(CONVERSATION_ID), request.getMethod(), request.getRequestURI(), getHeaders(request));
+
+        String conversationId = request.getHeader(CONVERSATION_ID);
+        String logEntry = CONVERSATION_ID;
+
+        if (conversationId == null) {
+            conversationId = request.toString();
+            logEntry = "request";
+        }
+
+        log.info("{}: {}, Method: {}, URI: {}, Headers: {}",
+                logEntry, conversationId, request.getMethod(), request.getRequestURI(), getHeaders(request));
+        response.addHeader(CONVERSATION_ID, conversationId);
+
         filterChain.doFilter(request, response);
-        log.info("conversationId: {}, Response Status: {}, Content Type: {}, Headers: {}",
-                response.getHeader(CONVERSATION_ID), response.getStatus(), response.getContentType(), getHeaders(response));
+
+        log.info("{}: {}, Response Status: {}, Content Type: {}, Headers: {}",
+                logEntry, response.getHeader(CONVERSATION_ID), response.getStatus(), response.getContentType(), getHeaders(response));
     }
 
     private String getHeaders(HttpServletRequest request) {
