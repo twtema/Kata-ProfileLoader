@@ -65,6 +65,6 @@ public class IndividualBlackListCheckDto {
     @Schema(description = "Кошелёк")
     private List<WalletDto> wallet;
 
-    @Schema(description = "Нежелательный клиент")
-    private boolean isUnwantedCustomer;
+//    @Schema(description = "Нежелательный клиент")
+//    private boolean isUnwantedCustomer;
 }

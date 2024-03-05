@@ -21,25 +21,25 @@ public class DetectionServiceImpl implements DetectionService {
 
     @Override
     public void terroristDetection(IndividualDto dto) {
-        if (dto != null) {
-            return loaderWebClient.get()
-                    .uri(uriBuilder -> uriBuilder
-                            .path(urlProperties.getProfileLoaderGetIndividual())
-                            .queryParam("icp", dto.getIcp())
-                            .build())
-                    .retrieve()
-                    .onStatus(HttpStatus::isError, response ->
-                            Mono.error(new IndividualNotFoundException(
-                                    "Individual with icp " + icp + " not found")
-                            )
-                    )
-                    .bodyToMono(IndividualDto.class)
-                    .block();
-
-        } else {
-            throw new IllegalArgumentException("ERROR");
-        }
-
+//        if (dto != null) {
+//            return loaderWebClient.get()
+//                    .uri(uriBuilder -> uriBuilder
+//                            .path(urlProperties.getProfileLoaderGetIndividual())
+//                            .queryParam("icp", dto.getIcp())
+//                            .build())
+//                    .retrieve()
+//                    .onStatus(HttpStatus::isError, response ->
+//                            Mono.error(new IndividualNotFoundException(
+//                                    "Individual with icp " + icp + " not found")
+//                            )
+//                    )
+//                    .bodyToMono(IndividualDto.class)
+//                    .block();
+//
+//        } else {
+//            throw new IllegalArgumentException("ERROR");
+//        }
+//
     }
 
     @Override

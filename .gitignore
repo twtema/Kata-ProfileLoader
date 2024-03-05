@@ -30,10 +30,8 @@ replay_pid*
 
 /.idea/
 /prometheus/
-/scripts/
 
 .idea/
-script/
 prometheus/
 
 
