@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -40,8 +42,11 @@ public class IndividualController {
     })
     @PostMapping
     public ResponseEntity<IndividualDto> postIndividual(
-            @Parameter(description = "DTO Individual для создания") @RequestBody IndividualDto dto) {
-        return new ResponseEntity<>(individualService.saveIndividual(dto), HttpStatus.CREATED);
+            @Parameter(description = "DTO Individual для создания") @RequestBody IndividualDto dto, HttpServletResponse response) {
+        IndividualDto individualDto = individualService.saveIndividual(dto);
+        response.addHeader("X-Debug-Info","Individual with icp: " + individualDto.getIcp() + " successfully saved to the database!");
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(individualDto);
     }
 
     @Operation(summary = "Создать тестового Individual", description = "Сохраняет и возвращает DTO тестового индивида")

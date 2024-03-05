@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
@@ -45,8 +46,11 @@ public class ContactMediumController {
     @PostMapping
     public ResponseEntity<ContactMediumDto> postContactMedium(
             @Parameter(description = "DTO ContactMedium для создания")
-            @RequestBody ContactMediumDto dto) {
-        return new ResponseEntity<>(contactMediumService.saveContactMedium(dto), HttpStatus.CREATED);
+            @RequestBody ContactMediumDto dto, HttpServletResponse response) {
+        ContactMediumDto contactMediumDto = contactMediumService.saveContactMedium(dto);
+        response.addHeader("X-Debug-Info", contactMediumDto.getType() + " successfully saved to the database!");
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(contactMediumDto);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

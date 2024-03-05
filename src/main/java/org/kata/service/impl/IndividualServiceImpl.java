@@ -71,6 +71,13 @@ public class IndividualServiceImpl implements IndividualService {
 
         individualCrudRepository.save(entity);
 
+        try {
+            individualCrudRepository.save(entity);
+            log.debug("Saved individual to the database: {}", entity);
+        } catch (Exception e) {
+            log.warn("Failed to save individual to the database.", e);
+        }
+
         return individualMapper.toDto(entity);
     }
 

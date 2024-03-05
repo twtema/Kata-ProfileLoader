@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
@@ -47,8 +48,11 @@ public class DocumentController {
     @PostMapping
     public ResponseEntity<DocumentDto> postDocument(
             @Parameter(description = "DTO Document для создания")
-            @RequestBody DocumentDto dto) {
-        return new ResponseEntity<>(documentService.saveDocument(dto), HttpStatus.CREATED);
+            @RequestBody DocumentDto dto, HttpServletResponse response) {
+        DocumentDto documentDto = documentService.saveDocument(dto);
+        response.addHeader("X-Debug-Info", documentDto.getDocumentType() + " successfully saved to the database!");
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(documentDto);
     }
 
     @Operation(

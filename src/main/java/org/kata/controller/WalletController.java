@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -39,8 +40,11 @@ public class WalletController {
     })
     @PostMapping
     public ResponseEntity<WalletDto> postWallet(
-            @Parameter(description = "DTO Wallet для создания") @RequestBody WalletDto dto) {
-        return new ResponseEntity<>(walletService.saveWallet(dto), HttpStatus.CREATED);
+            @Parameter(description = "DTO Wallet для создания") @RequestBody WalletDto dto, HttpServletResponse response) {
+            WalletDto walletDto = walletService.saveWallet(dto);
+            response.addHeader("X-Debug-Info", "Wallet with ID: " + walletDto.getWalletId() + ", successfully saved to the database!");
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(walletDto);
     }
     @Operation(summary = "Получить Wallet по номеру телефона и валюте", description = "Возвращает WalletDto")
     @ApiResponses(value = {
@@ -71,5 +75,4 @@ public class WalletController {
     public ErrorMessage getContactMediumHandler(ContactMediumNotFoundException e) {
         return new ErrorMessage(e.getMessage());
     }
-
 }
