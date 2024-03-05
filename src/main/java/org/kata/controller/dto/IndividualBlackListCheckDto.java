@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
-import org.kata.entity.SavingsAccount;
 import org.kata.entity.enums.GenderType;
 
 import java.util.Date;
@@ -15,7 +14,7 @@ import java.util.List;
 @Builder
 @Jacksonized
 @Schema(description = "DTO представляющий индивида")
-public class IndividualDto {
+public class IndividualBlackListCheckDto {
 
     @Schema(description = "ICP", example = "1234567890")
     private String icp;
@@ -66,6 +65,6 @@ public class IndividualDto {
     @Schema(description = "Кошелёк")
     private List<WalletDto> wallet;
 
-    @Schema(description = "Нежелательный клиент")
-    private boolean isUnwantedCustomer;
+//    @Schema(description = "Нежелательный клиент")
+//    private boolean isUnwantedCustomer;
 }

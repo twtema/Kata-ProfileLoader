@@ -64,6 +64,8 @@ public class IndividualServiceImpl implements IndividualService {
         processCollection(entity.getContacts(), entity);
         processCollection(entity.getAvatar(), entity);
         processCollection(entity.getWallet(), entity);
+        entity.setUnwantedCustomer(dto.isUnwantedCustomer());
+
 
         entity.getAvatar().get(0).setActual(true);
 

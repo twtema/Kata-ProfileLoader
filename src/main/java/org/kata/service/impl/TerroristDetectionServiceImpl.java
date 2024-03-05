@@ -14,6 +14,7 @@ import java.util.Calendar;
 @Service
 public class TerroristDetectionServiceImpl implements TerroristDetectionService {
 
+
     public boolean isBlackListDocument(IndividualDto dto, BlackListDocuments documents) {
         return dto.getDocuments().stream()
                 .anyMatch(docDto -> documents.getSeries().stream()
@@ -35,6 +36,7 @@ public class TerroristDetectionServiceImpl implements TerroristDetectionService 
     }
 
 
+
     public void checkIndividual(IndividualDto dto) {
         if (dto != null) {
             BlackListDocuments documents = new BlackListDocuments();
@@ -45,8 +47,11 @@ public class TerroristDetectionServiceImpl implements TerroristDetectionService 
             cal2.setTime(new BlackListIndividualBirthDate().getBirthDate());
 
 
-            if (isBlackListDocument(dto, documents) && isBlackListContacts(dto, contacts) && isBlackListBirthDate(cal1, cal2))
-                throw new TerroristDetectedException("ВЫ ТЕРРОРИСТ!!!!!!!!!!!!!!!!!!");
+            if (isBlackListDocument(dto, documents) && isBlackListContacts(dto, contacts) && isBlackListBirthDate(cal1, cal2)) {
+              throw new TerroristDetectedException("ВЫ ТЕРРОРИСТ!!!!!!!!!!!!!!!!!!");
+            } else if (isBlackListDocument(dto, documents) || isBlackListContacts(dto, contacts) || isBlackListBirthDate(cal1, cal2)) {
+                dto.setUnwantedCustomer(true);
+            }
         }
     }
 }
