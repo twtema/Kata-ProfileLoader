@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
 import org.kata.controller.dto.IndividualDto;
 import org.kata.exception.IndividualNotFoundException;
@@ -47,6 +46,17 @@ public class IndividualController {
         terroristDetectionService.checkIndividual(dto);
         return new ResponseEntity<>(individualService.saveIndividual(dto), HttpStatus.CREATED);
     }
+
+    @Operation(summary = "Создать тестового Individual", description = "Сохраняет и возвращает DTO тестового индивида")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Individual успешно создан"),
+            @ApiResponse(responseCode = "400", description = "Неверный запрос")
+    })
+    @PostMapping("/create")
+    public ResponseEntity<IndividualDto> addTestIndividual() {
+        return new ResponseEntity<>(individualService.saveIndividual(individualService.buildTestIndividual()), HttpStatus.CREATED);
+    }
+
     @Operation(summary = "Получить Individual по номеру", description = "Возвращает DTO Individual по номеру")
     @GetMapping("/byPhone")
     public ResponseEntity<IndividualDto> individualByPhone(
@@ -60,7 +70,6 @@ public class IndividualController {
             @ApiResponse(responseCode = "400", description = "Bad request"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-
     @DeleteMapping("/delete")
     public ResponseEntity<HttpStatus> deleteIndividual(@RequestParam String icp) {
         System.out.println("controller loader delete icp - " + icp);
