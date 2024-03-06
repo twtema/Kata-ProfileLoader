@@ -13,7 +13,6 @@ import org.kata.repository.AddressCrudRepository;
 import org.kata.repository.IndividualCrudRepository;
 import org.kata.service.AddressService;
 import org.kata.service.mapper.AddressMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
@@ -31,12 +30,7 @@ public class AddressServiceImpl implements AddressService {
     private final AddressCrudRepository addressCrudRepository;
     private final IndividualCrudRepository individualCrudRepository;
     private final AddressMapper addressMapper;
-
-
-
-    @Autowired
     private final CacheManager cacheManager;
-
 
     @Override
     @Cacheable(key = "#icp", value = "icpAddress")
@@ -80,18 +74,7 @@ public class AddressServiceImpl implements AddressService {
 
             addressCrudRepository.save(address);
 
-            Cache cacheAddress = cacheManager.getCache("icpAddress");
-            Cache cacheIndividual = cacheManager.getCache("icpIndividual");
-
-            if (cacheAddress != null && cacheAddress.get(dto.getIcp()) != null) {
-                cacheAddress.put(dto.getIcp(), dto);
-            }
-
-            if (cacheIndividual != null && cacheIndividual.get(dto.getIcp()) != null) {
-                IndividualDto individualDto = (IndividualDto) cacheIndividual.get(dto.getIcp()).get();
-                individualDto.getAddress().add(dto);
-                cacheIndividual.put(dto.getIcp(), individualDto);
-            }
+            addingNewAvatarInCache(dto);
 
             AddressDto addressDto = addressMapper.toDto(address);
             addressDto.setIcp(dto.getIcp());
@@ -120,5 +103,20 @@ public class AddressServiceImpl implements AddressService {
                 address.setActual(false);
             }
         });
+    }
+
+    private void addingNewAvatarInCache(AddressDto dto){
+        Cache cacheAddress = cacheManager.getCache("icpAddress");
+        Cache cacheIndividual = cacheManager.getCache("icpIndividual");
+
+        if (cacheAddress != null && cacheAddress.get(dto.getIcp()) != null) {
+            cacheAddress.put(dto.getIcp(), dto);
+        }
+
+        if (cacheIndividual != null && cacheIndividual.get(dto.getIcp()) != null) {
+            IndividualDto individualDto = (IndividualDto) cacheIndividual.get(dto.getIcp()).get();
+            individualDto.getAddress().add(dto);
+            cacheIndividual.put(dto.getIcp(), individualDto);
+        }
     }
 }

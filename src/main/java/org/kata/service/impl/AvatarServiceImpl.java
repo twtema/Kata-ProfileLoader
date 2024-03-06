@@ -4,18 +4,14 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.kata.controller.dto.AvatarDto;
-import org.kata.controller.dto.ContactChangeMessageDTO;
-import org.kata.controller.dto.DocumentDto;
 import org.kata.controller.dto.IndividualDto;
 import org.kata.entity.Avatar;
 import org.kata.entity.Individual;
 import org.kata.exception.AvatarNotFoundException;
 import org.kata.repository.AvatarCrudRepository;
 import org.kata.service.AvatarService;
-import org.kata.service.ContactConfirmationService;
 import org.kata.service.IndividualService;
 import org.kata.service.mapper.AvatarMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
@@ -29,15 +25,10 @@ import java.util.*;
 @RequiredArgsConstructor
 @Data
 public class  AvatarServiceImpl implements AvatarService {
-
     private final AvatarCrudRepository avatarCrudRepository;
-
     private final IndividualService individualService;
-
     private final AvatarMapper avatarMapper;
-
-    @Autowired
-    private CacheManager cacheManager;
+    private final CacheManager cacheManager;
 
     @Cacheable(key = "#icp", value = "icpAvatar")
     public AvatarDto getAvatar(String icp) {
@@ -81,18 +72,7 @@ public class  AvatarServiceImpl implements AvatarService {
 
         avatarCrudRepository.save(avatar);
 
-        Cache cacheAvatar = cacheManager.getCache("icpAvatar");
-        Cache cacheIndividual = cacheManager.getCache("icpIndividual");
-
-        if (cacheAvatar != null && cacheAvatar.get(dto.getIcp()) != null) {
-            cacheAvatar.put(dto.getIcp(), dto);
-        }
-
-        if (cacheIndividual != null && cacheIndividual.get(dto.getIcp()) != null) {
-            IndividualDto individualDto = (IndividualDto) cacheIndividual.get(dto.getIcp()).get();
-            individualDto.getAvatar().add(dto);
-            cacheIndividual.put(dto.getIcp(), individualDto);
-        }
+        addingNewAvatarInCache(dto);
 
         AvatarDto avatarDto = avatarMapper.toDto(avatar);
         avatarDto.setIcp(dto.getIcp());
@@ -159,4 +139,18 @@ public class  AvatarServiceImpl implements AvatarService {
         return individualService.getIndividualEntity(icp);
     }
 
+    private void addingNewAvatarInCache(AvatarDto dto) {
+        Cache cacheAvatar = cacheManager.getCache("icpAvatar");
+        Cache cacheIndividual = cacheManager.getCache("icpIndividual");
+
+        if (cacheAvatar != null && cacheAvatar.get(dto.getIcp()) != null) {
+            cacheAvatar.put(dto.getIcp(), dto);
+        }
+
+        if (cacheIndividual != null && cacheIndividual.get(dto.getIcp()) != null) {
+            IndividualDto individualDto = (IndividualDto) cacheIndividual.get(dto.getIcp()).get();
+            individualDto.getAvatar().add(dto);
+            cacheIndividual.put(dto.getIcp(), individualDto);
+        }
+    }
 }

@@ -23,7 +23,6 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 public class IndividualServiceImpl implements IndividualService {
-
     private final IndividualCrudRepository individualCrudRepository;
     private final IndividualMapper individualMapper;
     private final KafkaMessageSender kafkaMessageSender;
@@ -87,7 +86,6 @@ public class IndividualServiceImpl implements IndividualService {
     public void deleteIndividual(String icp) {
         Individual entity = individualCrudRepository.findByIcp(icp)
                 .orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + icp + " not found"));
-
 
         individualCrudRepository.delete(entity);
     }

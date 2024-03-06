@@ -1,5 +1,6 @@
 package org.kata.service.impl;
 
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.kata.controller.dto.DocumentDto;
@@ -26,16 +27,12 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Data
 public class DocumentServiceImpl implements DocumentService {
-
     private final DocumentCrudRepository documentCrudRepository;
-
     private final IndividualCrudRepository individualCrudRepository;
-
     private final DocumentMapper documentMapper;
-
-    @Autowired
-    private CacheManager cacheManager;
+    private final CacheManager cacheManager;
 
     @Cacheable(key = "#icp", value = "icpDocuments")
     public List<DocumentDto> getAllDocuments(String icp) {
@@ -77,22 +74,7 @@ public class DocumentServiceImpl implements DocumentService {
 
             documentCrudRepository.save(document);
 
-            Cache cacheDocuments = cacheManager.getCache("icpDocuments");
-            Cache cacheIndividual = cacheManager.getCache("icpIndividual");
-
-            if (cacheDocuments != null && cacheDocuments.get(dto.getIcp()) != null) {
-                cacheDocuments.put(dto.getIcp(), dto);
-            }
-
-            if (cacheIndividual != null && cacheIndividual.get(dto.getIcp()) != null) {
-                IndividualDto individualDto = (IndividualDto) cacheIndividual.get(dto.getIcp()).get();
-                List<DocumentDto> documentsToUpdate = individualDto.getDocuments().stream()
-                        .filter(doc -> doc.getDocumentType().equals(dto.getDocumentType()))
-                        .toList();
-                documentsToUpdate.forEach(doc -> doc.setActual(false));
-                individualDto.getDocuments().add(dto);
-                cacheIndividual.put(dto.getIcp(), individualDto);
-            }
+            addingNewDocumentInCache(dto);
 
             DocumentDto documentDto = documentMapper.toDto(document);
             documentDto.setIcp(dto.getIcp());
@@ -136,5 +118,24 @@ public class DocumentServiceImpl implements DocumentService {
             documentDto.setIcp(dto.getIcp());
             return documentDto;
         }).orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + dto.getIcp() + " not found"));
+    }
+
+    private void addingNewDocumentInCache (DocumentDto dto) {
+        Cache cacheDocuments = cacheManager.getCache("icpDocuments");
+        Cache cacheIndividual = cacheManager.getCache("icpIndividual");
+
+        if (cacheDocuments != null && cacheDocuments.get(dto.getIcp()) != null) {
+            cacheDocuments.put(dto.getIcp(), dto);
+        }
+
+        if (cacheIndividual != null && cacheIndividual.get(dto.getIcp()) != null) {
+            IndividualDto individualDto = (IndividualDto) cacheIndividual.get(dto.getIcp()).get();
+            List<DocumentDto> documentsToUpdate = individualDto.getDocuments().stream()
+                    .filter(doc -> doc.getDocumentType().equals(dto.getDocumentType()))
+                    .toList();
+            documentsToUpdate.forEach(doc -> doc.setActual(false));
+            individualDto.getDocuments().add(dto);
+            cacheIndividual.put(dto.getIcp(), individualDto);
+        }
     }
 }

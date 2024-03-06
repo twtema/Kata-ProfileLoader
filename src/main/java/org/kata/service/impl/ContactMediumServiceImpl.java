@@ -1,5 +1,6 @@
 package org.kata.service.impl;
 
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.kata.controller.dto.ContactMediumDto;
@@ -27,13 +28,12 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Data
 public class ContactMediumServiceImpl implements ContactMediumService {
     private final ContactMediumCrudRepository contactMediumCrudRepository;
     private final IndividualCrudRepository individualCrudRepository;
     private final ContactMediumMapper contactMediumMapper;
-
-    @Autowired
-    private CacheManager cacheManager;
+    private final CacheManager cacheManager;
 
     @Cacheable(key = "#icp", value = "icpContactMedium")
     public List<ContactMediumDto> getContactMedium(String icp) {
@@ -77,18 +77,7 @@ public class ContactMediumServiceImpl implements ContactMediumService {
 
             contactMediumCrudRepository.save(contactMedium);
 
-            Cache cacheContactMedium = cacheManager.getCache("icpContactMedium");
-            Cache cacheIndividual = cacheManager.getCache("icpIndividual");
-
-            if (cacheContactMedium != null && cacheContactMedium.get(dto.getIcp()) != null) {
-                cacheContactMedium.put(dto.getIcp(), dto);
-            }
-
-            if (cacheIndividual != null && cacheIndividual.get(dto.getIcp()) != null) {
-                IndividualDto individualDto = (IndividualDto) cacheIndividual.get(dto.getIcp()).get();
-                individualDto.getContacts().add(dto);
-                cacheIndividual.put(dto.getIcp(), individualDto);
-            }
+            addingNewContactInCache(dto);
 
             ContactMediumDto contactMediumDto = contactMediumMapper.toDto(contactMedium);
             contactMediumDto.setIcp(dto.getIcp());
@@ -106,6 +95,7 @@ public class ContactMediumServiceImpl implements ContactMediumService {
     }
 
     @Override
+    @Cacheable(key = "#icp", value = "icpContactMedium")
     public List<ContactMediumDto> getContactMedium(String icp, String uuid) {
         if (uuid.equals("uuid")) {
             return getContactMedium(icp);
@@ -120,5 +110,20 @@ public class ContactMediumServiceImpl implements ContactMediumService {
                 contactMedium.setActual(false);
             }
         });
+    }
+
+    private void addingNewContactInCache(ContactMediumDto dto) {
+        Cache cacheContactMedium = cacheManager.getCache("icpContactMedium");
+        Cache cacheIndividual = cacheManager.getCache("icpIndividual");
+
+        if (cacheContactMedium != null && cacheContactMedium.get(dto.getIcp()) != null) {
+            cacheContactMedium.put(dto.getIcp(), dto);
+        }
+
+        if (cacheIndividual != null && cacheIndividual.get(dto.getIcp()) != null) {
+            IndividualDto individualDto = (IndividualDto) cacheIndividual.get(dto.getIcp()).get();
+            individualDto.getContacts().add(dto);
+            cacheIndividual.put(dto.getIcp(), individualDto);
+        }
     }
 }

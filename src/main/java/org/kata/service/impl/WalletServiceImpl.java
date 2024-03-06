@@ -1,5 +1,6 @@
 package org.kata.service.impl;
 
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.kata.controller.dto.DocumentDto;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.kata.service.ContactMediumService;
@@ -30,34 +32,25 @@ import org.kata.service.ContactMediumService;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Data
 public class WalletServiceImpl implements WalletService {
-
     private final WalletCrudRepository walletCrudRepository;
-
     private final IndividualCrudRepository individualCrudRepository;
-
     private final WalletMapper walletMapper;
-
     private final ContactMediumService contactMediumService;
-
-    @Autowired
-    private CacheManager cacheManager;
+    private final CacheManager cacheManager;
 
 
     @Override
     @Cacheable(key = "#icp", value = "icpWallet")
     public List<WalletDto> getWallet(String icp) {
-        List<Wallet> wallets = getIndividual(icp).getWallet();
+        Optional<Individual> individual = individualCrudRepository.findByIcp(icp);
+        List<Wallet> wallets = individual.get().getWallet();
         if (!wallets.isEmpty()) {
-            return wallets
-                    .stream()
-                    .filter(Wallet::isActual)
-                    .map(wallet -> {
-                        WalletDto walletDto = walletMapper.toDto(wallet);
-                        walletDto.setIcp(icp);
-                        return walletDto;
-                    })
-                    .toList();
+            List<WalletDto> walletDtos =  walletMapper.toDto(wallets);
+            walletDtos.forEach(wal -> wal.setIcp(icp));
+
+            return walletDtos;
         }
         throw new WalletNotFoundException("No wallets for icp "
                 + icp
@@ -86,18 +79,7 @@ public class WalletServiceImpl implements WalletService {
 
         walletCrudRepository.save(wallet);
 
-        Cache cacheWallet = cacheManager.getCache("icpWallet");
-        Cache cacheIndividual = cacheManager.getCache("icpIndividual");
-
-        if (cacheWallet != null && cacheWallet.get(dto.getIcp()) != null) {
-            cacheWallet.put(dto.getIcp(), dto);
-        }
-
-        if (cacheIndividual != null && cacheIndividual.get(dto.getIcp()) != null) {
-            IndividualDto individualDto = (IndividualDto) cacheIndividual.get(dto.getIcp()).get();
-            individualDto.getWallet().add(dto);
-            cacheIndividual.put(dto.getIcp(), individualDto);
-        }
+        addingNewWalletInCache(dto);
 
         WalletDto walletDto = walletMapper.toDto(wallet);
         walletDto.setIcp(dto.getIcp());
@@ -158,26 +140,52 @@ public class WalletServiceImpl implements WalletService {
         );
         wallet.setBalance(balance);
         walletCrudRepository.save(wallet);
+
         WalletDto walletDto = walletMapper.toDto(wallet);
         walletDto.setIcp(wallet.getIndividual().getIcp());
-        log.warn("For icp {} created new Wallet: {}", walletDto.getIcp(), walletDto);
 
+        log.info("For icp {} updated Wallet: {}", walletDto.getIcp(), wallet);
+
+        updatingWalletInCache(walletDto);
+
+        return walletDto;
+    }
+
+    private void addingNewWalletInCache (WalletDto dto){
         Cache cacheWallet = cacheManager.getCache("icpWallet");
         Cache cacheIndividual = cacheManager.getCache("icpIndividual");
 
-        if (cacheWallet != null && cacheWallet.get(walletDto.getIcp()) != null) {
-            cacheWallet.put(walletDto.getIcp(), walletDto);
+        if (cacheWallet != null && cacheWallet.get(dto.getIcp()) != null) {
+            cacheWallet.put(dto.getIcp(), dto);
         }
 
-        if (cacheIndividual != null && cacheIndividual.get(walletDto.getIcp()) != null) {
-            IndividualDto individualDto = (IndividualDto) cacheIndividual.get(walletDto.getIcp()).get();
-            individualDto.getWallet().stream()
-                    .filter(wal -> wal.getWalletId().equals(walletDto.getWalletId()))
+        if (cacheIndividual != null && cacheIndividual.get(dto.getIcp()) != null) {
+            IndividualDto individualDto = (IndividualDto) cacheIndividual.get(dto.getIcp()).get();
+            individualDto.getWallet().add(dto);
+            cacheIndividual.put(dto.getIcp(), individualDto);
+        }
+    }
+
+    private void updatingWalletInCache (WalletDto dto) {
+        Cache cacheWallet = cacheManager.getCache("icpWallet");
+        Cache cacheIndividual = cacheManager.getCache("icpIndividual");
+
+        if (cacheWallet != null && cacheWallet.get(dto.getIcp()) != null) {
+            List<WalletDto> walletDto = (List<WalletDto>) cacheWallet.get(dto.getIcp()).get();
+            walletDto.stream()
+                    .filter(wal -> wal.getWalletId().equals(dto.getWalletId()))
                     .findFirst()
-                    .ifPresent(wal -> wal.setBalance(walletDto.getBalance()));
-            cacheIndividual.put(walletDto.getIcp(), individualDto);
+                    .ifPresent(wal -> wal.setBalance(dto.getBalance()));
+            cacheWallet.put(dto.getIcp(), walletDto);
         }
 
-        return walletDto;
+        if (cacheIndividual != null && cacheIndividual.get(dto.getIcp()) != null) {
+            IndividualDto individualDto = (IndividualDto) cacheIndividual.get(dto.getIcp()).get();
+            individualDto.getWallet().stream()
+                    .filter(wal -> wal.getWalletId().equals(dto.getWalletId()))
+                    .findFirst()
+                    .ifPresent(wal -> wal.setBalance(dto.getBalance()));
+            cacheIndividual.put(dto.getIcp(), individualDto);
+        }
     }
 }
