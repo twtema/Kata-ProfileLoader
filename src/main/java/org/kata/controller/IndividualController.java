@@ -54,7 +54,7 @@ public class IndividualController {
 
         debtDetectionService.checkIndividual(dto);
 
-//        intrudersDetectionService.checkIndividual(dto);
+        intrudersDetectionService.checkIndividual(dto);
 
         terroristDetectionService.checkIndividual(dto);
 
