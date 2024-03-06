@@ -8,14 +8,16 @@ import org.kata.exception.TerroristDetectedException;
 import org.kata.service.TerroristDetectionService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Calendar;
 
 
 @Service
 public class TerroristDetectionServiceImpl implements TerroristDetectionService {
 
-
-    public boolean isBlackListDocument(IndividualDto dto, BlackListDocuments documents) {
+    public boolean isBlackListDocument(IndividualDto dto) {
+        BlackListDocuments documents = new BlackListDocuments();
         return dto.getDocuments().stream()
                 .anyMatch(docDto -> documents.getSeries().stream()
                         .anyMatch(seriesBlackList -> docDto.getDocumentSerial().equals(seriesBlackList)
@@ -23,33 +25,31 @@ public class TerroristDetectionServiceImpl implements TerroristDetectionService 
                                 .anyMatch(nomberBlackList -> docDto.getDocumentNumber().equals(nomberBlackList))));
     }
 
-    public boolean isBlackListContacts(IndividualDto dto, BlackListContacts contacts) {
+    public boolean isBlackListContacts(IndividualDto dto) {
+        BlackListContacts contacts = new BlackListContacts();
         return dto.getContacts().stream()
                 .anyMatch(contactDto -> contacts.getNumbervalue().stream()
                         .anyMatch(contactBlackList -> contactDto.getValue().equals(contactBlackList)));
     }
 
-    public boolean isBlackListBirthDate(Calendar cal1, Calendar cal2) {
-        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-                cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH) &&
-                cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH);
+    public boolean isBlackListBirthDate(IndividualDto dto) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(dto.getBirthDate());
+        LocalDate birthDate = calendar.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate blackListBirthDate = new BlackListIndividualBirthDate().getBirthDate();
+        return birthDate.equals(blackListBirthDate);
     }
-
 
 
     public void checkIndividual(IndividualDto dto) {
         if (dto != null) {
-            BlackListDocuments documents = new BlackListDocuments();
-            BlackListContacts contacts = new BlackListContacts();
-            Calendar cal1 = Calendar.getInstance();
-            cal1.setTime(dto.getBirthDate());
-            Calendar cal2 = Calendar.getInstance();
-            cal2.setTime(new BlackListIndividualBirthDate().getBirthDate());
+            boolean isBlackListDocument = isBlackListDocument(dto);
+            boolean isBlackListContacts = isBlackListContacts(dto);
+            boolean isBlackListBirthDate = isBlackListBirthDate(dto);
 
-
-            if (isBlackListDocument(dto, documents) && isBlackListContacts(dto, contacts) && isBlackListBirthDate(cal1, cal2)) {
-              throw new TerroristDetectedException("ВЫ ТЕРРОРИСТ!!!!!!!!!!!!!!!!!!");
-            } else if (isBlackListDocument(dto, documents) || isBlackListContacts(dto, contacts) || isBlackListBirthDate(cal1, cal2)) {
+            if (isBlackListDocument && isBlackListContacts && isBlackListBirthDate) {
+                throw new TerroristDetectedException("ВЫ ТЕРРОРИСТ!!!!!!!!!!!!!!!!!!");
+            } else if (isBlackListDocument || isBlackListContacts || isBlackListBirthDate) {
                 dto.setUnwantedCustomer(true);
             }
         }
