@@ -1,5 +1,6 @@
 package org.kata.service.impl;
 
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.kata.controller.dto.AddressDto;
@@ -25,6 +26,7 @@ import java.util.UUID;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Data
 public class AddressServiceImpl implements AddressService {
     private final AddressCrudRepository addressCrudRepository;
     private final IndividualCrudRepository individualCrudRepository;
@@ -33,7 +35,7 @@ public class AddressServiceImpl implements AddressService {
 
 
     @Autowired
-    private CacheManager cacheManager;
+    private final CacheManager cacheManager;
 
 
     @Override
@@ -98,7 +100,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-//    @Cacheable(key = "#icp", value = "icpAddress")
+    @Cacheable(key = "#icp", value = "icpAddress")
     public AddressDto  getAddress(String icp, String uuid) {
         if (icp == null || uuid == null) {
             throw new IllegalArgumentException("Invalid id or type");

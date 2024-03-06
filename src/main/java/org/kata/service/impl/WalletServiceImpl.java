@@ -157,6 +157,27 @@ public class WalletServiceImpl implements WalletService {
                         + " not found")
         );
         wallet.setBalance(balance);
-        return walletMapper.toDto(walletCrudRepository.save(wallet));
+        walletCrudRepository.save(wallet);
+        WalletDto walletDto = walletMapper.toDto(wallet);
+        walletDto.setIcp(wallet.getIndividual().getIcp());
+        log.warn("For icp {} created new Wallet: {}", walletDto.getIcp(), walletDto);
+
+        Cache cacheWallet = cacheManager.getCache("icpWallet");
+        Cache cacheIndividual = cacheManager.getCache("icpIndividual");
+
+        if (cacheWallet != null && cacheWallet.get(walletDto.getIcp()) != null) {
+            cacheWallet.put(walletDto.getIcp(), walletDto);
+        }
+
+        if (cacheIndividual != null && cacheIndividual.get(walletDto.getIcp()) != null) {
+            IndividualDto individualDto = (IndividualDto) cacheIndividual.get(walletDto.getIcp()).get();
+            individualDto.getWallet().stream()
+                    .filter(wal -> wal.getWalletId().equals(walletDto.getWalletId()))
+                    .findFirst()
+                    .ifPresent(wal -> wal.setBalance(walletDto.getBalance()));
+            cacheIndividual.put(walletDto.getIcp(), individualDto);
+        }
+
+        return walletDto;
     }
 }
