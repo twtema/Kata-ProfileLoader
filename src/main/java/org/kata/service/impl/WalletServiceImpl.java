@@ -45,7 +45,9 @@ public class WalletServiceImpl implements WalletService {
     @Cacheable(key = "#icp", value = "icpWallet")
     public List<WalletDto> getWallet(String icp) {
         Optional<Individual> individual = individualCrudRepository.findByIcp(icp);
-        List<Wallet> wallets = individual.get().getWallet();
+        List<Wallet> wallets = individual.get().getWallet().stream()
+                .filter(wal -> wal.isActual())
+                .toList();
         if (!wallets.isEmpty()) {
             List<WalletDto> walletDtos =  walletMapper.toDto(wallets);
             walletDtos.forEach(wal -> wal.setIcp(icp));
