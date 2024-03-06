@@ -3,6 +3,7 @@ package org.kata.entity.blackList;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
@@ -12,10 +13,10 @@ import java.util.UUID;
 public class BlackListIndividualBirthDate {
 
     public BlackListIndividualBirthDate() {
-        birthDate = new Date(95, Calendar.MAY, 10);
+        birthDate = LocalDate.of(1995, 5, 10);
     }
 
     private String uuid = UUID.randomUUID().toString();
-    private Date birthDate;
+    private LocalDate birthDate;
 
 }
