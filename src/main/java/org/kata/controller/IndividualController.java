@@ -7,12 +7,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.kata.controller.dto.IndividualDto;
 import org.kata.exception.IndividualNotFoundException;
-import org.kata.service.*;
-import org.kata.exception.IntrudersDetectionException;
+import org.kata.service.IndividualService;
 import org.springdoc.api.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
 
 
 @RestController
@@ -21,14 +22,6 @@ import org.springframework.web.bind.annotation.*;
 public class IndividualController {
 
     private final IndividualService individualService;
-    private final DebtDetectionService debtDetectionService;
-
-    private final IntrudersDetectionService intrudersDetectionService;
-
-    private final FraudstersDetectionService fraudstersDetectionServiceImpl;
-
-    private final TerroristDetectionService terroristDetectionService;
-
 
     @Operation(summary = "Получить Individual по ICP", description = "Возвращает DTO Individual по ICP")
     @GetMapping
@@ -49,17 +42,11 @@ public class IndividualController {
     })
     @PostMapping
     public ResponseEntity<IndividualDto> postIndividual(
-            @Parameter(description = "DTO Individual для создания") @RequestBody IndividualDto dto) {
-
-        debtDetectionService.checkIndividual(dto);
-
-        intrudersDetectionService.checkIndividual(dto);
-
-        fraudstersDetectionServiceImpl.checkIndividual(dto);
-
-        terroristDetectionService.checkIndividual(dto);
-
-        return new ResponseEntity<>(individualService.saveIndividual(dto), HttpStatus.CREATED);
+            @Parameter(description = "DTO Individual для создания") @RequestBody IndividualDto dto, HttpServletResponse response) {
+        IndividualDto individualDto = individualService.saveIndividual(dto);
+        response.addHeader("X-Debug-Info","Individual with icp: " + individualDto.getIcp() + " successfully saved to the database!");
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(individualDto);
     }
 
     @Operation(summary = "Создать тестового Individual", description = "Сохраняет и возвращает DTO тестового индивида")
@@ -96,12 +83,6 @@ public class IndividualController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IndividualNotFoundException.class)
     public ErrorMessage getIndividualHandler(IndividualNotFoundException e) {
-        return new ErrorMessage(e.getMessage());
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(IntrudersDetectionException.class)
-    public ErrorMessage getIndividualHandler(IntrudersDetectionException e) {
         return new ErrorMessage(e.getMessage());
     }
 }

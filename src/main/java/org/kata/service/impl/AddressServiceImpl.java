@@ -65,7 +65,12 @@ public class AddressServiceImpl implements AddressService {
 
             log.info("For icp {} created new Address: {}", dto.getIcp(), address);
 
-            addressCrudRepository.save(address);
+            try {
+                addressCrudRepository.save(address);
+                log.debug("Saved address to the database: {}", address);
+            } catch (Exception e) {
+                log.warn("Failed to save address to the database.", e);
+            }
 
             AddressDto addressDto = addressMapper.toDto(address);
             addressDto.setIcp(dto.getIcp());

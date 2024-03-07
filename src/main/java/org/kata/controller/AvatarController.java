@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
@@ -43,8 +44,12 @@ public class AvatarController {
     })
 
     @PostMapping
-    public ResponseEntity<AvatarDto> postAvatar(@Parameter(description = "DTO Avatar для создания") @RequestBody AvatarDto dto, String hex) {
-        return new ResponseEntity<>(avatarService.saveOrUpdateAvatar(dto, hex), HttpStatus.CREATED);
+    public ResponseEntity<AvatarDto> postAvatar(@Parameter(description = "DTO Avatar для создания")
+                                                    @RequestBody AvatarDto dto, String hex, HttpServletResponse response) {
+        AvatarDto avatarDto = avatarService.saveOrUpdateAvatar(dto, hex);
+        response.addHeader("X-Debug-Info", "Avatar with name: " + avatarDto.getFilename() + ", successfully saved to the database!");
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(avatarDto);
     }
 
     @Operation(summary = "Получить список Avatar по icp",
