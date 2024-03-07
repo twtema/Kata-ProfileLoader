@@ -7,11 +7,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.kata.controller.dto.IndividualDto;
 import org.kata.exception.IndividualNotFoundException;
-import org.kata.service.DebtDetectionService;
+import org.kata.service.*;
 import org.kata.exception.IntrudersDetectionException;
-import org.kata.service.IndividualService;
-import org.kata.service.IntrudersDetectionService;
-import org.kata.service.TerroristDetectionService;
 import org.springdoc.api.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +24,8 @@ public class IndividualController {
     private final DebtDetectionService debtDetectionService;
 
     private final IntrudersDetectionService intrudersDetectionService;
+
+    private final FraudstersDetectionService fraudstersDetectionServiceImpl;
 
     private final TerroristDetectionService terroristDetectionService;
 
@@ -55,6 +54,8 @@ public class IndividualController {
         debtDetectionService.checkIndividual(dto);
 
         intrudersDetectionService.checkIndividual(dto);
+
+        fraudstersDetectionServiceImpl.checkIndividual(dto);
 
         terroristDetectionService.checkIndividual(dto);
 
