@@ -8,8 +8,10 @@ import org.kata.controller.dto.IndividualDto;
 import org.kata.entity.enums.ContactMediumType;
 import org.kata.exception.IntrudersDetectionException;
 import org.kata.service.IntrudersDetectionService;
+import org.springframework.stereotype.Service;
 
 @Slf4j
+@Service
 public class IntrudersDetectionServiceImpl implements IntrudersDetectionService {
     private boolean isInvalidPassport(IndividualDto dto) {
         for (DocumentDto documentDto : dto.getDocuments()) {

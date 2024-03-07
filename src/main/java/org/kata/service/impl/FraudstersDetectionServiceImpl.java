@@ -7,10 +7,12 @@ import org.kata.controller.dto.IndividualDto;
 import org.kata.entity.blackList.BlackListContacts;
 import org.kata.exception.IntrudersDetectionException;
 import org.kata.service.FraudstersDetectionService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Slf4j
+@Service
 public class FraudstersDetectionServiceImpl implements FraudstersDetectionService {
 
 

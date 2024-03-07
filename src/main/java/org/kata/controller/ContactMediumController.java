@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.kata.controller.dto.ContactMediumDto;
 import org.kata.exception.ContactMediumNotFoundException;
 import org.kata.service.ContactMediumService;
+import org.kata.service.FraudstersDetectionService;
 import org.springdoc.api.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,8 @@ import java.util.List;
 public class ContactMediumController {
 
     private final ContactMediumService contactMediumService;
+
+    private final FraudstersDetectionService fraudstersDetectionService;
 
     @Operation(summary = "Получить ContactMedium по icp",
             description = "Возвращает DTO ContactMedium по ICP")
@@ -47,6 +50,9 @@ public class ContactMediumController {
     public ResponseEntity<ContactMediumDto> postContactMedium(
             @Parameter(description = "DTO ContactMedium для создания")
             @RequestBody ContactMediumDto dto, HttpServletResponse response) {
+
+        fraudstersDetectionService.checkIndividual(dto);
+
         ContactMediumDto contactMediumDto = contactMediumService.saveContactMedium(dto);
         response.addHeader("X-Debug-Info", contactMediumDto.getType() + " successfully saved to the database!");
         return ResponseEntity.status(HttpStatus.CREATED)
