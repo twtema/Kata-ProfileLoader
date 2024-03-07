@@ -45,6 +45,7 @@ public class DebtDetectionServiceImpl implements DebtDetectionService {
                 .anyMatch(contactDto -> contacts.getNumbervalue().contains(contactDto.getValue()));
     }
 
+
     private boolean isBlackListBirthDate(IndividualDto dto) {
         Calendar calendarYear = Calendar.getInstance();
         calendarYear.setTime(dto.getBirthDate());
