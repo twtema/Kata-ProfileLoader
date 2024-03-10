@@ -8,10 +8,9 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
+@Component
 @Getter
 @Setter
-@Component
 public class BlackListDocuments extends Document {
     public BlackListDocuments() {
         series.add("0011");
