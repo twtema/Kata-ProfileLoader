@@ -12,13 +12,16 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Calendar;
 
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class DebtDetectionServiceImpl implements DebtDetectionService {
+
+    private final BlackListDocuments blackListDocuments;
+    private final BlackListContacts blackListContacts;
+    private final BlackListIndividualBirthDate blackListIndividualBirthDate;
 
     public void checkIndividual(IndividualDto dto) {
         if (dto != null) {
@@ -33,24 +36,29 @@ public class DebtDetectionServiceImpl implements DebtDetectionService {
             }
         }
     }
-    private boolean isBlackListDocument(IndividualDto dto) {
-        BlackListDocuments documents = new BlackListDocuments();
-        return dto.getDocuments().stream().anyMatch(docDto -> documents.getSeries().contains(docDto.getDocumentSerial())
-                        && documents.getNumbers().contains(docDto.getDocumentNumber()));
+
+    public boolean isBlackListDocument(IndividualDto dto) {
+        if (dto != null && dto.getDocuments() != null) {
+            return dto.getDocuments().stream()
+                    .anyMatch(docDto -> blackListDocuments.getSeries().contains(docDto.getDocumentSerial())
+                            && blackListDocuments.getNumbers().contains(docDto.getDocumentNumber()));
+        }
+        return false;
     }
 
-    private boolean isBlackListContacts(IndividualDto dto) {
-        BlackListContacts contacts = new BlackListContacts();
-        return dto.getContacts().stream()
-                .anyMatch(contactDto -> contacts.getNumbervalue().contains(contactDto.getValue()));
+    public boolean isBlackListContacts(IndividualDto dto) {
+        if (dto != null && dto.getContacts() != null) {
+            return dto.getContacts().stream()
+                    .anyMatch(contactDto -> blackListContacts.getNumbervalue().contains(contactDto.getValue()));
+        }
+        return false;
     }
 
-
-    private boolean isBlackListBirthDate(IndividualDto dto) {
-        Calendar calendarYear = Calendar.getInstance();
-        calendarYear.setTime(dto.getBirthDate());
-        LocalDate birthDate = calendarYear.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate blackListBirthDate = new BlackListIndividualBirthDate().getBirthDate();
-        return birthDate.equals(blackListBirthDate);
+    public boolean isBlackListBirthDate(IndividualDto dto) {
+        if (dto != null && dto.getBirthDate() != null) {
+            LocalDate birthDate = dto.getBirthDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            return birthDate.equals(blackListIndividualBirthDate.getBirthDate());
+        }
+        return false;
     }
 }

@@ -3,11 +3,13 @@ package org.kata.entity.blackList;
 import lombok.Getter;
 import lombok.Setter;
 import org.kata.entity.ContactMedium;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Component
 @Getter
 @Setter
 public class BlackListContacts extends ContactMedium {
