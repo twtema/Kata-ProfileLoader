@@ -66,7 +66,12 @@ public class ContactMediumServiceImpl implements ContactMediumService {
 
             log.info("For icp {} created new ContactMedium: {}", dto.getIcp(), contactMedium);
 
-            contactMediumCrudRepository.save(contactMedium);
+            try {
+                contactMediumCrudRepository.save(contactMedium);
+                log.debug("Saved contactMedium to the database: {}", contactMedium);
+            } catch (Exception e) {
+                log.warn("Failed to save contactMedium to the database.", e);
+            }
 
             ContactMediumDto contactMediumDto = contactMediumMapper.toDto(contactMedium);
             contactMediumDto.setIcp(dto.getIcp());

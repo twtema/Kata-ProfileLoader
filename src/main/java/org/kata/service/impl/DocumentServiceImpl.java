@@ -66,7 +66,12 @@ public class DocumentServiceImpl implements DocumentService {
 
             log.info("For icp {} created new Document: {}", dto.getIcp(), document);
 
-            documentCrudRepository.save(document);
+            try {
+                documentCrudRepository.save(document);
+                log.debug("Saved document to the database: {}", document);
+            } catch (Exception e) {
+                log.warn("Failed to save document to the database.", e);
+            }
 
             DocumentDto documentDto = documentMapper.toDto(document);
             documentDto.setIcp(dto.getIcp());
