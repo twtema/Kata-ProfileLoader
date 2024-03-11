@@ -51,7 +51,7 @@ public class ContactMediumController {
             @Parameter(description = "DTO ContactMedium для создания")
             @RequestBody ContactMediumDto dto, HttpServletResponse response) {
 
-        fraudstersDetectionService.checkIndividual(dto);
+        fraudstersDetectionService.checkContact(dto);
 
         ContactMediumDto contactMediumDto = contactMediumService.saveContactMedium(dto);
         response.addHeader("X-Debug-Info", contactMediumDto.getType() + " successfully saved to the database!");

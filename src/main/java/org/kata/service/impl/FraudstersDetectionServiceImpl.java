@@ -6,8 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.kata.controller.dto.ContactMediumDto;
 import org.kata.controller.dto.IndividualDto;
 import org.kata.entity.blackList.BlackListContacts;
-import org.kata.entity.blackList.BlackListDocuments;
-import org.kata.entity.blackList.BlackListIndividualBirthDate;
 import org.kata.exception.IntrudersDetectionException;
 import org.kata.service.FraudstersDetectionService;
 import org.springframework.stereotype.Service;
@@ -29,7 +27,7 @@ public class FraudstersDetectionServiceImpl implements FraudstersDetectionServic
 
 
     @Override
-    public void checkIndividual(ContactMediumDto dto) {
+    public void checkContact(ContactMediumDto dto) {
         List<ContactMediumDto> contacts = List.of(dto);
         if (isInvalidPhoneNumber(contacts)) {
             throw new IntrudersDetectionException("Обнаружен Мошенник!");
