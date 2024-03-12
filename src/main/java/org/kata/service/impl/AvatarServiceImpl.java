@@ -64,7 +64,12 @@ public class AvatarServiceImpl implements AvatarService {
             log.info("For icp {} created new Avatar: {}", dto.getIcp(), avatar);
         }
 
-        avatarCrudRepository.save(avatar);
+        try {
+            avatarCrudRepository.save(avatar);
+            log.debug("Saved avatar to the database: {}", avatar);
+        } catch (Exception e) {
+            log.warn("Failed to save avatar to the database.", e);
+        }
 
         AvatarDto avatarDto = avatarMapper.toDto(avatar);
         avatarDto.setIcp(dto.getIcp());

@@ -7,15 +7,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.kata.controller.dto.IndividualDto;
 import org.kata.exception.IndividualNotFoundException;
-import org.kata.service.DebtDetectionService;
-import org.kata.exception.IntrudersDetectionException;
-import org.kata.service.IndividualService;
-import org.kata.service.IntrudersDetectionService;
-import org.kata.service.TerroristDetectionService;
+import org.kata.service.*;
 import org.springdoc.api.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
 
 
 @RestController
@@ -24,10 +22,10 @@ import org.springframework.web.bind.annotation.*;
 public class IndividualController {
 
     private final IndividualService individualService;
+
     private final DebtDetectionService debtDetectionService;
-
+    private final FraudstersDetectionService fraudstersDetectionService;
     private final IntrudersDetectionService intrudersDetectionService;
-
     private final TerroristDetectionService terroristDetectionService;
 
 
@@ -53,9 +51,8 @@ public class IndividualController {
             @Parameter(description = "DTO Individual для создания") @RequestBody IndividualDto dto) {
 
         debtDetectionService.checkIndividual(dto);
-
+        fraudstersDetectionService.checkIndividual(dto);
         intrudersDetectionService.checkIndividual(dto);
-
         terroristDetectionService.checkIndividual(dto);
 
         return new ResponseEntity<>(individualService.saveIndividual(dto), HttpStatus.CREATED);
@@ -95,12 +92,6 @@ public class IndividualController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IndividualNotFoundException.class)
     public ErrorMessage getIndividualHandler(IndividualNotFoundException e) {
-        return new ErrorMessage(e.getMessage());
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(IntrudersDetectionException.class)
-    public ErrorMessage getIndividualHandler(IntrudersDetectionException e) {
         return new ErrorMessage(e.getMessage());
     }
 }

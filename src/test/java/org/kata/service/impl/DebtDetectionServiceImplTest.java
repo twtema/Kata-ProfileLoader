@@ -1,3 +1,4 @@
+
 package org.kata.service.impl;
 
 
@@ -99,7 +100,6 @@ class DebtDetectionServiceImplTest {
 
         assertTrue((blackListPhoneNumbers.contains(testIndividualDto.getContacts().get(0).getValue())));
     }
-
     @Test
     void isBlackListBirthDate() {
         LocalDate actualDate = LocalDate.of(1995, 5, 10);

@@ -20,7 +20,7 @@
             <column name="country_of_birth" type="VARCHAR(255)"/>
             <column name="birth_date" type="DATE"/>
             <column name="is_unwanted_customer" type="BOOLEAN">
-            <constraints nullable="false"/>
+                <constraints nullable="false"/>
         </column>
         </createTable>
     </changeSet>

@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("v1/address")
@@ -38,14 +40,17 @@ public class AddressController {
             @ApiResponse(responseCode = "201", description = "Address успешно создан"),
             @ApiResponse(responseCode = "400", description = "Неверный запрос")
     })
-
     @PostMapping
     public ResponseEntity<AddressDto> postAddress(
             @Parameter(description = "DTO Address для создания")
-            @RequestBody AddressDto dto) {
-        return new ResponseEntity<>(addressService.saveAddress(dto), HttpStatus.CREATED);
+            @RequestBody AddressDto dto,
+            HttpServletResponse response
+            ) {
+        AddressDto addressDto = addressService.saveAddress(dto);
+        response.addHeader("X-Debug-Info","Address with icp: " + addressDto.getIcp() + ", successfully saved to the database!");
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(addressDto);
     }
-
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(AddressNotFoundException.class)
     public ErrorMessage getAddressHandler(AddressNotFoundException e) {
