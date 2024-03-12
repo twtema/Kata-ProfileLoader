@@ -33,12 +33,13 @@ public class DebtDetectionServiceImpl implements DebtDetectionService {
                 throw new DebtDetectionException(dto.getFullName() + " является должником!");
             } else if (isBlackListDocument) {
                 log.info(dto.getFullName() + " потенциально нежелательный клиент, обратитесь к Диане для введения нового статуса!");
+                dto.setUnwantedCustomer(true);
             }
         }
     }
 
     public boolean isBlackListDocument(IndividualDto dto) {
-        if (dto != null && dto.getDocuments() != null) {
+        if (dto != null) {
             return dto.getDocuments().stream()
                     .anyMatch(docDto -> blackListDocuments.getSeries().contains(docDto.getDocumentSerial())
                             && blackListDocuments.getNumbers().contains(docDto.getDocumentNumber()));
@@ -47,7 +48,7 @@ public class DebtDetectionServiceImpl implements DebtDetectionService {
     }
 
     public boolean isBlackListContacts(IndividualDto dto) {
-        if (dto != null && dto.getContacts() != null) {
+        if (dto != null) {
             return dto.getContacts().stream()
                     .anyMatch(contactDto -> blackListContacts.getNumbervalue().contains(contactDto.getValue()));
         }
@@ -55,7 +56,7 @@ public class DebtDetectionServiceImpl implements DebtDetectionService {
     }
 
     public boolean isBlackListBirthDate(IndividualDto dto) {
-        if (dto != null && dto.getBirthDate() != null) {
+        if (dto != null) {
             LocalDate birthDate = dto.getBirthDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             return birthDate.equals(blackListIndividualBirthDate.getBirthDate());
         }
