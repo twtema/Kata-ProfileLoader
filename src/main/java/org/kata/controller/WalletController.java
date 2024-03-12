@@ -11,6 +11,7 @@ import org.kata.exception.ContactMediumNotFoundException;
 import org.kata.exception.WalletNotFoundException;
 import org.kata.service.WalletService;
 import org.springdoc.api.ErrorMessage;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
