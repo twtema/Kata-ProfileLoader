@@ -65,4 +65,7 @@ public class IndividualDto {
 
     @Schema(description = "Кошелёк")
     private List<WalletDto> wallet;
+
+    @Schema(description = "Банковская карта")
+    private List<BankCardDto> bankCard;
 }

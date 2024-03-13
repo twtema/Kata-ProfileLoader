@@ -3,6 +3,7 @@ package org.kata.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.kata.controller.dto.IndividualDto;
+import org.kata.entity.BankCard;
 import org.kata.entity.Individual;
 import org.kata.entity.IndividualRelatedEntity;
 import org.kata.exception.IndividualNotFoundException;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
 import java.util.UUID;
 
 @Service
@@ -64,6 +67,7 @@ public class IndividualServiceImpl implements IndividualService {
         processCollection(entity.getContacts(), entity);
         processCollection(entity.getAvatar(), entity);
         processCollection(entity.getWallet(), entity);
+        processCollection(entity.getBankCard(), entity);
 
         entity.getAvatar().get(0).setActual(true);
 

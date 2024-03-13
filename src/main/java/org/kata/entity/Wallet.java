@@ -6,6 +6,7 @@ import org.kata.entity.enums.CurrencyType;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
@@ -34,4 +35,6 @@ public class Wallet implements IndividualRelatedEntity{
     @Column(name = "is_actual")
     private boolean isActual;
 
+//    @OneToMany(mappedBy = "wallet", cascade = CascadeType.ALL)
+//    private List<BankCard> bankCard;
 }

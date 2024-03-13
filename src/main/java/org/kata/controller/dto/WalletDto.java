@@ -7,6 +7,7 @@ import lombok.extern.jackson.Jacksonized;
 import org.kata.entity.enums.CurrencyType;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @Builder
