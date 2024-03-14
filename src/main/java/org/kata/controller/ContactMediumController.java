@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.apache.bcel.classfile.Code;
 import org.kata.controller.dto.ContactMediumDto;
 import org.kata.exception.ContactMediumNotFoundException;
 import org.kata.service.ContactMediumService;
@@ -16,19 +17,21 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+import static org.kata.controller.Constants.*;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("v1/contactMedium")
+@RequestMapping(URI_CONTACT_MEDIUM)
 public class ContactMediumController {
 
     private final ContactMediumService contactMediumService;
 
-    @Operation(summary = "Получить ContactMedium по icp",
-            description = "Возвращает DTO ContactMedium по ICP")
+    @Operation(summary = GET_CONTACT_MEDIUM_SUMMARY,
+            description = GET_CONTACT_MEDIUM_DESCRIPTION)
 
     @GetMapping
     public ResponseEntity<List<ContactMediumDto>> getContactMedium(
-            @Parameter(description = "ICP ContactMedium") String id,
+            @Parameter(description = ICP_CONTACT_MEDIUM_DESCRIPTION) String id,
             @RequestParam(required = false) String type) {
 
         if (type == null) {
@@ -37,18 +40,18 @@ public class ContactMediumController {
         return new ResponseEntity<>(contactMediumService.getContactMedium(id, type), HttpStatus.OK);
     }
 
-    @Operation(summary = "Создать новый ContactMedium", description = "Сохраняет и возвращает DTO нового контакта")
+    @Operation(summary = CREATE_CONTACT_MEDIUM_SUMMARY, description = CREATE_CONTACT_MEDIUM_DESCRIPTION)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "ContactMedium успешно создан"),
-            @ApiResponse(responseCode = "400", description = "Неверный запрос")
+            @ApiResponse(responseCode = CODE_201, description = CONTACT_MEDIUM_CREATED),
+            @ApiResponse(responseCode = CODE_400, description = BAD_REQUEST)
     })
 
     @PostMapping
     public ResponseEntity<ContactMediumDto> postContactMedium(
-            @Parameter(description = "DTO ContactMedium для создания")
+            @Parameter(description = DTO_CONTACT_MEDIUM_DESCRIPTION)
             @RequestBody ContactMediumDto dto, HttpServletResponse response) {
         ContactMediumDto contactMediumDto = contactMediumService.saveContactMedium(dto);
-        response.addHeader("X-Debug-Info", contactMediumDto.getType() + " successfully saved to the database!");
+        response.addHeader(X_DEBUG_INFO, String.format(CONTACT_MEDIUM_SAVED_TO_DB, contactMediumDto.getType()));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(contactMediumDto);
     }

@@ -16,19 +16,21 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+import static org.kata.controller.Constants.*;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("v1/avatar")
+@RequestMapping(URI_AVATAR)
 public class AvatarController {
 
     private final AvatarService avatarService;
 
-    @Operation(summary = "Получить Avatar по icp",
-            description = "Возвращает DTO Avatar по ICP")
+    @Operation(summary = GET_AVATAR_BY_ICP,
+            description = RETURNS_DTO_AVATAR_BY_ICP)
 
     @GetMapping
     public ResponseEntity<AvatarDto> getAvatar(
-            @Parameter(description = "ICP Avatar") String id,
+            @Parameter(description = ICP_AVATAR) String id,
             @RequestParam(required = false) String type) {
 
         if (type == null) {
@@ -37,50 +39,52 @@ public class AvatarController {
         return new ResponseEntity<>(avatarService.getAvatar(id, type), HttpStatus.OK);
     }
 
-    @Operation(summary = "Создать новый Avatar", description = "Сохраняет и возвращает DTO нового аватара")
+    @Operation(summary = CREATE_NEW_AVATAR, description = SAVES_AND_RETURNS_NEW_AVATAR_DTO)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Avatar успешно создан"),
-            @ApiResponse(responseCode = "400", description = "Неверный запрос")
+            @ApiResponse(responseCode = CODE_201, description = AVATAR_SUCCESSFULLY_CREATED),
+            @ApiResponse(responseCode = CODE_400, description = BAD_REQUEST)
     })
 
     @PostMapping
-    public ResponseEntity<AvatarDto> postAvatar(@Parameter(description = "DTO Avatar для создания")
-                                                    @RequestBody AvatarDto dto, String hex, HttpServletResponse response) {
+    public ResponseEntity<AvatarDto> postAvatar(@Parameter(description = DTO_AVATAR_FOR_CREATION)
+                                                @RequestBody AvatarDto dto, String hex, HttpServletResponse response) {
         AvatarDto avatarDto = avatarService.saveOrUpdateAvatar(dto, hex);
-        response.addHeader("X-Debug-Info", "Avatar with name: " + avatarDto.getFilename() + ", successfully saved to the database!");
+        response.addHeader(X_DEBUG_INFO, String.format(AVATAR_WITH_NAME_SAVED, avatarDto.getFilename()));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(avatarDto);
     }
 
-    @Operation(summary = "Получить список Avatar по icp",
-            description= "Возвращает список DTO Avatar по ICP")
-    @GetMapping("/all")
-    public ResponseEntity<List<AvatarDto>> getAllAvatars(@Parameter(description = "ICP для получения List<Avatar>") @RequestParam String icp) {
+    @Operation(summary = GET_AVATAR_LIST_BY_ICP,
+            description = RETURNS_LIST_DTO_AVATAR_BY_ICP)
+    @GetMapping(ALL_ENDPOINT)
+    public ResponseEntity<List<AvatarDto>> getAllAvatars(@Parameter(description = ICP_TO_GET_LIST_AVATAR) @RequestParam String icp) {
         return new ResponseEntity<>(avatarService.getAllAvatarsDto(icp), HttpStatus.OK);
     }
 
-    @Operation(summary = "Запрос на удаление аватаров по icp и списку флагов",
-            description = "Запрос на удаление одного или нескольких Avatar по icp и списку boolean (галочки) в соответствии со списком getAllAvatars(String icp)"
-            )
+    @Operation(summary = DELETE_AVATARS_BY_ICP_AND_FLAGS, description = DELETE_AVATARS_DESC)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Avatar успешно удалён"),
-            @ApiResponse(responseCode = "400", description = "Неверный запрос")
+            @ApiResponse(responseCode = CODE_204, description = AVATAR_SUCCESSFULLY_CREATED),
+            @ApiResponse(responseCode = CODE_400, description = BAD_REQUEST)
     })
     @DeleteMapping
-    public ResponseEntity<HttpStatus> deleteAvatars(@Parameter(description = "ICP для удаления") @RequestParam String icp,
-                                                    @Parameter(description = "Флаги для удаления") @RequestParam List<Boolean> flags) {
+    public ResponseEntity<HttpStatus> deleteAvatars(
+            @Parameter(description = ICP_FOR_DELETION) @RequestParam String icp,
+            @Parameter(description = FLAGS_FOR_DELETION) @RequestParam List<Boolean> flags
+    ) {
         avatarService.deleteAvatars(icp, flags);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    @Operation(summary = "Обновляет активный аватар",
-            description= "Обновляет аватар по AvatarDto и хешу, рассчитанному в ProfileAvatar")
+
+    @Operation(summary = UPDATE_ACTIVE_AVATAR, description = UPDATE_AVATAR_DESC)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "202", description = "Avatar успешно обновлён"),
-            @ApiResponse(responseCode = "400", description = "Неверный запрос")
+            @ApiResponse(responseCode = CODE_202, description = AVATAR_UPDATED_SUCCESS),
+            @ApiResponse(responseCode = CODE_400, description = BAD_REQUEST)
     })
     @PatchMapping
-    public ResponseEntity<AvatarDto> setActiveAvatar(@Parameter(description = "DTO для обновления") @RequestParam AvatarDto avatarDto,
-                                                     @Parameter(description = "Хеш обновляемого изображения") @RequestParam String hex){
+    public ResponseEntity<AvatarDto> setActiveAvatar(
+            @Parameter(description = DTO_FOR_UPDATE) @RequestParam AvatarDto avatarDto,
+            @Parameter(description = HASH_OF_UPDATING_IMAGE) @RequestParam String hex
+    ) {
         return new ResponseEntity<>(avatarService.saveOrUpdateAvatar(avatarDto, hex), HttpStatus.ACCEPTED);
     }
 

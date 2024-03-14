@@ -15,18 +15,20 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 
+import static org.kata.controller.Constants.*;
+
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("v1/individual")
+@RequestMapping(URI_INDIVIDUAL)
 public class IndividualController {
 
     private final IndividualService individualService;
 
-    @Operation(summary = "Получить Individual по ICP", description = "Возвращает DTO Individual по ICP")
+    @Operation(summary = GET_INDIVIDUAL_SUMMARY, description = GET_INDIVIDUAL_DESCRIPTION)
     @GetMapping
     public ResponseEntity<IndividualDto> getIndividual(
-            @Parameter(description = "ICP Individual") String id,
+            @Parameter(description = ICP_INDIVIDUAL) String id,
             @RequestParam(required = false) String type) {
 
         if (type == null) {
@@ -35,46 +37,46 @@ public class IndividualController {
         return new ResponseEntity<>(individualService.getIndividual(id, type), HttpStatus.OK);
     }
 
-    @Operation(summary = "Создать нового Individual", description = "Сохраняет и возвращает DTO нового индивида")
+    @Operation(summary = CREATE_INDIVIDUAL_SUMMARY, description = CREATE_INDIVIDUAL_DESCRIPTION)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Individual успешно создан"),
-            @ApiResponse(responseCode = "400", description = "Неверный запрос")
+            @ApiResponse(responseCode = CODE_201, description = INDIVIDUAL_CREATED_DESCRIPTION),
+            @ApiResponse(responseCode = CODE_400, description = BAD_REQUEST)
     })
     @PostMapping
     public ResponseEntity<IndividualDto> postIndividual(
-            @Parameter(description = "DTO Individual для создания") @RequestBody IndividualDto dto, HttpServletResponse response) {
+            @Parameter(description = INDIVIDUAL_TO_CREATE_DESCRIPTION) @RequestBody IndividualDto dto, HttpServletResponse response) {
         IndividualDto individualDto = individualService.saveIndividual(dto);
-        response.addHeader("X-Debug-Info","Individual with icp: " + individualDto.getIcp() + " successfully saved to the database!");
+        response.addHeader(X_DEBUG_INFO, String.format(INDIVIDUAL_SUCCESSFULLY_SAVED, individualDto.getIcp()));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(individualDto);
     }
 
-    @Operation(summary = "Создать тестового Individual", description = "Сохраняет и возвращает DTO тестового индивида")
+    @Operation(summary = CREATE_TEST_INDIVIDUAL_SUMMARY, description = CREATE_TEST_INDIVIDUAL_DESCRIPTION)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Individual успешно создан"),
-            @ApiResponse(responseCode = "400", description = "Неверный запрос")
+            @ApiResponse(responseCode = CODE_201, description = TEST_INDIVIDUAL_CREATED),
+            @ApiResponse(responseCode = CODE_400, description = BAD_REQUEST)
     })
-    @PostMapping("/create")
+    @PostMapping(CREATE_ENDPOINT)
     public ResponseEntity<IndividualDto> addTestIndividual() {
         return new ResponseEntity<>(individualService.saveIndividual(individualService.buildTestIndividual()), HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Получить Individual по номеру", description = "Возвращает DTO Individual по номеру")
-    @GetMapping("/byPhone")
+    @Operation(summary = GET_INDIVIDUAL_BY_PHONE_SUMMARY, description = GET_INDIVIDUAL_BY_PHONE_DESCRIPTION)
+    @GetMapping(BY_PHONE_ENDPOINT)
     public ResponseEntity<IndividualDto> individualByPhone(
-            @Parameter(description = "Phone Individual") @RequestParam(required = false) String phone) {
+            @Parameter(description = PHONE_INDIVIDUAL) @RequestParam(required = false) String phone) {
         return new ResponseEntity<>(individualService.getIndividualByPhone(phone), HttpStatus.OK);
     }
 
-    @Operation(summary = "Delete an individual by icp")
+    @Operation(summary = DELETE_INDIVIDUAL_SUMMARY)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful deleted of Individual"),
-            @ApiResponse(responseCode = "400", description = "Bad request"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = CODE_200, description = SUCCESSFUL_DELETION_DESCRIPTION),
+            @ApiResponse(responseCode = CODE_400, description = BAD_REQUEST),
+            @ApiResponse(responseCode = CODE_500, description = INTERNAL_SERVER_ERROR_DESCRIPTION)
     })
-    @DeleteMapping("/delete")
+    @DeleteMapping(DELETE_ENDPOINT)
     public ResponseEntity<HttpStatus> deleteIndividual(@RequestParam String icp) {
-        System.out.println("controller loader delete icp - " + icp);
+        System.out.println(String.format(CONTROLLER_LOADER_DELETE_ICP, icp));
         individualService.deleteIndividual(icp);
         return ResponseEntity.ok(HttpStatus.OK);
     }

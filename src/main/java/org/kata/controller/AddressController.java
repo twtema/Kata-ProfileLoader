@@ -15,18 +15,19 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 
+import static org.kata.controller.Constants.*;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("v1/address")
+@RequestMapping(URI_ADDRESS)
 public class AddressController {
+
     private final AddressService addressService;
 
-    @Operation(summary = "Получить Address по icp",
-            description = "Возвращает DTO Address по ICP")
-
+    @Operation(summary = GET_ADDRESS_BY_ICP, description = RETURNS_DTO_ADDRESS_BY_ICP)
     @GetMapping
     public ResponseEntity<AddressDto> getAddress(
-            @Parameter(description = "ICP Address") String id,
+            @Parameter(description = ICP_ADDRESS) String id,
             @RequestParam(required = false) String type) {
 
         if (type == null) {
@@ -35,22 +36,23 @@ public class AddressController {
         return new ResponseEntity<>(addressService.getAddress(id, type), HttpStatus.OK);
     }
 
-    @Operation(summary = "Создать новый Address", description = "Сохраняет и возвращает DTO нового адреса")
+    @Operation(summary = CREATE_NEW_ADDRESS, description = SAVES_AND_RETURN_NEW_ADDRESS_DTO)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Address успешно создан"),
-            @ApiResponse(responseCode = "400", description = "Неверный запрос")
+            @ApiResponse(responseCode = CODE_201, description = ADDRESS_CREATED),
+            @ApiResponse(responseCode = CODE_400, description = INCORRECT_REQUEST)
     })
     @PostMapping
     public ResponseEntity<AddressDto> postAddress(
-            @Parameter(description = "DTO Address для создания")
+            @Parameter(description = DTO_ADDRESS_FOR_CREATE)
             @RequestBody AddressDto dto,
             HttpServletResponse response
-            ) {
+    ) {
         AddressDto addressDto = addressService.saveAddress(dto);
-        response.addHeader("X-Debug-Info","Address with icp: " + addressDto.getIcp() + ", successfully saved to the database!");
+        response.addHeader(X_DEBUG_INFO, String.format(ADDRESS_WITH_ICP_SAVED, addressDto.getIcp()));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(addressDto);
     }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(AddressNotFoundException.class)
     public ErrorMessage getAddressHandler(AddressNotFoundException e) {

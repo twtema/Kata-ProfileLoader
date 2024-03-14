@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static org.kata.service.impl.Constants.*;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -32,13 +34,13 @@ public class AvatarServiceImpl implements AvatarService {
             Avatar actualAvatar = avatars.stream()
                     .filter(Avatar::isActual)
                     .findFirst()
-                    .orElseThrow(() -> new AvatarNotFoundException("Avatar with icp: " + icp + " not found"));
+                    .orElseThrow(() -> new AvatarNotFoundException(String.format(ERROR_AVATAR_WITH_ICP_NOT_FOUND, icp)));
             AvatarDto avatarDto = avatarMapper.toDto(actualAvatar);
             avatarDto.setIcp(icp);
             return avatarDto;
         }
 
-        throw new AvatarNotFoundException("No avatar found for individual with icp: " + icp);
+        throw new AvatarNotFoundException(String.format(ERROR_NO_AVATAR_FOR_INDIVIDUAL, icp));
     }
 
 
@@ -53,7 +55,7 @@ public class AvatarServiceImpl implements AvatarService {
         if (optAvatar.isPresent()) {
             avatar = optAvatar.get();
             avatar.setActual(true);
-            log.info("For icp {} sat new Avatar: {}", dto.getIcp(), avatar);
+            log.info(LOG_FOR_ICP_SET_NEW_AVATAR, dto.getIcp(), avatar);
         } else {
             avatar = avatarMapper.toEntity(dto);
             avatar.setUuid(UUID.randomUUID().toString());
@@ -61,14 +63,14 @@ public class AvatarServiceImpl implements AvatarService {
             avatar.setIndividual(individual);
             avatar.setUploadDate(dto.getUploadDate());
             avatar.setHex(hex);
-            log.info("For icp {} created new Avatar: {}", dto.getIcp(), avatar);
+            log.info(LOG_FOR_ICP_CREATED_NEW_AVATAR, dto.getIcp(), avatar);
         }
 
         try {
             avatarCrudRepository.save(avatar);
-            log.debug("Saved avatar to the database: {}", avatar);
+            log.debug(LOG_SAVED_AVATAR_TO_DATABASE, avatar);
         } catch (Exception e) {
-            log.warn("Failed to save avatar to the database.", e);
+            log.warn(ERROR_FAILED_TO_SAVE_AVATAR_TO_THE_DATABASE, e);
         }
 
         AvatarDto avatarDto = avatarMapper.toDto(avatar);
@@ -96,10 +98,10 @@ public class AvatarServiceImpl implements AvatarService {
 
     @Override
     public AvatarDto getAvatar(String icp, String uuid) {
-        if (uuid.equals("uuid")) {
+        if (uuid.equals(UUID_STRING_VALUE)) {
             return getAvatar(icp);
         } else {
-            throw new IllegalArgumentException("Invalid type");
+            throw new IllegalArgumentException(ERROR_INVALID_TYPE);
         }
     }
 

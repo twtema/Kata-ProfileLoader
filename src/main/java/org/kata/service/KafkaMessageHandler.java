@@ -9,6 +9,8 @@ import org.kata.controller.dto.IndividualDto;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
+import static org.kata.service.impl.Constants.*;
+
 @Service
 @RequiredArgsConstructor
 public class KafkaMessageHandler {
@@ -18,9 +20,8 @@ public class KafkaMessageHandler {
     private final DocumentService documentService;
     private final ObjectMapper objectMapper;
 
-
-    @KafkaListener(topics = "${kafka.topic.create}", groupId = "${spring.kafka.consumer.group-id}",
-            containerFactory = "filterKafkaListenerContainerFactory")
+    @KafkaListener(topics = KAFKA_TOPIC_CREATE, groupId = KAFKA_CONSUMER_GROUP_ID,
+            containerFactory = FILTER_KAFKA_LISTENER_CONTAINER_FACTORY)
     public void handleMessage(String message) throws JsonProcessingException {
         IndividualDto dto = objectMapper.readValue(message, IndividualDto.class);
         individualService.saveIndividual(dto);
@@ -29,15 +30,16 @@ public class KafkaMessageHandler {
     /**
      * This method catch kafka message from topic "contact-change-topic" with old & new contacts with confirmation code. Map this message to {@link ContactChangeMessageDTO} and send to {@link ContactConfirmationService}.
      * <p>
+     *
      * @param message kafka message with old & new contacts and confirmation code
      * @author Aleksey Mischanchuk
-    */
-    @KafkaListener(topics = "${kafka.topic.listen}")
+     */
+    @KafkaListener(topics = KAFKA_TOPIC_LISTEN)
     public void handlerContactChangeMessage(String message) throws JsonProcessingException {
         contactConfirmationService.save(objectMapper.readValue(message, ContactChangeMessageDTO.class));
     }
 
-    @KafkaListener(topics = "${kafka.topic.create2}", groupId = "profile-loader")
+    @KafkaListener(topics = KAFKA_TOPIC_CREATE_2, groupId = PROFILE_LOADER_GROUP_ID)
     public void handleDocumentMessage(String message) throws JsonProcessingException {
         DocumentDto dto = objectMapper.readValue(message, DocumentDto.class);
         documentService.updateDocumentActualState(dto);

@@ -19,10 +19,13 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static org.kata.service.impl.Constants.*;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class ContactMediumServiceImpl implements ContactMediumService {
+
     private final ContactMediumCrudRepository contactMediumCrudRepository;
     private final IndividualCrudRepository individualCrudRepository;
     private final ContactMediumMapper contactMediumMapper;
@@ -41,10 +44,10 @@ public class ContactMediumServiceImpl implements ContactMediumService {
                 contactMediumDtos.forEach(cm -> cm.setIcp(icp));
                 return contactMediumDtos;
             } else {
-                throw new ContactMediumNotFoundException("No ContactMedium found for individual with icp: " + icp);
+                throw new ContactMediumNotFoundException(String.format(ERROR_NO_CONTACT_MEDIUM_FOUND_FOR_INDIVIDUAL, icp));
             }
         } else {
-            throw new IndividualNotFoundException("Individual with icp: " + icp + " not found");
+            throw new IndividualNotFoundException(String.format(ERROR_INDIVIDUAL_WITH_ICP_NOT_FOUND, icp));
         }
     }
 
@@ -64,36 +67,35 @@ public class ContactMediumServiceImpl implements ContactMediumService {
             contactMedium.setActual(true);
             contactMedium.setIndividual(ind);
 
-            log.info("For icp {} created new ContactMedium: {}", dto.getIcp(), contactMedium);
+            log.info(LOG_FOR_ICP_CREATED_NEW_CONTACT_MEDIUM, dto.getIcp(), contactMedium);
 
             try {
                 contactMediumCrudRepository.save(contactMedium);
-                log.debug("Saved contactMedium to the database: {}", contactMedium);
+                log.debug(LOG_SAVED_CONTACT_MEDIUM_TO_DATABASE, contactMedium);
             } catch (Exception e) {
-                log.warn("Failed to save contactMedium to the database.", e);
+                log.warn(LOG_FAILED_TO_SAVE_CONTACT_MEDIUM_TO_DATABASE, e);
             }
 
             ContactMediumDto contactMediumDto = contactMediumMapper.toDto(contactMedium);
             contactMediumDto.setIcp(dto.getIcp());
             return contactMediumDto;
-        }).orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + dto.getIcp() + " not found"));
+        }).orElseThrow(() -> new IndividualNotFoundException(String.format(ERROR_INDIVIDUAL_WITH_ICP_NOT_FOUND, dto.getIcp())));
     }
 
     public ContactMedium getContactMediumByTypeAndValue(ContactMediumType type, String value) {
         return contactMediumCrudRepository
                 .findByTypeAndValue(type, value)
-                .orElseThrow(() -> new ContactMediumNotFoundException("No contact medium found with type "
-                        + type
-                        + " and value "
-                        + value));
+                .orElseThrow(() -> new ContactMediumNotFoundException(
+                        String.format(ERROR_NO_CONTACT_MEDIUM_FOUND_WITH_TYPE_AND_VALUE, type, value)
+                ));
     }
 
     @Override
     public List<ContactMediumDto> getContactMedium(String icp, String uuid) {
-        if (uuid.equals("uuid")) {
+        if (uuid.equals(UUID_STRING_VALUE)) {
             return getContactMedium(icp);
         } else {
-            throw new IllegalArgumentException("Invalid type");
+            throw new IllegalArgumentException(ERROR_INVALID_TYPE);
         }
     }
 

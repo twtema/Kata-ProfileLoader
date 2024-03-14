@@ -18,7 +18,10 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
+
 import org.kata.service.ContactMediumService;
+
+import static org.kata.service.impl.Constants.*;
 
 @Service
 @Slf4j
@@ -32,8 +35,6 @@ public class WalletServiceImpl implements WalletService {
     private final WalletMapper walletMapper;
 
     private final ContactMediumService contactMediumService;
-
-
 
     @Override
     public List<WalletDto> getWallet(String icp) {
@@ -49,9 +50,7 @@ public class WalletServiceImpl implements WalletService {
                     })
                     .toList();
         }
-        throw new WalletNotFoundException("No wallets for icp "
-                + icp
-                + " found");
+        throw new WalletNotFoundException(String.format(ERROR_NO_WALLET_FOUND_FOR_ICP, icp));
     }
 
     @Override
@@ -72,19 +71,20 @@ public class WalletServiceImpl implements WalletService {
         wallet.setActual(true);
         wallet.setIndividual(ind);
 
-        log.info("For icp {} created new Wallet: {}", dto.getIcp(), wallet);
+        log.info(LOG_FOR_ICP_CREATED_NEW_WALLET, dto.getIcp(), wallet);
 
         try {
             walletCrudRepository.save(wallet);
-            log.debug("Saved wallet to the database: {}", wallet);
+            log.debug(LOG_SAVED_WALLET_TO_THE_DATABASE, wallet);
         } catch (Exception e) {
-            log.warn("Failed to save wallet to the database.", e);
+            log.warn(LOG_FAILED_TO_SAVE_WALLET_TO_THE_DATABASE, e);
         }
 
         WalletDto walletDto = walletMapper.toDto(wallet);
         walletDto.setIcp(dto.getIcp());
         return walletDto;
     }
+
     private void markWalletAsNotActual(List<Wallet> list) {
         list.forEach(wallet -> {
             if (wallet.isActual()) {
@@ -97,7 +97,8 @@ public class WalletServiceImpl implements WalletService {
         return individualCrudRepository
                 .findByIcp(icp)
                 .orElseThrow(() -> new IndividualNotFoundException(
-                        "Individual with icp " + icp + " not found"));
+                        String.format(ERROR_INDIVIDUAL_WITH_ICP_NOT_FOUND, icp)
+                ));
     }
 
     private Wallet getWalletByWalletId(String walletId) {
@@ -105,9 +106,7 @@ public class WalletServiceImpl implements WalletService {
                 .findByWalletId(walletId)
                 .filter(Wallet::isActual)
                 .orElseThrow(() -> new WalletNotFoundException(
-                        "Wallet with id "
-                                + walletId
-                                + " not found"
+                        String.format(ERROR_WALLET_WITH_ID_NOT_FOUND, walletId)
                 ));
     }
 
@@ -122,21 +121,14 @@ public class WalletServiceImpl implements WalletService {
                         && wallet.isActual())
                 .findFirst()
                 .orElseThrow(() -> new WalletNotFoundException(
-                        "Wallet for mobile "
-                                + mobile
-                                + " with currency "
-                                + currencyType
-                                + " not found"
-
+                        String.format(ERROR_WALLET_FOR_MOBILE_WITH_CURRENCY_NOT_FOUND, mobile, currencyType)
                 )));
     }
 
     @Override
     public WalletDto update(String walletId, BigDecimal balance) {
         Wallet wallet = walletCrudRepository.findByWalletId(walletId).orElseThrow(
-                () -> new WalletNotFoundException("Wallet with walletId "
-                        + walletId
-                        + " not found")
+                () -> new WalletNotFoundException(String.format(ERROR_WALLET_WITH_ID_NOT_FOUND, walletId))
         );
         wallet.setBalance(balance);
         return walletMapper.toDto(walletCrudRepository.save(wallet));

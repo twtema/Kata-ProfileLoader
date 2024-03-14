@@ -16,22 +16,24 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+import static org.kata.controller.Constants.*;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("v1/document")
+@RequestMapping(URI_DOCUMENT)
 public class DocumentController {
     private final DocumentService documentService;
 
-    @Operation(summary = "Получить Document по icp",
-            description = "Возвращает DTO Document по ICP")
+    @Operation(summary = GET_DOCUMENT_SUMMARY,
+            description = GET_DOCUMENT_DESCRIPTION)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful retrieval all documents"),
-            @ApiResponse(responseCode = "400", description = "Bad request"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = CODE_200, description = SUCCESSFUL_RETRIEVAL_ALL_DOCUMENTS),
+            @ApiResponse(responseCode = CODE_400, description = BAD_REQUEST),
+            @ApiResponse(responseCode = CODE_500, description = INTERNAL_SERVER_ERROR_DESCRIPTION)
     })
     @GetMapping
     public ResponseEntity<List<DocumentDto>> getDocument(
-            @Parameter(description = "ICP Document") String id,
+            @Parameter(description = ICP_DOCUMENT) String id,
             @RequestParam(required = false) String type) {
 
         if (type == null) {
@@ -40,32 +42,30 @@ public class DocumentController {
         return new ResponseEntity<>(documentService.getAllDocuments(id, type), HttpStatus.OK);
     }
 
-    @Operation(summary = "Создать новый Document", description = "Сохраняет и возвращает DTO нового документа")
+    @Operation(summary = CREATE_NEW_DOCUMENT, description = CREATE_NEW_DOCUMENT_DESC)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Document успешно создан"),
-            @ApiResponse(responseCode = "400", description = "Неверный запрос")
+            @ApiResponse(responseCode = CODE_201, description = DOCUMENT_CREATED),
+            @ApiResponse(responseCode = CODE_400, description = BAD_REQUEST)
     })
     @PostMapping
     public ResponseEntity<DocumentDto> postDocument(
-            @Parameter(description = "DTO Document для создания")
+            @Parameter(description = DOCUMENT_DTO_FOR_CREATION_DESCRIPTION)
             @RequestBody DocumentDto dto, HttpServletResponse response) {
         DocumentDto documentDto = documentService.saveDocument(dto);
-        response.addHeader("X-Debug-Info", documentDto.getDocumentType() + " successfully saved to the database!");
+        response.addHeader(X_DEBUG_INFO, String.format(DOCUMENT_SUCCESSFULLY_SAVED_TO_DB,documentDto.getDocumentType()));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(documentDto);
     }
 
-    @Operation(
-            summary = "Деактивация актуального документа",
-            description = "Деактивирует актуальный документ если более новый есть в топике Kafka")
+    @Operation(summary = UPDATE_ACTUAL_STATE_SUMMARY, description = UPDATE_ACTUAL_STATE_DESCRIPTION)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Document успешно деактивирован"),
-            @ApiResponse(responseCode = "400", description = "Неверный запрос"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = CODE_201, description = DOCUMENT_SUCCESSFULLY_DEACTIVATED),
+            @ApiResponse(responseCode = CODE_400, description = BAD_REQUEST),
+            @ApiResponse(responseCode = CODE_500, description = INTERNAL_SERVER_ERROR_DESCRIPTION)
     })
-    @PostMapping("/updateActualState")
+    @PostMapping(UPDATE_ACTUAL_STATE_ENDPOINT)
     public ResponseEntity<DocumentDto> updateActualState(
-            @Parameter(description = "DTO Document для деактивации")
+            @Parameter(description = DTO_DOCUMENT_FOR_DEACTIVATION_DESCRIPTION)
             @RequestBody DocumentDto dto) {
         return new ResponseEntity<>(documentService.updateDocumentActualState(dto), HttpStatus.CREATED);
     }

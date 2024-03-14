@@ -17,6 +17,8 @@ import org.springframework.util.CollectionUtils;
 import java.util.Collection;
 import java.util.UUID;
 
+import static org.kata.service.impl.Constants.*;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -31,18 +33,20 @@ public class IndividualServiceImpl implements IndividualService {
     @Override
     public IndividualDto getIndividual(String icp) {
         Individual entity = individualCrudRepository.findByIcp(icp)
-                .orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + icp + " not found"));
+                .orElseThrow(() -> new IndividualNotFoundException(String.format(ERROR_INDIVIDUAL_WITH_ICP_NOT_FOUND, icp)));
         if (!(entity == null)) {
             return individualMapper.toDto(entity);
         } else {
-            throw new IndividualNotFoundException("Individual with uuid: " + icp + " not found");
+            throw new IndividualNotFoundException(String.format(ERROR_INDIVIDUAL_UUID_NOT_FOUND, icp));
         }
     }
 
     @Override
     public IndividualDto getIndividualByPhone(String phone) {
         Individual entity = individualCrudRepository.findByPhone(phone)
-                .orElseThrow(() -> new IndividualNotFoundException("Individual with phone: " + phone + " not found"));
+                .orElseThrow(() -> new IndividualNotFoundException(
+                        String.format(ERROR_INDIVIDUAL_WITH_PHONE_NOT_FOUND, phone)
+                ));
         return individualMapper.toDto(entity);
     }
 
@@ -67,15 +71,15 @@ public class IndividualServiceImpl implements IndividualService {
 
         entity.getAvatar().get(0).setActual(true);
 
-        log.info("Create new Individual: {}", entity);
+        log.info(LOG_CREATE_NEW_INDIVIDUAL, entity);
 
         individualCrudRepository.save(entity);
 
         try {
             individualCrudRepository.save(entity);
-            log.debug("Saved individual to the database: {}", entity);
+            log.debug(LOG_SAVED_INDIVIDUAL_TO_THE_DATABASE, entity);
         } catch (Exception e) {
-            log.warn("Failed to save individual to the database.", e);
+            log.warn(LOG_FAILED_TO_SAVE_INDIVIDUAL_TO_THE_DATABASE, e);
         }
 
         return individualMapper.toDto(entity);
@@ -85,12 +89,11 @@ public class IndividualServiceImpl implements IndividualService {
     @Override
     public void deleteIndividual(String icp) {
         Individual entity = individualCrudRepository.findByIcp(icp)
-                .orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + icp + " not found"));
+                .orElseThrow(() -> new IndividualNotFoundException(String.format(ERROR_INDIVIDUAL_WITH_ICP_NOT_FOUND, icp)));
 
 
         individualCrudRepository.delete(entity);
     }
-
 
 
     @Override
@@ -102,10 +105,10 @@ public class IndividualServiceImpl implements IndividualService {
 
     @Override
     public IndividualDto getIndividual(String icp, String uuid) {
-        if (uuid.equals("uuid")) {
+        if (uuid.equals(UUID_STRING_VALUE)) {
             return getIndividual(icp);
         } else {
-            throw new IllegalArgumentException("Invalid Type");
+            throw new IllegalArgumentException(ERROR_INVALID_TYPE);
         }
 
     }
@@ -128,7 +131,6 @@ public class IndividualServiceImpl implements IndividualService {
     public Individual getIndividualEntity(String icp) {
         return individualCrudRepository
                 .findByIcp(icp)
-                .orElseThrow(() -> new IndividualNotFoundException(
-                        "Individual with icp " + icp + " not found"));
+                .orElseThrow(() -> new IndividualNotFoundException(String.format(ERROR_INDIVIDUAL_WITH_ICP_NOT_FOUND, icp)));
     }
 }

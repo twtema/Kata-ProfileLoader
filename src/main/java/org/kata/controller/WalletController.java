@@ -19,45 +19,46 @@ import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static org.kata.controller.Constants.*;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("v1/wallet")
+@RequestMapping(URI_WALLET)
 public class WalletController {
     private final WalletService walletService;
 
-    @Operation(summary = "Получить Wallet по icp",
-            description= "Возвращает DTO Wallet по ICP")
+    @Operation(summary = GET_WALLET_SUMMARY, description= GET_WALLET_DESCRIPTION)
     @GetMapping
     public ResponseEntity<List<WalletDto>> getWallet(
-            @Parameter(description = "ICP Wallet") @RequestParam String icp) {
+            @Parameter(description = ICP_WALLET_DESCRIPTION) @RequestParam String icp) {
         return new ResponseEntity<>(walletService.getWallet(icp), HttpStatus.OK);
     }
 
-    @Operation(summary = "Создать новый Wallet", description = "Сохраняет и возвращает DTO нового кошелька")
+    @Operation(summary = CREATE_WALLET_SUMMARY, description = CREATE_WALLET_DESCRIPTION)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Wallet успешно создан"),
-            @ApiResponse(responseCode = "400", description = "Неверный запрос")
+            @ApiResponse(responseCode = CODE_201, description = WALLET_CREATED_DESCRIPTION),
+            @ApiResponse(responseCode = CODE_400, description = BAD_REQUEST)
     })
     @PostMapping
     public ResponseEntity<WalletDto> postWallet(
-            @Parameter(description = "DTO Wallet для создания") @RequestBody WalletDto dto, HttpServletResponse response) {
+            @Parameter(description = DTO_WALLET_FOR_CREATION_DESCRIPTION) @RequestBody WalletDto dto, HttpServletResponse response) {
             WalletDto walletDto = walletService.saveWallet(dto);
-            response.addHeader("X-Debug-Info", "Wallet with ID: " + walletDto.getWalletId() + ", successfully saved to the database!");
+            response.addHeader(X_DEBUG_INFO, String.format(WALLET_SUCCESSFULLY_SAVED, walletDto.getWalletId()));
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(walletDto);
     }
-    @Operation(summary = "Получить Wallet по номеру телефона и валюте", description = "Возвращает WalletDto")
+    @Operation(summary = GET_WALLET_BY_MOBILE_AND_CURRENCY_SUMMARY, description = GET_WALLET_BY_MOBILE_AND_CURRENCY_DESCRIPTION)
     @ApiResponses(value = {
     })
-    @GetMapping("/byMobileAndCurrency")
+    @GetMapping(BY_MOBILE_AND_CURRENCY_ENDPOINT)
     public ResponseEntity<WalletDto> getWalletByMobileAndCurrency(String mobile, CurrencyType currency) {
         return new ResponseEntity<>(walletService.getWalletByMobileAndCurrency(mobile, currency), HttpStatus.OK);
     }
 
-    @Operation(summary = "Обновляет баланс Wallet по номеру кошелька", description = "Возвращает DTO обновлённого Wallet")
+    @Operation(summary = UPDATE_WALLET_SUMMARY, description = UPDATE_WALLET_DESCRIPTION)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "202", description = "Wallet успешно обновлён"),
-            @ApiResponse(responseCode = "400", description = "Неверный запрос")
+            @ApiResponse(responseCode = CODE_202, description = WALLET_SUCCESSFULLY_UPDATED_DESCRIPTION),
+            @ApiResponse(responseCode = CODE_400, description = BAD_REQUEST)
     })
     @PatchMapping()
     public ResponseEntity<WalletDto> update(String walletId, BigDecimal balance) {

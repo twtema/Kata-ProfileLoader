@@ -18,6 +18,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static org.kata.service.impl.Constants.*;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -42,10 +44,10 @@ public class DocumentServiceImpl implements DocumentService {
 
                 return documentDtos;
             } else {
-                throw new DocumentsNotFoundException("No Document found for individual with icp: " + icp);
+                throw new DocumentsNotFoundException(String.format(ERROR_NO_DOCUMENT_FOUND_FOR_INDIVIDUAL, icp));
             }
         } else {
-            throw new IndividualNotFoundException("Individual with icp: " + icp + " not found");
+            throw new IndividualNotFoundException(String.format(ERROR_INDIVIDUAL_WITH_ICP_NOT_FOUND, icp));
         }
     }
 
@@ -64,27 +66,27 @@ public class DocumentServiceImpl implements DocumentService {
             document.setActual(true);
             document.setIndividual(ind);
 
-            log.info("For icp {} created new Document: {}", dto.getIcp(), document);
+            log.info(LOG_FOR_ICP_CREATED_NEW_DOCUMENT, dto.getIcp(), document);
 
             try {
                 documentCrudRepository.save(document);
-                log.debug("Saved document to the database: {}", document);
+                log.debug(LOG_SAVED_DOCUMENT_MEDIUM_TO_DATABASE, document);
             } catch (Exception e) {
-                log.warn("Failed to save document to the database.", e);
+                log.warn(LOG_FAILED_TO_SAVE_DOCUMENT_TO_DATABASE, e);
             }
 
             DocumentDto documentDto = documentMapper.toDto(document);
             documentDto.setIcp(dto.getIcp());
             return documentDto;
-        }).orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + dto.getIcp() + " not found"));
+        }).orElseThrow(() -> new IndividualNotFoundException(String.format(ERROR_INDIVIDUAL_WITH_ICP_NOT_FOUND,dto.getIcp())));
     }
 
     @Override
     public List<DocumentDto> getAllDocuments(String icp, String uuid) {
-        if (uuid.equals("uuid")) {
+        if (uuid.equals(UUID_STRING_VALUE)) {
             return getAllDocuments(icp);
         } else {
-            throw new IllegalArgumentException("Invalid type");
+            throw new IllegalArgumentException(ERROR_INVALID_TYPE);
         }
     }
 
@@ -109,11 +111,11 @@ public class DocumentServiceImpl implements DocumentService {
             document.setUuid(UUID.randomUUID().toString());
             document.setIndividual(ind);
             document.setActual(true);
-            log.info("For icp {} created new Document: {}", dto.getIcp(), document);
+            log.info(LOG_FOR_ICP_CREATED_NEW_DOCUMENT, dto.getIcp(), document);
             documentCrudRepository.save(document);
             DocumentDto documentDto = documentMapper.toDto(document);
             documentDto.setIcp(dto.getIcp());
             return documentDto;
-        }).orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + dto.getIcp() + " not found"));
+        }).orElseThrow(() -> new IndividualNotFoundException(String.format(ERROR_INDIVIDUAL_WITH_ICP_NOT_FOUND,dto.getIcp())));
     }
 }

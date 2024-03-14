@@ -17,14 +17,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.kata.service.impl.Constants.*;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class AddressServiceImpl implements AddressService {
+
     private final AddressCrudRepository addressCrudRepository;
     private final IndividualCrudRepository individualCrudRepository;
     private final AddressMapper addressMapper;
-
 
     @Override
     public AddressDto getAddress(String icp) {
@@ -37,16 +39,16 @@ public class AddressServiceImpl implements AddressService {
                 Address actualAddress = address.stream()
                         .filter(Address::isActual)
                         .findFirst()
-                        .orElseThrow(() -> new AddressNotFoundException("Address with icp: " + icp + " not found"));
+                        .orElseThrow(() -> new AddressNotFoundException(String.format(ERROR_ADDRESS_NOT_FOUND, icp)));
 
                 AddressDto addressDto = addressMapper.toDto(actualAddress);
                 addressDto.setIcp(icp);
                 return addressDto;
             } else {
-                throw new AddressNotFoundException("No address found for individual with icp: " + icp);
+                throw new AddressNotFoundException(String.format(ERROR_NO_ADDRESS_FOUND_FOR_INDIVIDUAL, icp));
             }
         } else {
-            throw new IndividualNotFoundException("Individual with icp: " + icp + " not found");
+            throw new IndividualNotFoundException(String.format(ERROR_INDIVIDUAL_WITH_ICP_NOT_FOUND, icp));
         }
     }
 
@@ -63,31 +65,31 @@ public class AddressServiceImpl implements AddressService {
             address.setActual(true);
             address.setIndividual(ind);
 
-            log.info("For icp {} created new Address: {}", dto.getIcp(), address);
+            log.info(LOG_FOR_ICP_CREATED_NEW_ADDRESS, dto.getIcp(), address);
 
             try {
                 addressCrudRepository.save(address);
-                log.debug("Saved address to the database: {}", address);
+                log.debug(LOG_SAVED_ADDRESS_TO_DATABASE, address);
             } catch (Exception e) {
-                log.warn("Failed to save address to the database.", e);
+                log.warn(LOG_FAILED_TO_SAVE_ADDRESS, e);
             }
 
             AddressDto addressDto = addressMapper.toDto(address);
             addressDto.setIcp(dto.getIcp());
             return addressDto;
-        }).orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + dto.getIcp() + " not found"));
+        }).orElseThrow(() -> new IndividualNotFoundException(String.format(ERROR_INDIVIDUAL_WITH_ICP_NOT_FOUND, dto.getIcp())));
     }
 
     @Override
     public AddressDto  getAddress(String icp, String uuid) {
         if (icp == null || uuid == null) {
-            throw new IllegalArgumentException("Invalid id or type");
+            throw new IllegalArgumentException(ERROR_INVALID_ID_OR_TYPE);
         }
 
-        if (uuid.equals("uuid")) {
+        if (uuid.equals(UUID_STRING_VALUE)) {
             return getAddress(icp);
         } else {
-            throw new IllegalArgumentException("Invalid type");
+            throw new IllegalArgumentException(ERROR_INVALID_TYPE);
         }
     }
 
