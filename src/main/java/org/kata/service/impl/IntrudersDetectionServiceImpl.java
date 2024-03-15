@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class IntrudersDetectionServiceImpl implements IntrudersDetectionService {
-    private boolean isInvalidPassport(IndividualDto dto) {
+    public boolean isInvalidPassport(IndividualDto dto) {
         for (DocumentDto documentDto : dto.getDocuments()) {
             if (documentDto.getDocumentSerial().startsWith("00")) {
                 log.info("паспорт с данной серией {} не прошел валидацию", documentDto.getDocumentSerial());
@@ -24,7 +24,7 @@ public class IntrudersDetectionServiceImpl implements IntrudersDetectionService 
         return false;
     }
 
-    private boolean isInvalidPhoneNumber(IndividualDto dto) {
+    public boolean isInvalidPhoneNumber(IndividualDto dto) {
         for (ContactMediumDto contactDto : dto.getContacts()) {
             if(contactDto.getType() == ContactMediumType.PHONE) {
                 String phoneNumber = contactDto.getValue();
