@@ -3,6 +3,8 @@ package org.kata.service;
 import org.kata.controller.dto.IndividualDto;
 import org.kata.entity.Individual;
 
+import java.math.BigDecimal;
+
 public interface IndividualService {
     IndividualDto getIndividual(String icp);
 
@@ -19,5 +21,7 @@ public interface IndividualService {
     void deleteIndividual(String icp);
 
     IndividualDto buildTestIndividual();
+
+    IndividualDto getIndividualByCardNumber(String cardNumber);
 
 }

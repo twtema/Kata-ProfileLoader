@@ -2,10 +2,13 @@ package org.kata.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.implementation.bytecode.Throw;
+import org.apache.kafka.common.protocol.types.Field;
 import org.kata.controller.dto.IndividualDto;
 import org.kata.entity.Individual;
 import org.kata.entity.IndividualRelatedEntity;
 import org.kata.exception.IndividualNotFoundException;
+import org.kata.exception.NoMoneyException;
 import org.kata.initTestIndiv.TestIndividualBuilder;
 import org.kata.repository.IndividualCrudRepository;
 import org.kata.service.IndividualService;
@@ -14,6 +17,7 @@ import org.kata.service.mapper.IndividualMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -50,6 +54,13 @@ public class IndividualServiceImpl implements IndividualService {
     public IndividualDto buildTestIndividual() {
         return individualMapper.toDto(testIndividualBuilder.individualInitializer());
     }
+
+    @Override
+    public IndividualDto getIndividualByCardNumber(String cardNumber) {
+        //получить индивидуала по номеру карты
+        return null;
+    }
+
 
     @Override
     public IndividualDto saveIndividual(IndividualDto dto) {

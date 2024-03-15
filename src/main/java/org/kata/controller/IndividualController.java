@@ -8,12 +8,14 @@ import lombok.RequiredArgsConstructor;
 import org.kata.controller.dto.IndividualDto;
 import org.kata.exception.IndividualNotFoundException;
 import org.kata.service.IndividualService;
+import org.kata.service.TransferringMoneyService;
 import org.springdoc.api.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 
 
 @RestController
@@ -22,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 public class IndividualController {
 
     private final IndividualService individualService;
+    private final TransferringMoneyService transferringMoneyService;
 
     @Operation(summary = "Получить Individual по ICP", description = "Возвращает DTO Individual по ICP")
     @GetMapping
@@ -57,6 +60,17 @@ public class IndividualController {
     @PostMapping("/create")
     public ResponseEntity<IndividualDto> addTestIndividual() {
         return new ResponseEntity<>(individualService.saveIndividual(individualService.buildTestIndividual()), HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "Перевод денег по номеру карты", description = "Меняет баланс")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Перевод прошел успешно"),
+            @ApiResponse(responseCode = "400", description = "Неверный запрос")
+    })
+    @PostMapping("/transferring_money_by_card_number")
+    public ResponseEntity<HttpStatus> transferringMoneyByCardNumber(@RequestBody String icp, String cardNumber, BigDecimal summ) {
+        transferringMoneyService.transferringMoneyByCardNumber(icp,cardNumber,summ);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Operation(summary = "Получить Individual по номеру", description = "Возвращает DTO Individual по номеру")
