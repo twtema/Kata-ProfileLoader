@@ -62,11 +62,6 @@ public class IndividualDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<AvatarDto> avatar;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @Schema(description = "Кошелёк")
-    private List<WalletDto> wallet;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @Schema(description = "Банковская карта")
-    private List<BankCardDto> bankCard;
+    @Schema(description = "Счёта")
+    private List<AccountDto> account;
 }

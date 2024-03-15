@@ -11,16 +11,16 @@ import java.util.List;
 
 @Getter
 @Setter
-@Table(name = "wallet")
+@Table(name = "account")
 @Entity
-public class Wallet implements IndividualRelatedEntity{
+public class Account implements IndividualRelatedEntity{
 
     @Id
     @Column(name = "uuid")
     private String uuid;
 
-    @Column(name = "wallet_id")
-    private String walletId;
+    @Column(name = "account_id")
+    private String accountId;
 
     @ManyToOne
     @JoinColumn(name = "individual_uuid")

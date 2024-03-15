@@ -63,14 +63,13 @@ public class IndividualServiceImpl implements IndividualService {
         processCollection(entity.getDocuments(), entity);
         processCollection(entity.getContacts(), entity);
         processCollection(entity.getAvatar(), entity);
-        processCollection(entity.getWallet(), entity);
-        processCollection(entity.getBankCard(), entity);
-
+        processCollection(entity.getAccount(), entity);
 
         entity.getAvatar().get(0).setActual(true);
 
         log.info("Create new Individual: {}", entity);
 
+        individualCrudRepository.save(entity);
 
         try {
             individualCrudRepository.save(entity);
