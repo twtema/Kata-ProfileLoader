@@ -1,8 +1,7 @@
 package org.kata.entity;
 
-import lombok.AllArgsConstructor;
+
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.kata.entity.enums.CurrencyType;
 

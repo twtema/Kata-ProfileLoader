@@ -1,6 +1,6 @@
 package org.kata.controller.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
@@ -8,7 +8,7 @@ import lombok.extern.jackson.Jacksonized;
 import org.kata.entity.enums.CurrencyType;
 
 import java.math.BigDecimal;
-import java.util.List;
+
 
 @Data
 @Builder
