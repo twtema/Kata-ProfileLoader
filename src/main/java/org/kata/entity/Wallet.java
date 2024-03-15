@@ -1,6 +1,8 @@
 package org.kata.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.kata.entity.enums.CurrencyType;
 
@@ -35,6 +37,6 @@ public class Wallet implements IndividualRelatedEntity{
     @Column(name = "is_actual")
     private boolean isActual;
 
-//    @OneToMany(mappedBy = "wallet", cascade = CascadeType.ALL)
-//    private List<BankCard> bankCard;
+    @OneToMany(mappedBy = "wallet", cascade = CascadeType.ALL)
+    private List<BankCard> bankCard;
 }

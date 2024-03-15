@@ -6,6 +6,7 @@ import org.kata.controller.dto.IndividualDto;
 import org.kata.entity.BankCard;
 import org.kata.entity.Individual;
 import org.kata.entity.IndividualRelatedEntity;
+import org.kata.entity.Wallet;
 import org.kata.exception.IndividualNotFoundException;
 import org.kata.initTestIndiv.TestIndividualBuilder;
 import org.kata.repository.IndividualCrudRepository;
@@ -16,8 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
 import java.util.UUID;
 
 @Service
@@ -69,11 +68,11 @@ public class IndividualServiceImpl implements IndividualService {
         processCollection(entity.getWallet(), entity);
         processCollection(entity.getBankCard(), entity);
 
+
         entity.getAvatar().get(0).setActual(true);
 
         log.info("Create new Individual: {}", entity);
 
-        individualCrudRepository.save(entity);
 
         try {
             individualCrudRepository.save(entity);

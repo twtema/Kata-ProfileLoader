@@ -19,7 +19,7 @@ public class BankCardDto {
     @Schema(description = "Имя владельца", example = "Иван")
     private String holderName;
 
-    @Schema(description = "Номер карты", example = "2202 2018 4060 7718")
+    @Schema(description = "Номер карты", example = "2202201840607718")
     private String cardNumber;
 
     @Schema(description = "Код проверки подлинности банковской карты", example = "111")

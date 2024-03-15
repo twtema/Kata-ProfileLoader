@@ -1,5 +1,6 @@
 package org.kata.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
@@ -26,5 +27,4 @@ public class WalletDto {
 
     @Schema(description = "Баланс", example = "123.45")
     private BigDecimal balance;
-
 }
