@@ -36,6 +36,6 @@ public class Account implements IndividualRelatedEntity{
     @Column(name = "is_actual")
     private boolean isActual;
 
-    @OneToMany(mappedBy = "wallet", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     private List<BankCard> bankCard;
 }

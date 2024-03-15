@@ -21,8 +21,8 @@ public class BankCard implements IndividualRelatedEntity {
     private Individual individual;
 
     @ManyToOne
-    @JoinColumn(name = "wallet_uuid")
-    private Wallet wallet;
+    @JoinColumn(name = "account_uuid")
+    private Account account;
 
     @Column(name = "holder_name")
     private String holderName;

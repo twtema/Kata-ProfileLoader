@@ -64,6 +64,7 @@ public class IndividualServiceImpl implements IndividualService {
         processCollection(entity.getContacts(), entity);
         processCollection(entity.getAvatar(), entity);
         processCollection(entity.getAccount(), entity);
+        processCollection(entity.getBankCard(), entity);
 
         entity.getAvatar().get(0).setActual(true);
 

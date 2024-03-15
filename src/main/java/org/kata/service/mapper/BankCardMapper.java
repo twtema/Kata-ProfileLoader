@@ -1,9 +1,7 @@
 package org.kata.service.mapper;
 
 import org.kata.controller.dto.BankCardDto;
-import org.kata.controller.dto.WalletDto;
 import org.kata.entity.BankCard;
-import org.kata.entity.Wallet;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
