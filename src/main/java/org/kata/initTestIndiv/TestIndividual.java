@@ -24,7 +24,6 @@ public class TestIndividual extends Individual {
     private List<ContactMedium> contacts;
     private List<Address> address;
     private List<Avatar> avatar;
-    private List<Wallet> wallet;
-    private List<SavingsAccount> savingsAccount;
+    private List<Account> account;
 
 }

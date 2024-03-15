@@ -1,16 +1,16 @@
 package org.kata.service.mapper;
 
-import org.kata.controller.dto.WalletDto;
-import org.kata.entity.Wallet;
+import org.kata.controller.dto.AccountDto;
+import org.kata.entity.Account;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import java.util.List;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-public interface WalletMapper {
-    Wallet toEntity(WalletDto walletDto);
+public interface AccountMapper {
+    Account toEntity(AccountDto accountDto);
 
-    WalletDto toDto(Wallet wallet);
+    AccountDto toDto(Account account);
 
-    List<WalletDto> toDto(List<Wallet> wallet);
+    List<AccountDto> toDto(List<Account> account);
 }
