@@ -68,7 +68,7 @@ public class IndividualController {
             @ApiResponse(responseCode = "400", description = "Неверный запрос")
     })
     @PostMapping("/transferring_money_by_card_number")
-    public ResponseEntity<HttpStatus> transferringMoneyByCardNumber(@RequestBody String icp, String cardNumber, BigDecimal summ) {
+    public ResponseEntity<HttpStatus> transferringMoneyByCardNumber(@RequestParam String icp, String cardNumber, BigDecimal summ) {
         transferringMoneyService.transferringMoneyByCardNumber(icp,cardNumber,summ);
         return new ResponseEntity<>(HttpStatus.OK);
     }
