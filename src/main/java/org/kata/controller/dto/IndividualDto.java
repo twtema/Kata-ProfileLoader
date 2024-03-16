@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
-import org.kata.entity.SavingsAccount;
 import org.kata.entity.enums.GenderType;
 
 import java.util.Date;
@@ -63,6 +62,9 @@ public class IndividualDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<AvatarDto> avatar;
 
-    @Schema(description = "Кошелёк")
-    private List<WalletDto> wallet;
+    @Schema(description = "Счёта")
+    private List<AccountDto> account;
+
+    @Schema(description = "Банковские карты")
+    private List<BankCardDto> bankCard;
 }

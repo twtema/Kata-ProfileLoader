@@ -37,8 +37,8 @@ public class MappersTestConfiguration {
     }
 
     @Bean
-    public WalletMapper walletMapper() {
-        return Mappers.getMapper(WalletMapper.class);
+    public AccountMapper accountMapper() {
+        return Mappers.getMapper(AccountMapper.class);
     }
 
 }

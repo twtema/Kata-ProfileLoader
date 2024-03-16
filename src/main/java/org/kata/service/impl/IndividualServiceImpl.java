@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.implementation.bytecode.Throw;
 import org.apache.kafka.common.protocol.types.Field;
 import org.kata.controller.dto.IndividualDto;
+import org.kata.entity.Account;
+import org.kata.entity.BankCard;
 import org.kata.entity.Individual;
 import org.kata.entity.IndividualRelatedEntity;
 import org.kata.exception.IndividualNotFoundException;
@@ -51,14 +53,15 @@ public class IndividualServiceImpl implements IndividualService {
     }
 
     @Override
-    public IndividualDto buildTestIndividual() {
-        return individualMapper.toDto(testIndividualBuilder.individualInitializer());
+    public IndividualDto getIndividualByCardNumber(String cardNumber) {
+        Individual entity = individualCrudRepository.findByCardNumber(cardNumber)
+                .orElseThrow(() -> new IndividualNotFoundException("Individual with cardNumber: " + cardNumber + " not found"));
+        return individualMapper.toDto(entity);
     }
 
     @Override
-    public IndividualDto getIndividualByCardNumber(String cardNumber) {
-        //получить индивидуала по номеру карты
-        return null;
+    public IndividualDto buildTestIndividual() {
+        return individualMapper.toDto(testIndividualBuilder.individualInitializer());
     }
 
 
@@ -70,17 +73,27 @@ public class IndividualServiceImpl implements IndividualService {
             entity.setUuid(generateUuid());
         }
 
+        /** Установка связей между сущностями */
+        for (Account account : entity.getAccount()) {
+            account.setIndividual(entity);
+            for (BankCard bankCard : entity.getBankCard()) {
+                bankCard.setIndividual(entity);
+                bankCard.setAccount(account);
+            }
+        }
+
         processCollection(entity.getAddress(), entity);
         processCollection(entity.getDocuments(), entity);
         processCollection(entity.getContacts(), entity);
         processCollection(entity.getAvatar(), entity);
-        processCollection(entity.getWallet(), entity);
+        processCollection(entity.getAccount(), entity);
+        processCollection(entity.getBankCard(), entity);
+
 
         entity.getAvatar().get(0).setActual(true);
 
         log.info("Create new Individual: {}", entity);
 
-        individualCrudRepository.save(entity);
 
         try {
             individualCrudRepository.save(entity);

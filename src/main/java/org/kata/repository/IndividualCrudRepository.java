@@ -16,6 +16,9 @@ public interface IndividualCrudRepository extends CrudRepository<Individual, Str
     @Query("SELECT c.individual FROM ContactMedium c WHERE c.value = :phone")
     Optional<Individual> findByPhone(@Param("phone") String phone);
 
+    @Query("SELECT c.individual FROM BankCard c WHERE c.cardNumber = :card_number")
+    Optional<Individual> findByCardNumber(@Param("card_number") String cardNumber);
+
     @Override
     void delete(Individual entity);
 }
