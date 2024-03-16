@@ -3,6 +3,8 @@ package org.kata.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.kata.controller.dto.IndividualDto;
+import org.kata.entity.Account;
+import org.kata.entity.BankCard;
 import org.kata.entity.Individual;
 import org.kata.entity.IndividualRelatedEntity;
 import org.kata.exception.IndividualNotFoundException;
@@ -59,6 +61,15 @@ public class IndividualServiceImpl implements IndividualService {
             entity.setUuid(generateUuid());
         }
 
+        /** Установка связей между сущностями */
+        for (Account account : entity.getAccount()) {
+            account.setIndividual(entity);
+            for (BankCard bankCard : entity.getBankCard()) {
+                bankCard.setIndividual(entity);
+                bankCard.setAccount(account);
+            }
+        }
+
         processCollection(entity.getAddress(), entity);
         processCollection(entity.getDocuments(), entity);
         processCollection(entity.getContacts(), entity);
@@ -66,11 +77,11 @@ public class IndividualServiceImpl implements IndividualService {
         processCollection(entity.getAccount(), entity);
         processCollection(entity.getBankCard(), entity);
 
+
         entity.getAvatar().get(0).setActual(true);
 
         log.info("Create new Individual: {}", entity);
 
-        individualCrudRepository.save(entity);
 
         try {
             individualCrudRepository.save(entity);

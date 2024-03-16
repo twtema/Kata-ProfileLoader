@@ -1,8 +1,7 @@
 package org.kata.entity;
 
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.kata.entity.enums.CurrencyType;
 
 import javax.persistence.*;
@@ -13,6 +12,8 @@ import java.util.List;
 @Setter
 @Table(name = "account")
 @Entity
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class Account implements IndividualRelatedEntity{
 
     @Id
@@ -38,4 +39,5 @@ public class Account implements IndividualRelatedEntity{
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     private List<BankCard> bankCard;
+
 }

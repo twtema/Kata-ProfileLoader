@@ -27,4 +27,6 @@ public class BankCardDto {
 
     @Schema(description = "Дата окончания срока", example = "01.01.2027")
     private Date expirationDate;
+
+    private boolean actual;
 }

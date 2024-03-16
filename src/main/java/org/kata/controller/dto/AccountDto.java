@@ -27,4 +27,5 @@ public class AccountDto {
 
     @Schema(description = "Баланс", example = "123.45")
     private BigDecimal balance;
+
 }

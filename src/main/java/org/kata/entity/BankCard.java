@@ -1,11 +1,13 @@
 package org.kata.entity;
 
 import lombok.*;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -28,7 +30,7 @@ public class BankCard implements IndividualRelatedEntity {
     private String holderName;
 
     @Column(name = "card_number")
-    @Size(min = 19, max = 19, message = "Номер карты должна содержать 16 символов")
+    @Size(min = 16, max = 16, message = "Номер карты должна содержать 16 символов")
     private String cardNumber;
 
     @Column(name = "expiration_date")
