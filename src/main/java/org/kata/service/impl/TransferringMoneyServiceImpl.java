@@ -6,6 +6,7 @@ import org.kata.controller.dto.AccountDto;
 import org.kata.controller.dto.IndividualDto;
 import org.kata.exception.NoMoneyException;
 import org.kata.service.AccountService;
+import org.kata.service.CurrencyConverterService;
 import org.kata.service.IndividualService;
 import org.kata.service.TransferringMoneyService;
 import org.kata.service.mapper.IndividualMapper;
@@ -19,6 +20,7 @@ public class TransferringMoneyServiceImpl implements TransferringMoneyService {
 
     private final IndividualService individualService;
     private final AccountService accountService;
+    private final CurrencyConverterService converterService;
 
     @Override
     public void transferringMoneyByCardNumber(String icp, String cardNumber, BigDecimal summ) {
@@ -27,6 +29,7 @@ public class TransferringMoneyServiceImpl implements TransferringMoneyService {
 
         if (sender != null && recipient != null) {
             debitsMoney(sender.getAccount().get(0),summ);
+            summ = converterService.convertCurrency(summ, sender.getAccount().get(0).getCurrencyType(), recipient.getAccount().get(0).getCurrencyType());
             creditsMoney(recipient.getAccount().get(0),summ);
         }
 
