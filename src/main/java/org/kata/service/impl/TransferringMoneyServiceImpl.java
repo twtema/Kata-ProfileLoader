@@ -9,7 +9,6 @@ import org.kata.service.AccountService;
 import org.kata.service.CurrencyConverterService;
 import org.kata.service.IndividualService;
 import org.kata.service.TransferringMoneyService;
-import org.kata.service.mapper.IndividualMapper;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
