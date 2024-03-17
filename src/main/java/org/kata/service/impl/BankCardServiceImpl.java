@@ -56,6 +56,9 @@ public class BankCardServiceImpl implements BankCardService {
         Optional<Individual> individual = individualCrudRepository.findByIcp(dto.getIcp());
 
         return individual.map(ind -> {
+            if (bankCardExists(ind, dto.getCardNumber())) {
+                throw new BankCardNotFoundException("Bank card with number: " + dto.getCardNumber() + " already exists.");
+            }
             List<BankCard> bankCards = ind.getBankCard();
             List<BankCard> markOldCard = bankCards.stream()
                     .filter(card -> dto.getBankCardType().equals(card.getBankCardType()))
@@ -95,32 +98,16 @@ public class BankCardServiceImpl implements BankCardService {
     }
 
     @Override
-    public BankCardDto updateBankCardActualState(BankCardDto dto) {
-        Optional<Individual> individual = individualCrudRepository.findByIcp(dto.getIcp());
-        return individual.map(ind -> {
-            List<BankCard> bankCards = ind.getBankCard()
-                    .stream()
-                    .filter(bankCard -> bankCard.getBankCardType().equals(dto.getBankCardType()))
-                    .toList();
-            markBankCardAsNotActual(bankCards);
-            BankCard bankCard = bankCardMapper.toEntity(dto);
-            bankCard.setUuid(UUID.randomUUID().toString());
-            bankCard.setIndividual(ind);
-            bankCard.setActual(true);
-            log.info("For icp {} created new bankCard: {}", dto.getIcp(), bankCard);
-            bankCardCrudRepository.save(bankCard);
-            BankCardDto bankCardDto = bankCardMapper.toDto(bankCard);
-            bankCardDto.setIcp(dto.getIcp());
-            return bankCardDto;
-        }).orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + dto.getIcp() + " not found"));
-    }
-
-    @Override
     public List<BankCardDto> getAllBankCards(String icp, String uuid) {
         if (uuid.equals("uuid")) {
             return getAllBankCards(icp);
         } else {
             throw new IllegalArgumentException("Invalid type");
         }
+    }
+
+    private boolean bankCardExists(Individual individual, String cardNumber) {
+        return individual.getBankCard().stream()
+                .anyMatch(card -> cardNumber.equals(card.getCardNumber()));
     }
 }

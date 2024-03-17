@@ -9,7 +9,5 @@ public interface BankCardService {
 
     BankCardDto saveBankCard(BankCardDto dto);
 
-    BankCardDto updateBankCardActualState(BankCardDto dto);
-
     List<BankCardDto> getAllBankCards(String icp, String uuid);
 }

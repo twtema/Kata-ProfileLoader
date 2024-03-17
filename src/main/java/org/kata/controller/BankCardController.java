@@ -56,21 +56,6 @@ public class BankCardController {
                 .body(bankCardDto);
     }
 
-//    @Operation(
-//            summary = "Деактивация актуального документа",
-//            description = "Деактивирует актуальный документ если более новый есть в топике Kafka")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "201", description = "Document успешно деактивирован"),
-//            @ApiResponse(responseCode = "400", description = "Неверный запрос"),
-//            @ApiResponse(responseCode = "500", description = "Internal server error")
-//    })
-//    @PostMapping("/updateActualState")
-//    public ResponseEntity<DocumentDto> updateActualState(
-//            @Parameter(description = "DTO Document для деактивации")
-//            @RequestBody DocumentDto dto) {
-//        return new ResponseEntity<>(documentService.updateDocumentActualState(dto), HttpStatus.CREATED);
-//    }
-
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BankCardNotFoundException.class)
     public ErrorMessage getBankCardHandler(BankCardNotFoundException e) {
