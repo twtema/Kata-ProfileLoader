@@ -1,13 +1,14 @@
 package org.kata.entity;
 
 import lombok.*;
-import org.springframework.stereotype.Component;
+import org.kata.entity.enums.BankCardType;
+
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 import java.util.Date;
-import java.util.List;
+
 
 @Getter
 @Setter
@@ -35,6 +36,10 @@ public class BankCard implements IndividualRelatedEntity {
 
     @Column(name = "expiration_date")
     private Date expirationDate;
+
+    @Column(name = "bank_card_type")
+    @Enumerated(EnumType.STRING)
+    private BankCardType bankCardType;
 
     @Column(name = "cvv")
     @Digits(integer = 3, fraction = 0, message = "CVV код должен содержать 3 цифры")
