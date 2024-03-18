@@ -30,6 +30,7 @@ public class BankCardServiceImpl implements BankCardService {
 
     private final BankCardMapper bankCardMapper;
 
+
     @Override
     public List<BankCardDto> getAllBankCards(String icp) {
         Optional<Individual> individual = individualCrudRepository.findByIcp(icp);
@@ -56,7 +57,7 @@ public class BankCardServiceImpl implements BankCardService {
         Optional<Individual> individual = individualCrudRepository.findByIcp(dto.getIcp());
 
         return individual.map(ind -> {
-            if (bankCardExists(ind, dto.getCardNumber())) {
+            if (bankCardExists(ind, dto.getCardNumber(), dto.getCvv())) {
                 throw new BankCardNotFoundException("Bank card with number: " + dto.getCardNumber() + " already exists.");
             }
             List<BankCard> bankCards = ind.getBankCard();
@@ -106,8 +107,14 @@ public class BankCardServiceImpl implements BankCardService {
         }
     }
 
-    private boolean bankCardExists(Individual individual, String cardNumber) {
-        return individual.getBankCard().stream()
-                .anyMatch(card -> cardNumber.equals(card.getCardNumber()));
+    private boolean bankCardExists(Individual individual, String cardNumber, Integer cvv) {
+        if (cardNumber.length() != 16) {
+            throw new IllegalArgumentException("Card number must contain 16 digits.");
+        }
+        if (String.valueOf(cvv).length() != 3) {
+            throw new IllegalArgumentException("CVV code must contain 3 digits.");
+        }
+        return individual.getBankCard().stream().anyMatch(card -> cardNumber.equals(card.getCardNumber())
+                && cvv.equals(card.getCvv()));
     }
 }

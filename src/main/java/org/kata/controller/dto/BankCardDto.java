@@ -24,7 +24,7 @@ public class BankCardDto {
     private String cardNumber;
 
     @Schema(description = "Код проверки подлинности банковской карты", example = "111")
-    private int cvv;
+    private Integer cvv;
 
     @Schema(description = "Тип банковской карты", example = "DEBIT_CARD")
     private BankCardType bankCardType;

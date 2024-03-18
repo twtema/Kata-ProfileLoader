@@ -3,10 +3,7 @@ package org.kata.entity;
 import lombok.*;
 import org.kata.entity.enums.BankCardType;
 
-
 import javax.persistence.*;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.Size;
 import java.util.Date;
 
 
@@ -31,7 +28,6 @@ public class BankCard implements IndividualRelatedEntity {
     private String holderName;
 
     @Column(name = "card_number")
-    @Size(min = 16, max = 16, message = "Номер карты должна содержать 16 символов")
     private String cardNumber;
 
     @Column(name = "expiration_date")
@@ -42,8 +38,7 @@ public class BankCard implements IndividualRelatedEntity {
     private BankCardType bankCardType;
 
     @Column(name = "cvv")
-    @Digits(integer = 3, fraction = 0, message = "CVV код должен содержать 3 цифры")
-    private int cvv;
+    private Integer cvv;
 
     @Column(name = "is_actual")
     private boolean isActual;
