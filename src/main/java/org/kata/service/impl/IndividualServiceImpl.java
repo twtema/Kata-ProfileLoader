@@ -10,6 +10,7 @@ import org.kata.entity.IndividualRelatedEntity;
 import org.kata.exception.IndividualNotFoundException;
 import org.kata.initTestIndiv.TestIndividualBuilder;
 import org.kata.repository.IndividualCrudRepository;
+import org.kata.service.BankCardService;
 import org.kata.service.IndividualService;
 import org.kata.service.KafkaMessageSender;
 import org.kata.service.mapper.IndividualMapper;

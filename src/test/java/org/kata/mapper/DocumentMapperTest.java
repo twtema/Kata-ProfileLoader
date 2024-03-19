@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kata.controller.dto.DocumentDto;
 import org.kata.entity.Document;
-import org.kata.entity.enums.DocumentType;
 import org.kata.mapper.setters.Setter;
 import org.kata.mapper.util.MapperChecker;
 import org.kata.service.mapper.DocumentMapper;

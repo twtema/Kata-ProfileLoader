@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kata.controller.dto.ContactMediumDto;
 import org.kata.entity.ContactMedium;
-import org.kata.entity.enums.ContactMediumType;
 import org.kata.mapper.setters.Setter;
 import org.kata.mapper.util.MapperChecker;
 import org.kata.service.mapper.ContactMediumMapper;

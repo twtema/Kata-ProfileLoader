@@ -3,6 +3,7 @@ package org.kata.service.mapper;
 import org.kata.controller.dto.BankCardDto;
 import org.kata.entity.BankCard;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import java.util.List;

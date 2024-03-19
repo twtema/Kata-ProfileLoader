@@ -30,6 +30,9 @@ public class IndividualSetter implements Setter<Individual, IndividualDto> {
     @Qualifier("accountSetter")
     private Setter accountSetter;
     @Autowired
+    @Qualifier("bankCardSetter")
+    private Setter bankCardSetter;
+    @Autowired
     AddressMapper addressMapper;
     @Autowired
     DocumentMapper documentMapper;
@@ -39,6 +42,8 @@ public class IndividualSetter implements Setter<Individual, IndividualDto> {
     AvatarMapper  avatarMapper;
     @Autowired
     AccountMapper accountMapper;
+    @Autowired
+    BankCardMapper bankCardMapper;
 
     @Override
     public void setEntityFields(Individual individual) {
@@ -48,6 +53,7 @@ public class IndividualSetter implements Setter<Individual, IndividualDto> {
         individual.setAvatar(generateEntityList(new Avatar(), avatarSetter));
         individual.setContacts(generateEntityList(new ContactMedium(), contactSetter));
         individual.setAccount(generateEntityList(new Account(), accountSetter));
+        individual.setBankCard(generateEntityList(new BankCard(), bankCardSetter));
         individual.setGender(GenderType.MALE);
         individual.setBirthDate(new Date());
     }
@@ -61,6 +67,7 @@ public class IndividualSetter implements Setter<Individual, IndividualDto> {
         individualDto.setAvatar(generateDtoList(avatarMapper.toDto(new Avatar()), avatarSetter));
         individualDto.setContacts(generateDtoList(contactMediumMapper.toDto(new ContactMedium()), contactSetter));
         individualDto.setAccount(generateDtoList(accountMapper.toDto(new Account()), accountSetter));
+        individualDto.setBankCard(generateDtoList(bankCardMapper.toDto(new BankCard()), bankCardSetter));
         individualDto.setBirthDate(new Date());
     }
 

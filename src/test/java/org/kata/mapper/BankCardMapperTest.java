@@ -3,51 +3,46 @@ package org.kata.mapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.kata.controller.dto.IndividualDto;
-import org.kata.entity.*;
+import org.kata.controller.dto.BankCardDto;
+import org.kata.entity.BankCard;
 import org.kata.mapper.setters.Setter;
 import org.kata.mapper.util.MapperChecker;
-import org.kata.service.mapper.*;
+import org.kata.service.mapper.BankCardMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.junit4.SpringRunner;
 
-
-
 @RunWith(SpringRunner.class)
-public class IndividualMapperTest implements MapperTest<Individual, IndividualDto> {
+public class BankCardMapperTest implements MapperTest<BankCard, BankCardDto> {
     @Autowired
-    private IndividualMapper individualMapper;
+    private BankCardMapper bankCardMapper;
     @Autowired
     private MapperChecker mapperChecker;
     @Autowired
-    @Qualifier("individualSetter")
+    @Qualifier("bankCardSetter")
     private Setter setter;
-
-    private Individual individualFrom;
-    private IndividualDto individualDtoFrom;
+    private BankCard bankCardFrom;
+    private BankCardDto bankCardDtoFrom;
 
     @Before
     public void setUp() {
-        individualFrom = new Individual();
-        individualDtoFrom = individualMapper.toDto(individualFrom);
-        setter.setEntityFields(individualFrom);
-        setter.setDtoFields(individualDtoFrom);
+        bankCardFrom = new BankCard();
+        bankCardDtoFrom = bankCardMapper.toDto(bankCardFrom);
+        setter.setEntityFields(bankCardFrom);
+        setter.setDtoFields(bankCardDtoFrom);
     }
-
-    @Override
     @Test
+    @Override
     public void shouldMapEntityToDto() throws IllegalAccessException {
         mapperChecker.checkFieldsEquivalence(
-                individualFrom,
-                individualMapper.toDto(individualFrom));
+                bankCardFrom,
+                bankCardMapper.toDto(bankCardFrom));
     }
-
-    @Override
     @Test
+    @Override
     public void shouldMapDtoToEntity() throws IllegalAccessException {
         mapperChecker.checkFieldsEquivalence(
-                individualDtoFrom,
-                individualMapper.toEntity(individualDtoFrom));
+                bankCardFrom,
+                bankCardMapper.toEntity(bankCardDtoFrom));
     }
 }

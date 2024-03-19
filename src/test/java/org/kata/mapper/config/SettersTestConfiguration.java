@@ -1,5 +1,6 @@
 package org.kata.mapper.config;
 
+import org.kata.entity.BankCard;
 import org.kata.mapper.setters.*;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -29,5 +30,9 @@ public class SettersTestConfiguration {
     @Bean
     public AccountSetter accountSetter() {
         return new AccountSetter();
+    }
+    @Bean
+    public BankCardSetter bankCardSetter() {
+        return new BankCardSetter();
     }
 }

@@ -4,7 +4,6 @@ import org.kata.controller.dto.AvatarDto;
 import org.kata.entity.Avatar;
 
 import java.util.Random;
-import java.util.stream.Stream;
 
 
 public class AvatarSetter implements Setter<Avatar, AvatarDto> {

@@ -39,4 +39,9 @@ public class MappersTestConfiguration {
         return Mappers.getMapper(AccountMapper.class);
     }
 
+    @Bean
+    public BankCardMapper bankCardMapper() {
+        return  Mappers.getMapper(BankCardMapper.class);
+    }
+
 }
