@@ -117,4 +117,11 @@ public class BankCardServiceImpl implements BankCardService {
         return individual.getBankCard().stream().anyMatch(card -> cardNumber.equals(card.getCardNumber())
                 && cvv.equals(card.getCvv()));
     }
+    @Override
+    public void deleteBankCard(String icp) {
+        Optional<BankCard> entity = bankCardCrudRepository.findById(icp);
+        BankCard bankCard = entity.orElseThrow(() -> new IndividualNotFoundException("BankCard with icp: " + icp + " not found"));
+
+        bankCardCrudRepository.delete(bankCard);
+    }
 }

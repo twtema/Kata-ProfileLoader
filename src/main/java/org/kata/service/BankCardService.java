@@ -10,4 +10,7 @@ public interface BankCardService {
     BankCardDto saveBankCard(BankCardDto dto);
 
     List<BankCardDto> getAllBankCards(String icp, String uuid);
+
+    void deleteBankCard(String icp);
+
 }

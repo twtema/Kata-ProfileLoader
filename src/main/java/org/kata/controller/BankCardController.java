@@ -56,6 +56,19 @@ public class BankCardController {
                 .body(bankCardDto);
     }
 
+    @Operation(summary = "Delete an bankCard by icp")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful deleted of BankCard"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @DeleteMapping("/delete")
+    public ResponseEntity<HttpStatus> deleteBankCard(@RequestParam String icp) {
+        System.out.println("controller loader delete icp - " + icp);
+        bankCardService.deleteBankCard(icp);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BankCardNotFoundException.class)
     public ErrorMessage getBankCardHandler(BankCardNotFoundException e) {
