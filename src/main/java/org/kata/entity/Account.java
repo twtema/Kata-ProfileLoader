@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Setter
 @Table(name = "account")
 @Entity
-public class Account implements IndividualRelatedEntity{
+public class Account implements IndividualRelatedEntity {
 
     @Id
     @Column(name = "uuid")

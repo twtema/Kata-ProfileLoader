@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.kata.controller.dto.AccountDto;
 import org.kata.entity.enums.CurrencyType;
+import org.kata.exception.AccountOperationException;
 import org.kata.exception.ContactMediumNotFoundException;
 import org.kata.exception.AccountNotFoundException;
 import org.kata.service.AccountService;
@@ -25,8 +26,11 @@ import java.util.List;
 public class AccountController {
     private final AccountService accountService;
 
+    private static final String DEPOSIT_OPERATION_SUMMARY = "Производит операции со счетом.";
+    private static final String DEPOSIT_OPERATION_DESCRIPTION = "Получает в аргументы только номер счета, объект самой операции получает из redis. Возвращает AccountDto.";
+
     @Operation(summary = "Получить Account по icp",
-            description= "Возвращает DTO Account по ICP")
+            description = "Возвращает DTO Account по ICP")
     @GetMapping
     public ResponseEntity<List<AccountDto>> getAccount(
             @Parameter(description = "ICP Account") @RequestParam String icp) {
@@ -41,20 +45,20 @@ public class AccountController {
     @PostMapping
     public ResponseEntity<AccountDto> postAccount(
             @Parameter(description = "DTO Account для создания") @RequestBody AccountDto dto, HttpServletResponse response) {
-            AccountDto accountDto = accountService.saveAccount(dto);
-            response.addHeader("X-Debug-Info", "Account with ID: " + accountDto.getAccountId() + ", successfully saved to the database!");
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(accountDto);
+        AccountDto accountDto = accountService.saveAccount(dto);
+        response.addHeader("X-Debug-Info", "Account with ID: " + accountDto.getAccountId() + ", successfully saved to the database!");
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(accountDto);
     }
+
     @Operation(summary = "Получить Account по номеру телефона и валюте", description = "Возвращает AccountDto")
-    @ApiResponses(value = {
-    })
+    @ApiResponses()
     @GetMapping("/byMobileAndCurrency")
     public ResponseEntity<AccountDto> getAccountByMobileAndCurrency(String mobile, CurrencyType currency) {
         return new ResponseEntity<>(accountService.getAccountByMobileAndCurrency(mobile, currency), HttpStatus.OK);
     }
 
-    @Operation(summary = "Обновляет баланс Account по номеру кошелька", description = "Возвращает DTO обновлённого Account")
+    @Operation(summary = "Обновляет баланс Account по номеру счета", description = "Возвращает DTO обновлённого Account")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "202", description = "Account успешно обновлён"),
             @ApiResponse(responseCode = "400", description = "Неверный запрос")
@@ -62,6 +66,16 @@ public class AccountController {
     @PatchMapping()
     public ResponseEntity<AccountDto> update(String AccountId, BigDecimal balance) {
         return new ResponseEntity<>(accountService.update(AccountId, balance), HttpStatus.ACCEPTED);
+    }
+
+    @Operation(summary = DEPOSIT_OPERATION_SUMMARY, description = DEPOSIT_OPERATION_DESCRIPTION)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "203", description = "Operation Success"),
+            @ApiResponse(responseCode = "401", description = "Operation failed")
+    })
+    @PatchMapping("/operation")
+    public ResponseEntity<AccountDto> performAccountOperation(String uuid) throws AccountOperationException {
+        return new ResponseEntity<>(accountService.performAccountOperation(uuid), HttpStatus.OK);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -73,6 +87,12 @@ public class AccountController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ContactMediumNotFoundException.class)
     public ErrorMessage getContactMediumHandler(ContactMediumNotFoundException e) {
+        return new ErrorMessage(e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(AccountOperationException.class)
+    public ErrorMessage getAccountOperationExceptionHandler(AccountOperationException e) {
         return new ErrorMessage(e.getMessage());
     }
 }
