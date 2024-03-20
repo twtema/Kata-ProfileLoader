@@ -11,6 +11,6 @@ public interface BankCardService {
 
     List<BankCardDto> getAllBankCards(String icp, String uuid);
 
-    void deleteBankCard(String icp);
+    void deleteBankCard(String icp, List<String> cardNumbers);
 
 }

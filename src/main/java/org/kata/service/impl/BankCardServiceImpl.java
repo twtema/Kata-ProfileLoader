@@ -11,6 +11,7 @@ import org.kata.exception.IndividualNotFoundException;
 import org.kata.repository.BankCardCrudRepository;
 import org.kata.repository.IndividualCrudRepository;
 import org.kata.service.BankCardService;
+import org.kata.service.IndividualService;
 import org.kata.service.mapper.BankCardMapper;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,8 @@ public class BankCardServiceImpl implements BankCardService {
     private final BankCardCrudRepository bankCardCrudRepository;
 
     private final IndividualCrudRepository individualCrudRepository;
+
+    private final IndividualService individualService;
 
     private final BankCardMapper bankCardMapper;
 
@@ -90,20 +93,27 @@ public class BankCardServiceImpl implements BankCardService {
         }).orElseThrow(() -> new IndividualNotFoundException("Individual with icp: " + dto.getIcp() + " not found"));
     }
 
-    private void markBankCardAsNotActual(List<BankCard> list) {
-        list.forEach(bankCard -> {
-            if (bankCard.isActual()) {
-                bankCard.setActual(false);
-            }
-        });
-    }
-
     @Override
     public List<BankCardDto> getAllBankCards(String icp, String uuid) {
         if (uuid.equals("uuid")) {
             return getAllBankCards(icp);
         } else {
             throw new IllegalArgumentException("Invalid type");
+        }
+    }
+    @Override
+    public void deleteBankCard(String icp, List<String> cardNumbers) {
+        List<BankCard> bankCards = getIndividual(icp).getBankCard();
+        for (String cardNumber : cardNumbers) {
+            List <BankCard> cardToDelete = bankCards.stream()
+                    .filter(card -> card.getCardNumber().equals(cardNumber))
+                    .toList();
+            bankCards.removeAll(cardToDelete);
+            if (!cardToDelete.isEmpty()) {
+                bankCardCrudRepository.deleteAll(cardToDelete);
+            } else {
+                throw new BankCardNotFoundException("Bank card with number " + cardNumber + " not found for individual with icp: " + icp);
+            }
         }
     }
 
@@ -117,11 +127,16 @@ public class BankCardServiceImpl implements BankCardService {
         return individual.getBankCard().stream().anyMatch(card -> cardNumber.equals(card.getCardNumber())
                 && cvv.equals(card.getCvv()));
     }
-    @Override
-    public void deleteBankCard(String icp) {
-        Optional<BankCard> entity = bankCardCrudRepository.findById(icp);
-        BankCard bankCard = entity.orElseThrow(() -> new IndividualNotFoundException("BankCard with icp: " + icp + " not found"));
 
-        bankCardCrudRepository.delete(bankCard);
+    private Individual getIndividual(String icp) {
+        return individualService.getIndividualEntity(icp);
+    }
+
+    private void markBankCardAsNotActual(List<BankCard> list) {
+        list.forEach(bankCard -> {
+            if (bankCard.isActual()) {
+                bankCard.setActual(false);
+            }
+        });
     }
 }

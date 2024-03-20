@@ -56,16 +56,17 @@ public class BankCardController {
                 .body(bankCardDto);
     }
 
-    @Operation(summary = "Delete an bankCard by icp")
+    @Operation(summary = "Удаление банковской карты по icp и номеру банковской карты")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful deleted of BankCard"),
             @ApiResponse(responseCode = "400", description = "Bad request"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @DeleteMapping("/delete")
-    public ResponseEntity<HttpStatus> deleteBankCard(@RequestParam String icp) {
+    public ResponseEntity<HttpStatus> deleteBankCard(@Parameter(description = "ICP для удаления") @RequestParam String icp,
+                                                     @Parameter(description = "Номер банковской карты для удаления") @RequestParam List<String> cardNumbers) {
         System.out.println("controller loader delete icp - " + icp);
-        bankCardService.deleteBankCard(icp);
+        bankCardService.deleteBankCard(icp, cardNumbers);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
