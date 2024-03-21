@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
-import static org.kata.service.impl.Constants.*;
+import static org.kata.utils.Constants.ConstantsKafka.*;
 
 
 @Service

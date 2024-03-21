@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.apache.bcel.classfile.Code;
 import org.kata.controller.dto.ContactMediumDto;
 import org.kata.exception.ContactMediumNotFoundException;
 import org.kata.service.ContactMediumService;
@@ -17,18 +16,22 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-import static org.kata.controller.Constants.*;
+import static org.kata.utils.Constants.ConstantsControllersCodes.*;
+import static org.kata.utils.Constants.ConstantsControllerStrings.*;
+import static org.kata.utils.Constants.ConstantsEndpoints.URI_CONTACT_MEDIUM;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(URI_CONTACT_MEDIUM)
 public class ContactMediumController {
 
+
+
+
     private final ContactMediumService contactMediumService;
 
-    @Operation(summary = GET_CONTACT_MEDIUM_SUMMARY,
-            description = GET_CONTACT_MEDIUM_DESCRIPTION)
 
+    @Operation(summary = GET_CONTACT_MEDIUM_SUMMARY, description = GET_CONTACT_MEDIUM_DESCRIPTION)
     @GetMapping
     public ResponseEntity<List<ContactMediumDto>> getContactMedium(
             @Parameter(description = ICP_CONTACT_MEDIUM_DESCRIPTION) String id,

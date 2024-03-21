@@ -19,12 +19,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static org.kata.controller.Constants.*;
+import static org.kata.utils.Constants.ConstantsControllersCodes.*;
+import static org.kata.utils.Constants.ConstantsEndpoints.*;
+import static org.kata.utils.Constants.ConstantsControllerStrings.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(URI_WALLET)
 public class WalletController {
+
     private final WalletService walletService;
 
     @Operation(summary = GET_WALLET_SUMMARY, description= GET_WALLET_DESCRIPTION)
@@ -48,8 +51,7 @@ public class WalletController {
                     .body(walletDto);
     }
     @Operation(summary = GET_WALLET_BY_MOBILE_AND_CURRENCY_SUMMARY, description = GET_WALLET_BY_MOBILE_AND_CURRENCY_DESCRIPTION)
-    @ApiResponses(value = {
-    })
+    @ApiResponses()
     @GetMapping(BY_MOBILE_AND_CURRENCY_ENDPOINT)
     public ResponseEntity<WalletDto> getWalletByMobileAndCurrency(String mobile, CurrencyType currency) {
         return new ResponseEntity<>(walletService.getWalletByMobileAndCurrency(mobile, currency), HttpStatus.OK);

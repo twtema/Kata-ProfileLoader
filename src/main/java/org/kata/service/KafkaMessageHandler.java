@@ -9,7 +9,7 @@ import org.kata.controller.dto.IndividualDto;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
-import static org.kata.service.impl.Constants.*;
+import static org.kata.utils.Constants.ConstantsKafka.*;
 
 @Service
 @RequiredArgsConstructor

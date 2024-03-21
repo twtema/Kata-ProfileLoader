@@ -17,7 +17,10 @@ import org.springframework.util.CollectionUtils;
 import java.util.Collection;
 import java.util.UUID;
 
-import static org.kata.service.impl.Constants.*;
+import static org.kata.utils.Constants.*;
+import static org.kata.utils.Constants.ConstantsServiceLogs.*;
+import static org.kata.utils.Constants.ConstantsServicesErrors.*;
+
 
 @Service
 @Slf4j
@@ -33,11 +36,11 @@ public class IndividualServiceImpl implements IndividualService {
     @Override
     public IndividualDto getIndividual(String icp) {
         Individual entity = individualCrudRepository.findByIcp(icp)
-                .orElseThrow(() -> new IndividualNotFoundException(String.format(ERROR_INDIVIDUAL_WITH_ICP_NOT_FOUND, icp)));
+                .orElseThrow(() -> new IndividualNotFoundException(String.format(ERR_INDIVIDUAL_WITH_ICP_NOT_FOUND, icp)));
         if (!(entity == null)) {
             return individualMapper.toDto(entity);
         } else {
-            throw new IndividualNotFoundException(String.format(ERROR_INDIVIDUAL_UUID_NOT_FOUND, icp));
+            throw new IndividualNotFoundException(String.format(ERR_INDIVIDUAL_UUID_NOT_FOUND, icp));
         }
     }
 
@@ -45,7 +48,7 @@ public class IndividualServiceImpl implements IndividualService {
     public IndividualDto getIndividualByPhone(String phone) {
         Individual entity = individualCrudRepository.findByPhone(phone)
                 .orElseThrow(() -> new IndividualNotFoundException(
-                        String.format(ERROR_INDIVIDUAL_WITH_PHONE_NOT_FOUND, phone)
+                        String.format(ERR_INDIVIDUAL_WITH_PHONE_NOT_FOUND, phone)
                 ));
         return individualMapper.toDto(entity);
     }
@@ -89,7 +92,7 @@ public class IndividualServiceImpl implements IndividualService {
     @Override
     public void deleteIndividual(String icp) {
         Individual entity = individualCrudRepository.findByIcp(icp)
-                .orElseThrow(() -> new IndividualNotFoundException(String.format(ERROR_INDIVIDUAL_WITH_ICP_NOT_FOUND, icp)));
+                .orElseThrow(() -> new IndividualNotFoundException(String.format(ERR_INDIVIDUAL_WITH_ICP_NOT_FOUND, icp)));
 
 
         individualCrudRepository.delete(entity);
@@ -108,7 +111,7 @@ public class IndividualServiceImpl implements IndividualService {
         if (uuid.equals(UUID_STRING_VALUE)) {
             return getIndividual(icp);
         } else {
-            throw new IllegalArgumentException(ERROR_INVALID_TYPE);
+            throw new IllegalArgumentException(ERR_INVALID_TYPE);
         }
 
     }
@@ -131,6 +134,6 @@ public class IndividualServiceImpl implements IndividualService {
     public Individual getIndividualEntity(String icp) {
         return individualCrudRepository
                 .findByIcp(icp)
-                .orElseThrow(() -> new IndividualNotFoundException(String.format(ERROR_INDIVIDUAL_WITH_ICP_NOT_FOUND, icp)));
+                .orElseThrow(() -> new IndividualNotFoundException(String.format(ERR_INDIVIDUAL_WITH_ICP_NOT_FOUND, icp)));
     }
 }

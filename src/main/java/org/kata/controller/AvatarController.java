@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-import static org.kata.controller.Constants.*;
+import static org.kata.utils.Constants.ConstantsControllersCodes.*;
+import static org.kata.utils.Constants.ConstantsControllerStrings.*;
+import static org.kata.utils.Constants.ConstantsEndpoints.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,9 +27,7 @@ public class AvatarController {
 
     private final AvatarService avatarService;
 
-    @Operation(summary = GET_AVATAR_BY_ICP,
-            description = RETURNS_DTO_AVATAR_BY_ICP)
-
+    @Operation(summary = GET_AVATAR_BY_ICP, description = RETURNS_DTO_AVATAR_BY_ICP)
     @GetMapping
     public ResponseEntity<AvatarDto> getAvatar(
             @Parameter(description = ICP_AVATAR) String id,
@@ -54,8 +54,7 @@ public class AvatarController {
                 .body(avatarDto);
     }
 
-    @Operation(summary = GET_AVATAR_LIST_BY_ICP,
-            description = RETURNS_LIST_DTO_AVATAR_BY_ICP)
+    @Operation(summary = GET_AVATAR_LIST_BY_ICP, description = RETURNS_LIST_DTO_AVATAR_BY_ICP)
     @GetMapping(ALL_ENDPOINT)
     public ResponseEntity<List<AvatarDto>> getAllAvatars(@Parameter(description = ICP_TO_GET_LIST_AVATAR) @RequestParam String icp) {
         return new ResponseEntity<>(avatarService.getAllAvatarsDto(icp), HttpStatus.OK);

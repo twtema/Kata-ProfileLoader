@@ -15,8 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 
-import static org.kata.controller.Constants.*;
-
+import static org.kata.utils.Constants.ConstantsControllersCodes.*;
+import static org.kata.utils.Constants.ConstantsEndpoints.*;
+import static org.kata.utils.Constants.ConstantsControllerStrings.*;
 
 @RestController
 @RequiredArgsConstructor

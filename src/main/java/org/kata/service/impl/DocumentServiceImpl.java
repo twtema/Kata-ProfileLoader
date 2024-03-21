@@ -18,7 +18,10 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static org.kata.service.impl.Constants.*;
+import static org.kata.utils.Constants.*;
+import static org.kata.utils.Constants.ConstantsServiceLogs.*;
+import static org.kata.utils.Constants.ConstantsServicesErrors.*;
+
 
 @Service
 @Slf4j
@@ -44,10 +47,10 @@ public class DocumentServiceImpl implements DocumentService {
 
                 return documentDtos;
             } else {
-                throw new DocumentsNotFoundException(String.format(ERROR_NO_DOCUMENT_FOUND_FOR_INDIVIDUAL, icp));
+                throw new DocumentsNotFoundException(String.format(ERR_NO_DOCUMENT_FOUND_FOR_INDIVIDUAL, icp));
             }
         } else {
-            throw new IndividualNotFoundException(String.format(ERROR_INDIVIDUAL_WITH_ICP_NOT_FOUND, icp));
+            throw new IndividualNotFoundException(String.format(ERR_INDIVIDUAL_WITH_ICP_NOT_FOUND, icp));
         }
     }
 
@@ -78,7 +81,7 @@ public class DocumentServiceImpl implements DocumentService {
             DocumentDto documentDto = documentMapper.toDto(document);
             documentDto.setIcp(dto.getIcp());
             return documentDto;
-        }).orElseThrow(() -> new IndividualNotFoundException(String.format(ERROR_INDIVIDUAL_WITH_ICP_NOT_FOUND,dto.getIcp())));
+        }).orElseThrow(() -> new IndividualNotFoundException(String.format(ERR_INDIVIDUAL_WITH_ICP_NOT_FOUND,dto.getIcp())));
     }
 
     @Override
@@ -86,7 +89,7 @@ public class DocumentServiceImpl implements DocumentService {
         if (uuid.equals(UUID_STRING_VALUE)) {
             return getAllDocuments(icp);
         } else {
-            throw new IllegalArgumentException(ERROR_INVALID_TYPE);
+            throw new IllegalArgumentException(ERR_INVALID_TYPE);
         }
     }
 
@@ -116,6 +119,6 @@ public class DocumentServiceImpl implements DocumentService {
             DocumentDto documentDto = documentMapper.toDto(document);
             documentDto.setIcp(dto.getIcp());
             return documentDto;
-        }).orElseThrow(() -> new IndividualNotFoundException(String.format(ERROR_INDIVIDUAL_WITH_ICP_NOT_FOUND,dto.getIcp())));
+        }).orElseThrow(() -> new IndividualNotFoundException(String.format(ERR_INDIVIDUAL_WITH_ICP_NOT_FOUND,dto.getIcp())));
     }
 }

@@ -19,7 +19,10 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static org.kata.service.impl.Constants.*;
+import static org.kata.utils.Constants.*;
+import static org.kata.utils.Constants.ConstantsServiceLogs.*;
+import static org.kata.utils.Constants.ConstantsServicesErrors.*;
+
 
 @Service
 @Slf4j
@@ -44,10 +47,10 @@ public class ContactMediumServiceImpl implements ContactMediumService {
                 contactMediumDtos.forEach(cm -> cm.setIcp(icp));
                 return contactMediumDtos;
             } else {
-                throw new ContactMediumNotFoundException(String.format(ERROR_NO_CONTACT_MEDIUM_FOUND_FOR_INDIVIDUAL, icp));
+                throw new ContactMediumNotFoundException(String.format(ERR_NO_CONTACT_MEDIUM_FOUND_FOR_INDIVIDUAL, icp));
             }
         } else {
-            throw new IndividualNotFoundException(String.format(ERROR_INDIVIDUAL_WITH_ICP_NOT_FOUND, icp));
+            throw new IndividualNotFoundException(String.format(ERR_INDIVIDUAL_WITH_ICP_NOT_FOUND, icp));
         }
     }
 
@@ -79,14 +82,14 @@ public class ContactMediumServiceImpl implements ContactMediumService {
             ContactMediumDto contactMediumDto = contactMediumMapper.toDto(contactMedium);
             contactMediumDto.setIcp(dto.getIcp());
             return contactMediumDto;
-        }).orElseThrow(() -> new IndividualNotFoundException(String.format(ERROR_INDIVIDUAL_WITH_ICP_NOT_FOUND, dto.getIcp())));
+        }).orElseThrow(() -> new IndividualNotFoundException(String.format(ERR_INDIVIDUAL_WITH_ICP_NOT_FOUND, dto.getIcp())));
     }
 
     public ContactMedium getContactMediumByTypeAndValue(ContactMediumType type, String value) {
         return contactMediumCrudRepository
                 .findByTypeAndValue(type, value)
                 .orElseThrow(() -> new ContactMediumNotFoundException(
-                        String.format(ERROR_NO_CONTACT_MEDIUM_FOUND_WITH_TYPE_AND_VALUE, type, value)
+                        String.format(ERR_NO_CONTACT_MEDIUM_FOUND_WITH_TYPE_AND_VALUE, type, value)
                 ));
     }
 
@@ -95,7 +98,7 @@ public class ContactMediumServiceImpl implements ContactMediumService {
         if (uuid.equals(UUID_STRING_VALUE)) {
             return getContactMedium(icp);
         } else {
-            throw new IllegalArgumentException(ERROR_INVALID_TYPE);
+            throw new IllegalArgumentException(ERR_INVALID_TYPE);
         }
     }
 

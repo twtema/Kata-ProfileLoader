@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.kata.controller.dto.AddressDto;
 import org.kata.exception.AddressNotFoundException;
 import org.kata.service.AddressService;
+import org.kata.utils.Constants;
 import org.springdoc.api.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +16,13 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 
-import static org.kata.controller.Constants.*;
+import static org.kata.utils.Constants.ConstantsControllersCodes.*;
+import static org.kata.utils.Constants.ConstantsControllerStrings.*;
+
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(URI_ADDRESS)
+@RequestMapping(Constants.ConstantsEndpoints.URI_ADDRESS)
 public class AddressController {
 
     private final AddressService addressService;

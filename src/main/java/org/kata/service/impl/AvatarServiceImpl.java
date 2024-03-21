@@ -14,7 +14,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-import static org.kata.service.impl.Constants.*;
+import static org.kata.utils.Constants.*;
+import static org.kata.utils.Constants.ConstantsServiceLogs.*;
+import static org.kata.utils.Constants.ConstantsServicesErrors.*;
+
 
 @Service
 @Slf4j
@@ -34,13 +37,13 @@ public class AvatarServiceImpl implements AvatarService {
             Avatar actualAvatar = avatars.stream()
                     .filter(Avatar::isActual)
                     .findFirst()
-                    .orElseThrow(() -> new AvatarNotFoundException(String.format(ERROR_AVATAR_WITH_ICP_NOT_FOUND, icp)));
+                    .orElseThrow(() -> new AvatarNotFoundException(String.format(ERR_AVATAR_WITH_ICP_NOT_FOUND, icp)));
             AvatarDto avatarDto = avatarMapper.toDto(actualAvatar);
             avatarDto.setIcp(icp);
             return avatarDto;
         }
 
-        throw new AvatarNotFoundException(String.format(ERROR_NO_AVATAR_FOR_INDIVIDUAL, icp));
+        throw new AvatarNotFoundException(String.format(ERR_NO_AVATAR_FOR_INDIVIDUAL, icp));
     }
 
 
@@ -70,7 +73,7 @@ public class AvatarServiceImpl implements AvatarService {
             avatarCrudRepository.save(avatar);
             log.debug(LOG_SAVED_AVATAR_TO_DATABASE, avatar);
         } catch (Exception e) {
-            log.warn(ERROR_FAILED_TO_SAVE_AVATAR_TO_THE_DATABASE, e);
+            log.warn(ERR_FAILED_TO_SAVE_AVATAR_TO_THE_DATABASE, e);
         }
 
         AvatarDto avatarDto = avatarMapper.toDto(avatar);
@@ -101,7 +104,7 @@ public class AvatarServiceImpl implements AvatarService {
         if (uuid.equals(UUID_STRING_VALUE)) {
             return getAvatar(icp);
         } else {
-            throw new IllegalArgumentException(ERROR_INVALID_TYPE);
+            throw new IllegalArgumentException(ERR_INVALID_TYPE);
         }
     }
 

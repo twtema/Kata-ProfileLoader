@@ -21,7 +21,8 @@ import java.util.UUID;
 
 import org.kata.service.ContactMediumService;
 
-import static org.kata.service.impl.Constants.*;
+import static org.kata.utils.Constants.ConstantsServiceLogs.*;
+import static org.kata.utils.Constants.ConstantsServicesErrors.*;
 
 @Service
 @Slf4j
@@ -50,7 +51,7 @@ public class WalletServiceImpl implements WalletService {
                     })
                     .toList();
         }
-        throw new WalletNotFoundException(String.format(ERROR_NO_WALLET_FOUND_FOR_ICP, icp));
+        throw new WalletNotFoundException(String.format(ERR_NO_WALLET_FOUND_FOR_ICP, icp));
     }
 
     @Override
@@ -97,7 +98,7 @@ public class WalletServiceImpl implements WalletService {
         return individualCrudRepository
                 .findByIcp(icp)
                 .orElseThrow(() -> new IndividualNotFoundException(
-                        String.format(ERROR_INDIVIDUAL_WITH_ICP_NOT_FOUND, icp)
+                        String.format(ERR_INDIVIDUAL_WITH_ICP_NOT_FOUND, icp)
                 ));
     }
 
@@ -106,7 +107,7 @@ public class WalletServiceImpl implements WalletService {
                 .findByWalletId(walletId)
                 .filter(Wallet::isActual)
                 .orElseThrow(() -> new WalletNotFoundException(
-                        String.format(ERROR_WALLET_WITH_ID_NOT_FOUND, walletId)
+                        String.format(ERR_WALLET_WITH_ID_NOT_FOUND, walletId)
                 ));
     }
 
@@ -121,14 +122,14 @@ public class WalletServiceImpl implements WalletService {
                         && wallet.isActual())
                 .findFirst()
                 .orElseThrow(() -> new WalletNotFoundException(
-                        String.format(ERROR_WALLET_FOR_MOBILE_WITH_CURRENCY_NOT_FOUND, mobile, currencyType)
+                        String.format(ERR_WALLET_FOR_MOBILE_WITH_CURRENCY_NOT_FOUND, mobile, currencyType)
                 )));
     }
 
     @Override
     public WalletDto update(String walletId, BigDecimal balance) {
         Wallet wallet = walletCrudRepository.findByWalletId(walletId).orElseThrow(
-                () -> new WalletNotFoundException(String.format(ERROR_WALLET_WITH_ID_NOT_FOUND, walletId))
+                () -> new WalletNotFoundException(String.format(ERR_WALLET_WITH_ID_NOT_FOUND, walletId))
         );
         wallet.setBalance(balance);
         return walletMapper.toDto(walletCrudRepository.save(wallet));

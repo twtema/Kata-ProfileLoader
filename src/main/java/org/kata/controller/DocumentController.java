@@ -16,16 +16,20 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-import static org.kata.controller.Constants.*;
+import static org.kata.utils.Constants.ConstantsControllersCodes.*;
+import static org.kata.utils.Constants.ConstantsControllerStrings.*;
+import static org.kata.utils.Constants.ConstantsEndpoints.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(URI_DOCUMENT)
 public class DocumentController {
+
+
+
     private final DocumentService documentService;
 
-    @Operation(summary = GET_DOCUMENT_SUMMARY,
-            description = GET_DOCUMENT_DESCRIPTION)
+    @Operation(summary = GET_DOCUMENT_SUMMARY, description = GET_DOCUMENT_DESCRIPTION)
     @ApiResponses(value = {
             @ApiResponse(responseCode = CODE_200, description = SUCCESSFUL_RETRIEVAL_ALL_DOCUMENTS),
             @ApiResponse(responseCode = CODE_400, description = BAD_REQUEST),
