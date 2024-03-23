@@ -15,6 +15,7 @@ import org.kata.service.IndividualService;
 import org.kata.service.mapper.BankCardMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -60,10 +61,14 @@ public class BankCardServiceImpl implements BankCardService {
         Optional<Individual> individual = individualCrudRepository.findByIcp(dto.getIcp());
 
         return individual.map(ind -> {
+            List<BankCard> bankCards = ind.getBankCard();
+            if (bankCards == null) {
+                bankCards = new ArrayList<>();
+                ind.setBankCard(bankCards);
+            }
             if (bankCardExists(ind, dto.getCardNumber(), dto.getCvv())) {
                 throw new BankCardNotFoundException("Bank card with number: " + dto.getCardNumber() + " already exists.");
             }
-            List<BankCard> bankCards = ind.getBankCard();
             List<BankCard> markOldCard = bankCards.stream()
                     .filter(card -> dto.getBankCardType().equals(card.getBankCardType()))
                     .collect(Collectors.toList());
@@ -74,8 +79,11 @@ public class BankCardServiceImpl implements BankCardService {
             bankCard.setActual(true);
             bankCard.setIndividual(ind);
 
-            for (Account account : ind.getAccount()) {
-                bankCard.setAccount(account);
+            List<Account> accounts = ind.getAccount();
+            if (accounts != null) {
+                for (Account account : accounts) {
+                    bankCard.setAccount(account);
+                }
             }
 
             log.info("For icp {} created new BankCard: {}", dto.getIcp(), bankCard);
@@ -101,11 +109,12 @@ public class BankCardServiceImpl implements BankCardService {
             throw new IllegalArgumentException("Invalid type");
         }
     }
+
     @Override
     public void deleteBankCard(String icp, List<String> cardNumbers) {
         List<BankCard> bankCards = getIndividual(icp).getBankCard();
         for (String cardNumber : cardNumbers) {
-            List <BankCard> cardToDelete = bankCards.stream()
+            List<BankCard> cardToDelete = bankCards.stream()
                     .filter(card -> card.getCardNumber().equals(cardNumber))
                     .toList();
             bankCards.removeAll(cardToDelete);
@@ -117,15 +126,17 @@ public class BankCardServiceImpl implements BankCardService {
         }
     }
 
-    private boolean bankCardExists(Individual individual, String cardNumber, Integer cvv) {
-        if (cardNumber.length() != 16) {
+    public boolean bankCardExists(Individual individual, String cardNumber, Integer cvv) {
+        if (individual.getBankCard() == null) {
+            return false;
+        } else if (cardNumber.length() != 16) {
             throw new IllegalArgumentException("Card number must contain 16 digits.");
-        }
-        if (String.valueOf(cvv).length() != 3) {
+        } else if (String.valueOf(cvv).length() != 3) {
             throw new IllegalArgumentException("CVV code must contain 3 digits.");
         }
-        return individual.getBankCard().stream().anyMatch(card -> cardNumber.equals(card.getCardNumber())
-                && cvv.equals(card.getCvv()));
+
+        return individual.getBankCard().stream().anyMatch(card ->
+                cardNumber.equals(card.getCardNumber()) && cvv.equals(card.getCvv()));
     }
 
     private Individual getIndividual(String icp) {

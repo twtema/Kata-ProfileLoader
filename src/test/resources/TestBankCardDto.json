@@ -1,0 +1,9 @@
+{
+  "icp": "1234567890",
+  "holderName": "Иван",
+  "cardNumber": "2202201840607718",
+  "cvv": 111,
+  "bankCardType": "DEBIT_CARD",
+  "expirationDate": "2024-03-21T19:12:32.314Z",
+  "actual": true
+}
